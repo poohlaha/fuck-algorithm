@@ -1,11 +1,14 @@
 use crate::link::list::{merge_two_list, partition, print};
+use crate::tree::binary_heap::{BinaryHeap, BinaryMinHeap};
 
 mod link;
 mod error;
+mod tree;
 
 fn main() {
    test_merge_two_list();
    test_partition();
+   test_min_binary_heap();
 }
 
 /// 测试 `合并两个有序链表`
@@ -19,4 +22,54 @@ fn test_partition() {
     println!("{}", "");
     let head = partition(vec![1,4,3,2,5,2], 3);
     print(head);
+}
+
+/// 测试最小二叉堆
+fn test_min_binary_heap() {
+    println!("{}", "");
+    let mut heap = BinaryMinHeap::new();
+    heap.push(5);
+    heap.push(3);
+    heap.push(7);
+    heap.push(1);
+    heap.push(9);
+    heap.push(2);
+    heap.push(4);
+    heap.push(6);
+
+    /*
+          1
+            /   \
+           3     2
+         /  \   / \
+        5    9 7   4
+       /
+      6
+   */
+
+    println!("{:?}", heap);
+
+    // delete
+    println!("{:?}", heap.delete());
+    println!("{:?}", heap);
+
+    /*
+          2
+        /   \
+       3     4
+     /  \   / \
+    5    9 7   6
+    */
+
+    // delete
+    println!("{:?}", heap.delete());
+    println!("{:?}", heap);
+
+    /*
+          3
+        /   \
+       5     4
+     /  \   /
+    6    9 7
+     */
 }

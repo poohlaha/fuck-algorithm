@@ -52,6 +52,12 @@ pub(crate) fn merge_two_list(v1: Vec<u32>, v2: Vec<u32>) -> Option<Box<ListNode<
     dummy_head.next
 }
 
+/// 合并多个有序链表
+pub(crate) fn merge_k_list() {
+
+}
+
+
 /// 分隔链表
 pub(crate) fn partition(v: Vec<u32>, x: u32) -> Option<Box<ListNode<u32>>> {
     let mut dummy_head1 = ListNode::<u32>::new(0); // 存放小于 x 的链表的虚拟头结点
