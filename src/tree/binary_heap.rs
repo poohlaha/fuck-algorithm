@@ -16,7 +16,6 @@
 */
 
 pub trait BinaryHeap<R> {
-
     /**
         在数组表示的完全二叉树中，每个父节点的左子节点总是在其索引的下一个位置。
         例如，父节点的索引为 i，则左子节点的索引为 i + 1。
@@ -24,7 +23,7 @@ pub trait BinaryHeap<R> {
         因此左子节点的索引实际上是父节点索引乘以 2 加上 1，即 2*i + 1。
     **/
     fn left(&self, i: usize) -> usize {
-        return 2 * i + 1
+        return 2 * i + 1;
     }
 
     /**
@@ -33,7 +32,7 @@ pub trait BinaryHeap<R> {
         同样地，为了得到正确的索引，我们需要将父节点的索引乘以 2，然后再加上 2，即 2*i + 2。
     **/
     fn right(&self, i: usize) -> usize {
-        return 2 * i + 2
+        return 2 * i + 2;
     }
 
     /**
@@ -44,7 +43,7 @@ pub trait BinaryHeap<R> {
             因此反推回去时需要除以 2。
     **/
     fn parent(&self, i: usize) -> usize {
-        return (i - 1) / 2
+        return (i - 1) / 2;
     }
 
     /// 插入
@@ -58,28 +57,26 @@ pub trait BinaryHeap<R> {
 
     /// 上浮, 添加用
     fn swim(&mut self, index: usize);
-
 }
 
 /// 最小堆
 #[derive(Debug, Clone)]
 pub struct BinaryMinHeap<T> {
-    data: Vec<T>
+    data: Vec<T>,
 }
 
 impl<T: Ord> BinaryHeap<T> for BinaryMinHeap<T> {
-
     /// 插入, 上浮
     fn push(&mut self, value: T) {
-       self.data.push(value);
-       let last_index = self.data.len() - 1;
-       self.swim(last_index);
+        self.data.push(value);
+        let last_index = self.data.len() - 1;
+        self.swim(last_index);
     }
 
     /// 删除, 下沉, 返回最小元素
     fn delete(&mut self) -> Option<T> {
         if self.data.is_empty() {
-            return None
+            return None;
         }
 
         // 交换第一个和最后一个元素
@@ -111,7 +108,7 @@ impl<T: Ord> BinaryHeap<T> for BinaryMinHeap<T> {
             }
 
             if min_index == index {
-                break
+                break;
             }
 
             self.data.swap(min_index, index);
@@ -123,8 +120,9 @@ impl<T: Ord> BinaryHeap<T> for BinaryMinHeap<T> {
     fn swim(&mut self, mut index: usize) {
         while index > 0 && index <= self.data.len() - 1 {
             let parent_index = self.parent(index);
-            if self.data[parent_index] <= self.data[index] { // 最小堆中父节点的值小于或等于子节点的值
-                break
+            if self.data[parent_index] <= self.data[index] {
+                // 最小堆中父节点的值小于或等于子节点的值
+                break;
             }
 
             self.data.swap(parent_index, index);
@@ -134,11 +132,88 @@ impl<T: Ord> BinaryHeap<T> for BinaryMinHeap<T> {
 }
 
 impl<T: Ord> BinaryMinHeap<T> {
-
     pub fn new() -> Self {
-        Self {
-            data: Vec::new(),
+        Self { data: Vec::new() }
+    }
+
+    pub fn get_data(&self) -> &Vec<T> {
+        return &self.data;
+    }
+}
+
+/// 最大堆
+#[derive(Debug, Clone)]
+pub struct BinaryMaxHeap<T> {
+    data: Vec<T>,
+}
+
+impl<T: Ord> BinaryHeap<T> for BinaryMaxHeap<T> {
+    /// 插入, 上浮
+    fn push(&mut self, value: T) {
+        self.data.push(value);
+        let last_index = self.data.len() - 1;
+        self.swim(last_index);
+    }
+
+    /// 删除, 下沉, 返回最大元素
+    fn delete(&mut self) -> Option<T> {
+        if self.data.is_empty() {
+            return None;
         }
+
+        // 交换第一个和最后一个元素
+        let last_index = self.data.len() - 1;
+        self.data.swap(0, last_index);
+
+        // 删除交换后的第一个元素
+        let result = self.data.pop();
+        self.sink(0);
+        result
+    }
+
+    /// 下沉, 删除用
+    fn sink(&mut self, mut index: usize) {
+        let size = self.data.len();
+        while index < size {
+            let left_child_index = self.left(index);
+            let right_child_index = self.right(index);
+            let mut max_index = index;
+
+            if left_child_index < size && self.data[left_child_index] > self.data[max_index] {
+                max_index = left_child_index
+            }
+
+            if right_child_index < size && self.data[right_child_index] > self.data[max_index] {
+                max_index = right_child_index
+            }
+
+            if max_index == index {
+                break;
+            }
+
+            self.data.swap(max_index, index);
+            index = max_index;
+        }
+    }
+
+    /// 上浮, 添加用
+    fn swim(&mut self, mut index: usize) {
+        while index > 0 && index <= self.data.len() - 1 {
+            let parent_index = self.parent(index);
+            if self.data[parent_index] >= self.data[index] {
+                // 最大堆中父节点的值小于或等于子节点的值
+                break;
+            }
+
+            self.data.swap(parent_index, index);
+            index = parent_index
+        }
+    }
+}
+
+impl<T: Ord> BinaryMaxHeap<T> {
+    pub fn new() -> Self {
+        Self { data: Vec::new() }
     }
 
     pub fn get_data(&self) -> &Vec<T> {

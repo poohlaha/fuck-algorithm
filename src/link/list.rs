@@ -5,15 +5,14 @@ use std::fmt::Debug;
 #[derive(Clone, Debug)]
 pub struct ListNode<E> {
     pub(crate) element: E,
-    pub(crate) next: Option<Box<ListNode<E>>>
+    pub(crate) next: Option<Box<ListNode<E>>>,
 }
 
 impl<E> ListNode<E> {
-
     pub fn new(element: E) -> Self {
         Self {
             element,
-            next: None
+            next: None,
         }
     }
 }
@@ -53,10 +52,7 @@ pub(crate) fn merge_two_list(v1: Vec<u32>, v2: Vec<u32>) -> Option<Box<ListNode<
 }
 
 /// 合并多个有序链表
-pub(crate) fn merge_k_list() {
-
-}
-
+pub(crate) fn merge_k_list() {}
 
 /// 分隔链表
 pub(crate) fn partition(v: Vec<u32>, x: u32) -> Option<Box<ListNode<u32>>> {
@@ -94,10 +90,11 @@ pub(crate) fn partition(v: Vec<u32>, x: u32) -> Option<Box<ListNode<u32>>> {
 
 /// 根据数组创建链表
 pub(crate) fn create<E>(arr: Vec<E>) -> Option<Box<ListNode<E>>>
-where E: Clone
+where
+    E: Clone,
 {
     if arr.is_empty() {
-        return None
+        return None;
     }
 
     let first = arr.get(0);
@@ -112,16 +109,16 @@ where E: Clone
             }
         }
 
-        return head
+        return head;
     }
 
-    return None
+    return None;
 }
 
 /// 打印链表
 pub(crate) fn print<E>(head: Option<Box<ListNode<E>>>)
 where
-    E: Debug
+    E: Debug,
 {
     let mut current = head;
     while let Some(node) = current {
