@@ -1,6 +1,8 @@
 //! 单向链表
 
+use std::cmp::Ordering;
 use std::fmt::Debug;
+use crate::tree::binary_heap::{BinaryHeap, BinaryMinHeap};
 
 #[derive(Clone, Debug)]
 pub struct ListNode<E> {
@@ -14,6 +16,18 @@ impl<E> ListNode<E> {
             element,
             next: None,
         }
+    }
+}
+
+impl<E: PartialOrd> PartialOrd for ListNode<E> {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        self.element.partial_cmp(&other.element)
+    }
+}
+
+impl<T: PartialEq> PartialEq for ListNode<T> {
+    fn eq(&self, other: &Self) -> bool {
+        self.element == other.element
     }
 }
 
@@ -51,8 +65,56 @@ pub(crate) fn merge_two_list(v1: Vec<u32>, v2: Vec<u32>) -> Option<Box<ListNode<
     dummy_head.next
 }
 
-/// 合并多个有序链表
-pub(crate) fn merge_k_list() {}
+/// 合并 K 个有序链表
+/**
+    - 创建一个最小堆，用于存储每个链表的头节点。
+    - 将每个链表的头节点插入到最小堆中。
+    - 从最小堆中弹出堆顶节点（即当前最小的节点），将其添加到结果链表中。
+    - 如果弹出的节点有下一个节点，则将下一个节点插入到最小堆中，以保持堆的性质。
+    - 重复步骤 3 和步骤 4，直到最小堆为空。
+**/
+pub(crate) fn merge_k_list(v: Vec<Vec<u32>>) -> Option<Box<ListNode<u32>>> {
+    if v.is_empty() {
+        return None;
+    }
+
+    let mut dummy_head = ListNode::<u32>::new(0); // 虚拟头节点
+    let mut p = &mut dummy_head;
+
+    // 1. 创建一个最小堆，用于存储每个链表的头节点
+    let mut heap = BinaryMinHeap::new();
+
+    // 2. 将 K 个链表的头结点加入最小堆
+    for v in v.iter() {
+        // 创建节点
+        let head = create(v.clone());
+        if let Some(head) = head {
+            heap.push(head)
+        }
+    }
+
+    while !heap.is_empty() {
+        // 3. 从最小堆中弹出堆顶节点（即当前最小的节点），将其添加到结果链表中
+        let mut node = heap.delete();
+        p.next = node.clone();
+
+        // 4. 如果弹出的节点有下一个节点，则将下一个节点插入到最小堆中，以保持堆的性质。
+        if let Some(mut node) = node {
+            let next = node.as_mut().next.take();
+            if let Some(next) = next {
+                heap.push(next.clone());
+            }
+        }
+
+        // p 指针不断前进
+        p = p.next.as_mut().unwrap().as_mut();
+    }
+
+    // 5. 将结果链表的最后一个节点的 next 字段设置为 None，以避免环形链表
+    p.next = None;
+
+    dummy_head.next
+}
 
 /// 分隔链表
 pub(crate) fn partition(v: Vec<u32>, x: u32) -> Option<Box<ListNode<u32>>> {

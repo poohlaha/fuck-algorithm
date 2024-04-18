@@ -43,6 +43,10 @@ pub trait BinaryHeap<R> {
             因此反推回去时需要除以 2。
     **/
     fn parent(&self, i: usize) -> usize {
+        if i == 0 {
+            return 0
+        }
+
         return (i - 1) / 2;
     }
 
@@ -65,7 +69,7 @@ pub struct BinaryMinHeap<T> {
     data: Vec<T>,
 }
 
-impl<T: Ord> BinaryHeap<T> for BinaryMinHeap<T> {
+impl<T: PartialOrd> BinaryHeap<T> for BinaryMinHeap<T> {
     /// 插入, 上浮
     fn push(&mut self, value: T) {
         self.data.push(value);
@@ -120,7 +124,12 @@ impl<T: Ord> BinaryHeap<T> for BinaryMinHeap<T> {
     fn swim(&mut self, mut index: usize) {
         while index > 0 && index <= self.data.len() - 1 {
             let parent_index = self.parent(index);
-            if self.data[parent_index] <= self.data[index] {
+            if self.data[parent_index] == self.data[index] {
+                // 最小堆中父节点的值小于或等于子节点的值
+                break;
+            }
+
+            if self.data[parent_index] < self.data[index] {
                 // 最小堆中父节点的值小于或等于子节点的值
                 break;
             }
@@ -131,13 +140,17 @@ impl<T: Ord> BinaryHeap<T> for BinaryMinHeap<T> {
     }
 }
 
-impl<T: Ord> BinaryMinHeap<T> {
+impl<T: PartialOrd> BinaryMinHeap<T> {
     pub fn new() -> Self {
         Self { data: Vec::new() }
     }
 
     pub fn get_data(&self) -> &Vec<T> {
         return &self.data;
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.data.is_empty()
     }
 }
 
@@ -147,7 +160,7 @@ pub struct BinaryMaxHeap<T> {
     data: Vec<T>,
 }
 
-impl<T: Ord> BinaryHeap<T> for BinaryMaxHeap<T> {
+impl<T: PartialOrd> BinaryHeap<T> for BinaryMaxHeap<T> {
     /// 插入, 上浮
     fn push(&mut self, value: T) {
         self.data.push(value);
@@ -211,12 +224,16 @@ impl<T: Ord> BinaryHeap<T> for BinaryMaxHeap<T> {
     }
 }
 
-impl<T: Ord> BinaryMaxHeap<T> {
+impl<T: PartialOrd> BinaryMaxHeap<T> {
     pub fn new() -> Self {
         Self { data: Vec::new() }
     }
 
     pub fn get_data(&self) -> &Vec<T> {
         return &self.data;
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.data.is_empty()
     }
 }
