@@ -1,4 +1,4 @@
-use crate::link::list::{merge_k_list, merge_two_list, partition, print};
+use crate::link::list::{find_from_end, merge_k_list, merge_two_list, partition, print};
 use crate::tree::binary_heap::{BinaryHeap, BinaryMaxHeap, BinaryMinHeap};
 
 mod error;
@@ -9,6 +9,7 @@ fn main() {
     test_merge_two_list();
     test_partition();
     test_merge_k_list();
+    test_find_from_end();
     test_min_binary_heap();
     test_max_binary_heap();
 }
@@ -34,6 +35,14 @@ fn test_merge_k_list() {
     println!("merge k list");
     let head = merge_k_list(vec![vec![1, 4, 5], vec![1, 3, 4], vec![2, 6]]);
     print(head);
+    println!("\n")
+}
+
+/// 测试 `单链表的倒数第 k 个节点`
+fn test_find_from_end() {
+    println!("find from end");
+    let index = find_from_end(vec![1, 4, 5, 1, 3, 4, 2, 6], 4);
+    println!("{:?}", index);
     println!("\n")
 }
 

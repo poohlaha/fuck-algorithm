@@ -31,125 +31,6 @@ impl<T: PartialEq> PartialEq for ListNode<T> {
     }
 }
 
-/// 合并两个有序链表
-pub(crate) fn merge_two_list(v1: Vec<u32>, v2: Vec<u32>) -> Option<Box<ListNode<u32>>> {
-    // 创建 `虚拟头节点`
-    let mut dummy_head = ListNode::<u32>::new(0);
-    let mut current = &mut dummy_head;
-    let mut p1 = create(v1);
-    let mut p2 = create(v2);
-
-    while p1.is_some() && p2.is_some() {
-        let element1 = p1.as_ref().unwrap().element;
-        let element2 = p2.as_ref().unwrap().element;
-        if element1 > element2 {
-            current.next = p2.clone();
-            p2 = p2.unwrap().next
-        } else {
-            current.next = p1.clone();
-            p1 = p1.unwrap().next
-        }
-
-        // 移动当前指针, 不断前进
-        current = current.next.as_mut().unwrap()
-    }
-
-    if p1.is_some() {
-        current.next = p1
-    }
-
-    if p2.is_some() {
-        current.next = p2
-    }
-
-    dummy_head.next
-}
-
-/// 合并 K 个有序链表
-/**
-    - 创建一个最小堆，用于存储每个链表的头节点。
-    - 将每个链表的头节点插入到最小堆中。
-    - 从最小堆中弹出堆顶节点（即当前最小的节点），将其添加到结果链表中。
-    - 如果弹出的节点有下一个节点，则将下一个节点插入到最小堆中，以保持堆的性质。
-    - 重复步骤 3 和步骤 4，直到最小堆为空。
-**/
-pub(crate) fn merge_k_list(v: Vec<Vec<u32>>) -> Option<Box<ListNode<u32>>> {
-    if v.is_empty() {
-        return None;
-    }
-
-    let mut dummy_head = ListNode::<u32>::new(0); // 虚拟头节点
-    let mut p = &mut dummy_head;
-
-    // 1. 创建一个最小堆，用于存储每个链表的头节点
-    let mut heap = BinaryMinHeap::new();
-
-    // 2. 将 K 个链表的头结点加入最小堆
-    for v in v.iter() {
-        // 创建节点
-        let head = create(v.clone());
-        if let Some(head) = head {
-            heap.push(head)
-        }
-    }
-
-    while !heap.is_empty() {
-        // 3. 从最小堆中弹出堆顶节点（即当前最小的节点），将其添加到结果链表中
-        let mut node = heap.delete();
-        p.next = node.clone();
-
-        // 4. 如果弹出的节点有下一个节点，则将下一个节点插入到最小堆中，以保持堆的性质。
-        if let Some(mut node) = node {
-            let next = node.as_mut().next.take();
-            if let Some(next) = next {
-                heap.push(next.clone());
-            }
-        }
-
-        // p 指针不断前进
-        p = p.next.as_mut().unwrap().as_mut();
-    }
-
-    // 5. 将结果链表的最后一个节点的 next 字段设置为 None，以避免环形链表
-    p.next = None;
-
-    dummy_head.next
-}
-
-/// 分隔链表
-pub(crate) fn partition(v: Vec<u32>, x: u32) -> Option<Box<ListNode<u32>>> {
-    let mut dummy_head1 = ListNode::<u32>::new(0); // 存放小于 x 的链表的虚拟头结点
-    let mut dummy_head2 = ListNode::<u32>::new(0); // 存放大于等于 x 的链表的虚拟头结点
-    let mut p1 = &mut dummy_head1;
-    let mut p2 = &mut dummy_head2;
-    let mut p = create(v); // p 负责遍历原链表，类似合并两个有序链表的逻辑
-
-    while p.is_some() {
-        let element = p.as_ref().unwrap().element;
-        if element < x {
-            p1.next = p.clone();
-            p1 = p1.next.as_mut().unwrap().as_mut();
-        } else {
-            p2.next = p.clone();
-            p2 = p2.next.as_mut().unwrap().as_mut();
-        }
-
-        // 不能直接让 p 指针前进
-        // p = p.next
-        // 断开原链表中的每个节点的 next 指针
-        let next = p.as_mut().unwrap().next.take();
-        p = next
-    }
-
-    // 连接两个链表
-    // 将原链表的尾部节点的 next 指针置为 None
-    p1.next = None;
-    p2.next = None;
-
-    p1.next = dummy_head2.next;
-    dummy_head1.next
-}
-
 /// 根据数组创建链表
 pub(crate) fn create<E>(arr: Vec<E>) -> Option<Box<ListNode<E>>>
 where
@@ -187,4 +68,160 @@ where
         print!("{:#?} ", node.element);
         current = node.next
     }
+}
+
+/// 分隔链表
+pub(crate) fn partition(v: Vec<u32>, x: u32) -> Option<Box<ListNode<u32>>> {
+    let mut dummy_head1 = ListNode::<u32>::new(0); // 存放小于 x 的链表的虚拟头结点
+    let mut dummy_head2 = ListNode::<u32>::new(0); // 存放大于等于 x 的链表的虚拟头结点
+    let mut p1 = &mut dummy_head1;
+    let mut p2 = &mut dummy_head2;
+    let mut p = create(v); // p 负责遍历原链表，类似合并两个有序链表的逻辑
+
+    while p.is_some() {
+        let element = p.as_ref().unwrap().element;
+        if element < x {
+            p1.next = p.clone();
+            p1 = p1.next.as_mut().unwrap().as_mut();
+        } else {
+            p2.next = p.clone();
+            p2 = p2.next.as_mut().unwrap().as_mut();
+        }
+
+        // 不能直接让 p 指针前进
+        // p = p.next
+        // 断开原链表中的每个节点的 next 指针
+        let next = p.as_mut().unwrap().next.take();
+        p = next
+    }
+
+    // 连接两个链表
+    // 将原链表的尾部节点的 next 指针置为 None
+    p1.next = None;
+    p2.next = None;
+
+    p1.next = dummy_head2.next;
+    dummy_head1.next
+}
+
+/// 合并两个有序链表
+pub(crate) fn merge_two_list(v1: Vec<u32>, v2: Vec<u32>) -> Option<Box<ListNode<u32>>> {
+    // 创建 `虚拟头节点`
+    let mut dummy_head = ListNode::<u32>::new(0);
+    let mut current = &mut dummy_head;
+    let mut p1 = create(v1);
+    let mut p2 = create(v2);
+
+    while p1.is_some() && p2.is_some() {
+        let element1 = p1.as_ref().unwrap().element;
+        let element2 = p2.as_ref().unwrap().element;
+        if element1 > element2 {
+            current.next = p2.clone();
+            p2 = p2.unwrap().next
+        } else {
+            current.next = p1.clone();
+            p1 = p1.unwrap().next
+        }
+
+        // 移动当前指针, 不断前进
+        current = current.next.as_mut().unwrap()
+    }
+
+    if p1.is_some() {
+        current.next = p1
+    }
+
+    if p2.is_some() {
+        current.next = p2
+    }
+
+    dummy_head.next
+}
+
+/// 合并 K 个有序链表
+/**
+- 创建一个最小堆，用于存储每个链表的头节点。
+- 将每个链表的头节点插入到最小堆中。
+- 从最小堆中弹出堆顶节点（即当前最小的节点），将其添加到结果链表中。
+- 如果弹出的节点有下一个节点，则将下一个节点插入到最小堆中，以保持堆的性质。
+- 重复步骤 3 和步骤 4，直到最小堆为空。
+ **/
+pub(crate) fn merge_k_list(v: Vec<Vec<u32>>) -> Option<Box<ListNode<u32>>> {
+    if v.is_empty() {
+        return None;
+    }
+
+    let mut dummy_head = ListNode::<u32>::new(0); // 虚拟头节点
+    let mut p = &mut dummy_head;
+
+    // 1. 创建一个最小堆，用于存储每个链表的头节点
+    let mut heap = BinaryMinHeap::new();
+
+    // 2. 将 K 个链表的头结点加入最小堆, 时间复杂度: O(K * m), K: 链表长度, m 是链表的平均长度
+    for v in v.iter() {
+        // 创建节点
+        let head = create(v.clone()); // O(m)，其中 m 是链表的平均长度
+        if let Some(head) = head {
+            heap.push(head)
+        }
+    }
+
+    // 时间复杂度为: O(K * log n), 假设弹出堆顶节点的时间复杂度为 O(log n)，其中 n 是堆中的元素数量, K: 链表长度
+    while !heap.is_empty() {
+        // 3. 从最小堆中弹出堆顶节点（即当前最小的节点），将其添加到结果链表中
+        let node = heap.delete(); // 时间复杂度为 O(K * log n)
+        p.next = node.clone();
+
+        // 4. 如果弹出的节点有下一个节点，则将下一个节点插入到最小堆中，以保持堆的性质。时间复杂度为 O(K * log n)
+        if let Some(mut node) = node {
+            let next = node.as_mut().next.take();
+            if let Some(next) = next {
+                heap.push(next.clone());
+            }
+        }
+
+        // p 指针不断前进
+        p = p.next.as_mut().unwrap().as_mut();
+    }
+
+    // 5. 将结果链表的最后一个节点的 next 字段设置为 None，以避免环形链表
+    p.next = None;
+
+    dummy_head.next
+}
+
+/// 单链表的倒数第 k 个节点
+/**
+  使用双指针
+  1. p1 指针先走 k 步
+  2. p2 指针从头开始走
+  3. 当 p1 指针走到结尾, 取 p2 指针对应的节点, 即为 k 节点
+  p1 指针和 p2指针中间相关 k 步
+*/
+pub(crate) fn find_from_end(v1: Vec<u32>, k: u32) -> Option<u32> {
+    if v1.is_empty() {
+        return None;
+    }
+
+    let len = (v1.len() - 1) as u32;
+    if k > len - 1 {
+        return None
+    }
+
+    let mut p1 = create(v1.clone());
+    let mut p2 = create(v1.clone());  // 2. p2 指针从头开始走
+
+    // 1. p1 指针先走 k 步
+    for _ in 0 .. k {
+        p1 = p1.unwrap().next;
+    }
+
+    // 3. 当 p1 指针走到结尾, 取 p2 指针对应的节点, 即为 k 节点
+    while p1.as_mut().is_some()  {
+        p1 = p1.as_mut().unwrap().next.take();
+        p2 = p2.as_mut().unwrap().next.take()
+    }
+
+    // 4. 结束后, 取 p2 指针对应的节点
+    return Some(p2.unwrap().element)
 }
