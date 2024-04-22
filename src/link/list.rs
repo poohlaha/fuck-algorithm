@@ -198,7 +198,31 @@ pub(crate) fn merge_k_list(v: Vec<Vec<u32>>) -> Option<Box<ListNode<u32>>> {
   3. 当 p1 指针走到结尾, 取 p2 指针对应的节点, 即为 k 节点
   p1 指针和 p2指针中间相关 k 步
 */
-pub(crate) fn find_from_end(v1: Vec<u32>, k: u32) -> Option<u32> {
+pub(crate) fn find_from_end(head: &Option<Box<ListNode<u32>>>, k: u32) -> Option<Box<ListNode<u32>>> {
+    if head.is_none() {
+        return None;
+    }
+
+    let mut p1 = head;
+    let mut p2 = head;  // 2. p2 指针从头开始走
+
+    for _ in 0 .. k {
+        p1 = &p1.as_ref().unwrap().next;
+    }
+
+    // 3. 当 p1 指针走到结尾, 取 p2 指针对应的节点, 即为 k 节点
+    while p1.as_ref().is_some()  {
+        p1 = &p1.as_ref().unwrap().next;
+        p2 = &p2.as_ref().unwrap().next;
+    }
+
+    // 4. 结束后, 取 p2 指针对应的节点
+    return p2.clone();
+}
+
+/// 删除链表的倒数第 N 个结点
+/// 查找到 N 的前一个节点 N + 1, 然后把 N + 1 的下一个节点指向 N - 1个节点
+pub(crate) fn remove_n_from_end(v1: Vec<u32>, k: u32) -> Option<Box<ListNode<u32>>> {
     if v1.is_empty() {
         return None;
     }
@@ -208,20 +232,17 @@ pub(crate) fn find_from_end(v1: Vec<u32>, k: u32) -> Option<u32> {
         return None
     }
 
-    let mut p1 = create(v1.clone());
-    let mut p2 = create(v1.clone());  // 2. p2 指针从头开始走
+    let mut dummy = ListNode::<u32>::new(0);
+    dummy.next = create(v1.clone());
 
-    // 1. p1 指针先走 k 步
-    for _ in 0 .. k {
-        p1 = p1.unwrap().next;
+    // 查找 N + 1 的节点
+    let mut node = find_from_end(&dummy.next, k + 1);
+    if let Some(mut head) = node.as_mut() {
+        if let Some(mut next_node) = head.next.take() {
+            head.next = next_node.next
+        }
     }
 
-    // 3. 当 p1 指针走到结尾, 取 p2 指针对应的节点, 即为 k 节点
-    while p1.as_mut().is_some()  {
-        p1 = p1.as_mut().unwrap().next.take();
-        p2 = p2.as_mut().unwrap().next.take()
-    }
-
-    // 4. 结束后, 取 p2 指针对应的节点
-    return Some(p2.unwrap().element)
+    return dummy.next;
 }
+

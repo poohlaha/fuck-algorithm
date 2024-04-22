@@ -1,4 +1,4 @@
-use crate::link::list::{find_from_end, merge_k_list, merge_two_list, partition, print};
+use crate::link::list::{merge_k_list, merge_two_list, partition, print, remove_n_from_end};
 use crate::tree::binary_heap::{BinaryHeap, BinaryMaxHeap, BinaryMinHeap};
 
 mod error;
@@ -9,7 +9,7 @@ fn main() {
     test_merge_two_list();
     test_partition();
     test_merge_k_list();
-    test_find_from_end();
+    test_remove_n_from_end();
     test_min_binary_heap();
     test_max_binary_heap();
 }
@@ -38,11 +38,11 @@ fn test_merge_k_list() {
     println!("\n")
 }
 
-/// 测试 `单链表的倒数第 k 个节点`
-fn test_find_from_end() {
-    println!("find from end");
-    let index = find_from_end(vec![1, 4, 5, 1, 3, 4, 2, 6], 4);
-    println!("{:?}", index);
+/// 测试 `删除链表的倒数第 N 个结点`
+fn test_remove_n_from_end() {
+    println!("remove n from end");
+    let head = remove_n_from_end(vec![1, 4, 5, 7, 3, 4, 2, 6], 4);
+    println!("{:#?}", head);
     println!("\n")
 }
 
