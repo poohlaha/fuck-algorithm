@@ -1,4 +1,4 @@
-use crate::link::list::{create, detect_cycle, has_cycle, merge_k_list, merge_two_list, middle_node, partition, print, remove_n_from_end};
+use crate::link::list::{create, detect_cycle, get_intersection_node, has_cycle, merge_k_list, merge_two_list, middle_node, partition, print, remove_n_from_end};
 use crate::tree::binary_heap::{BinaryHeap, BinaryMaxHeap, BinaryMinHeap};
 
 mod error;
@@ -13,6 +13,7 @@ fn main() {
     test_middle_node();
     test_has_cycle();
     test_detect_cycle();
+    test_get_intersection_node();
     test_min_binary_heap();
     test_max_binary_heap();
 }
@@ -72,6 +73,14 @@ fn test_detect_cycle() {
     let head = create(vec![1, 2, 5, 7, 3, 4, 2]);
     let flag = detect_cycle(head);
     println!("{:#?}", flag);
+    println!("\n")
+}
+
+/// 测试 `两个链表是否相交`
+fn test_get_intersection_node() {
+    println!("get intersection node");
+    let head = get_intersection_node(vec![1, 2, 5, 7, 4], vec![3, 8, 1, 2]);
+    println!("{:#?}", head);
     println!("\n")
 }
 

@@ -351,4 +351,51 @@ pub(crate) fn detect_cycle(head: Option<Box<ListNode<u32>>>) -> Option<Box<ListN
     return p1;
 }
 
+/// 两个链表是否相交
+/**
+  现有 A, B 两个链表
+  1. 列表长度不相等, p1 走一步，如果走到 A 链表末尾，转到 B 链表, p2 走一步，如果走到 B 链表末尾，转到 A 链表(如果没有相交，会造成死循环)
+  2. 列表长度相等, 循环两个列表来判断 p1 指针和 p2 指针是否相等
+  3. 直接把 A B 链接前后相连, 使用上面的 `寻找环形链表起点` 来查找, 这样会修改链表
+  此处主要判断长度不相等的情况
+*/
+pub(crate) fn get_intersection_node(v1: Vec<u32>, v2: Vec<u32>) -> Option<Box<ListNode<u32>>> {
+    if v1.is_empty() || v2.is_empty() {
+        return None
+    }
+
+    let len1 = v1.len();
+    let len2 = v2.len();
+    if len1 == len2 {
+        return None
+    }
+
+    let head1 = create(v1);
+    let head2 = create(v2);
+    let mut p1 = head1.clone();
+    let mut p2 = head2.clone();
+
+    // 1. 列表长度不相等, p1 走一步，如果走到 A 链表末尾，转到 B 链表, p2 走一步，如果走到 B 链表末尾，转到 A 链表
+    while p1 != p2 {
+        p1 = p1.unwrap().next;
+        p2 = p2.unwrap().next;
+
+        if p1.is_none() {
+            p1 = head2.clone();
+        }
+
+        if p2.is_none() {
+            p2 = head1.clone();
+        }
+    }
+
+    // 随便返回哪一个节点
+    if p1.is_none() {
+        return None;
+    }
+
+    p1.as_mut().unwrap().next.take();
+    return p1;
+}
+
 
