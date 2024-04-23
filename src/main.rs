@@ -1,4 +1,4 @@
-use crate::link::list::{merge_k_list, merge_two_list, partition, print, remove_n_from_end};
+use crate::link::list::{create, detect_cycle, has_cycle, merge_k_list, merge_two_list, middle_node, partition, print, remove_n_from_end};
 use crate::tree::binary_heap::{BinaryHeap, BinaryMaxHeap, BinaryMinHeap};
 
 mod error;
@@ -10,6 +10,9 @@ fn main() {
     test_partition();
     test_merge_k_list();
     test_remove_n_from_end();
+    test_middle_node();
+    test_has_cycle();
+    test_detect_cycle();
     test_min_binary_heap();
     test_max_binary_heap();
 }
@@ -43,6 +46,32 @@ fn test_remove_n_from_end() {
     println!("remove n from end");
     let head = remove_n_from_end(vec![1, 4, 5, 7, 3, 4, 2, 6], 4);
     println!("{:#?}", head);
+    println!("\n")
+}
+
+/// 测试 `删除链表的倒数第 N 个结点`
+fn test_middle_node() {
+    println!("middle node");
+    let head = middle_node(vec![1, 4, 5, 7, 3, 4, 2, 6]);
+    println!("{:#?}", head);
+    println!("\n")
+}
+
+/// 测试 `判断链表是否包含环`
+fn test_has_cycle() {
+    println!("has cycle");
+    let head = create(vec![1, 2, 5, 7, 3, 4, 2]);
+    let flag = has_cycle(head);
+    println!("{:#?}", flag);
+    println!("\n")
+}
+
+/// 测试 `寻找环形链表起点`
+fn test_detect_cycle() {
+    println!("detect cycle");
+    let head = create(vec![1, 2, 5, 7, 3, 4, 2]);
+    let flag = detect_cycle(head);
+    println!("{:#?}", flag);
     println!("\n")
 }
 
@@ -114,14 +143,14 @@ fn test_max_binary_heap() {
     println!("{:?}", heap);
 
     /*
-              9
-            /   \
-           7     5
-         /  \   / \
-        6    3 2   4
-       /
-      1
-     */
+             9
+           /   \
+          7     5
+        /  \   / \
+       6    3 2   4
+      /
+     1
+    */
 
     // delete
     println!("{:?}", heap.delete());
@@ -140,12 +169,12 @@ fn test_max_binary_heap() {
     println!("{:?}", heap);
 
     /*
-          6
-        /   \
-       4     5
-     /  \   /
-    1    3 2
-   */
+           6
+         /   \
+        4     5
+      /  \   /
+     1    3 2
+    */
 
     println!("\n")
 }

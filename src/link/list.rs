@@ -1,8 +1,8 @@
 //! 单向链表
 
+use crate::tree::binary_heap::{BinaryHeap, BinaryMinHeap};
 use std::cmp::Ordering;
 use std::fmt::Debug;
-use crate::tree::binary_heap::{BinaryHeap, BinaryMinHeap};
 
 #[derive(Clone, Debug)]
 pub struct ListNode<E> {
@@ -44,15 +44,18 @@ where
     if let Some(first) = first {
         let mut head = Some(Box::new(ListNode::<E>::new(first.clone())));
         let mut cur = &mut head;
+
         for x in arr.iter().skip(1) {
             let new_node = Some(Box::new(ListNode::new(x.clone())));
             if let Some(ref mut node) = cur {
-                node.next = new_node;
+                node.next = new_node.clone();
                 cur = &mut node.next;
             }
         }
 
-        return head;
+        // 判断是否环形，环形需要连接入口节点和其尾节点
+
+        return head.clone();
     }
 
     return None;
@@ -198,20 +201,23 @@ pub(crate) fn merge_k_list(v: Vec<Vec<u32>>) -> Option<Box<ListNode<u32>>> {
   3. 当 p1 指针走到结尾, 取 p2 指针对应的节点, 即为 k 节点
   p1 指针和 p2指针中间相关 k 步
 */
-pub(crate) fn find_from_end(head: &Option<Box<ListNode<u32>>>, k: u32) -> Option<Box<ListNode<u32>>> {
+pub(crate) fn find_from_end(
+    head: &Option<Box<ListNode<u32>>>,
+    k: u32,
+) -> Option<Box<ListNode<u32>>> {
     if head.is_none() {
         return None;
     }
 
     let mut p1 = head;
-    let mut p2 = head;  // 2. p2 指针从头开始走
+    let mut p2 = head; // 2. p2 指针从头开始走
 
-    for _ in 0 .. k {
+    for _ in 0..k {
         p1 = &p1.as_ref().unwrap().next;
     }
 
     // 3. 当 p1 指针走到结尾, 取 p2 指针对应的节点, 即为 k 节点
-    while p1.as_ref().is_some()  {
+    while p1.as_ref().is_some() {
         p1 = &p1.as_ref().unwrap().next;
         p2 = &p2.as_ref().unwrap().next;
     }
@@ -229,7 +235,7 @@ pub(crate) fn remove_n_from_end(v1: Vec<u32>, k: u32) -> Option<Box<ListNode<u32
 
     let len = (v1.len() - 1) as u32;
     if k > len - 1 {
-        return None
+        return None;
     }
 
     let mut dummy = ListNode::<u32>::new(0);
@@ -237,12 +243,112 @@ pub(crate) fn remove_n_from_end(v1: Vec<u32>, k: u32) -> Option<Box<ListNode<u32
 
     // 查找 N + 1 的节点
     let mut node = find_from_end(&dummy.next, k + 1);
-    if let Some(mut head) = node.as_mut() {
-        if let Some(mut next_node) = head.next.take() {
+    if let Some(head) = node.as_mut() {
+        if let Some(next_node) = head.next.take() {
             head.next = next_node.next
         }
     }
 
     return dummy.next;
 }
+
+/// 单链表的中点
+/**
+    1. 使用两个指针，一个称为快指针，另一个称为慢指针。初始时，两个指针都指向链表的头部
+    2. 开始移动指针。快指针每次向前移动两步，而慢指针每次向前移动一步
+    3. 快指针到达了链表的末尾，而慢指针刚好指向了链表的中点
+**/
+pub(crate) fn middle_node(v1: Vec<u32>) -> Option<Box<ListNode<u32>>> {
+    if v1.is_empty() {
+        return None;
+    }
+
+    // 1. 使用两个指针，一个称为快指针，另一个称为慢指针。初始时，两个指针都指向链表的头部
+    let mut p1 = create(v1.clone()); // 快指针
+    let mut p2 = create(v1.clone()); // 慢指针
+
+    // 2. 开始移动指针。快指针每次向前移动两步，而慢指针每次向前移动一步
+    while p1.is_some() && p1.as_ref().unwrap().next.is_some() {
+        p1 = p1.unwrap().next.unwrap().next;
+        p2 = p2.unwrap().next;
+    }
+
+    p2.as_mut().unwrap().next.take();
+    return p2;
+}
+
+/// 判断链表是否包含环
+/**
+    判断链表是否包含环时，可以使用快慢指针方法
+    使用两个指针，一个慢指针每次移动一个节点，而一个快指针每次移动两个节点。
+    如果链表中存在环，那么快指针最终会追上慢指针。
+ */
+pub(crate) fn has_cycle(head: Option<Box<ListNode<u32>>>) -> bool {
+    if head.is_none() {
+        return false;
+    }
+
+    // 1. 使用两个指针，一个称为快指针，另一个称为慢指针。初始时，两个指针都指向链表的头部
+    let mut p1 = head.clone(); // 快指针
+    let mut p2 = head.clone(); // 慢指针
+
+    // 2. 开始移动指针。快指针每次向前移动两步，而慢指针每次向前移动一步
+    while p1.is_some() && p1.as_ref().unwrap().next.is_some() {
+        p1 = p1.unwrap().next.unwrap().next;
+        p2 = p2.unwrap().next;
+
+        if p1 == p2 {
+            return true;
+        }
+    }
+
+    false
+}
+
+/// 寻找环形链表起点
+/**
+    给定一个链表的头节点 head, 返回链表开始入环的第一个节点。 如果链表无环，则返回空。
+    如果链表中有某个节点，可以通过连续跟踪 next 指针再次到达，则链表中存在环。 为了表示给定链表中的环，评测系统内部使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。
+    如果 pos 是 -1，则在该链表中没有环。注意：pos 不作为参数进行传递，仅仅是为了标识链表的实际情况。
+    不允许修改 链表。
+*/
+pub(crate) fn detect_cycle(head: Option<Box<ListNode<u32>>>) -> Option<Box<ListNode<u32>>> {
+    if head.is_none() {
+        return None;
+    }
+
+    // 1. 使用两个指针，一个称为快指针，另一个称为慢指针。初始时，两个指针都指向链表的头部
+    let mut p1 = head.clone(); // 快指针
+    let mut p2 = head.clone(); // 慢指针
+
+    // 2. 开始移动指针。快指针每次向前移动两步，而慢指针每次向前移动一步
+    let mut has_cycle = false;
+    while p1.is_some() && p1.as_ref().unwrap().next.is_some() {
+        p1 = p1.unwrap().next.unwrap().next;
+        p2 = p2.unwrap().next;
+
+        if p1 == p2 {
+            has_cycle = true;
+            break;
+        }
+    }
+
+    // 没有环
+    if !has_cycle {
+        return None
+    }
+
+    // 找到环的入口节点, 慢指针从 `头节点` 开始, 此时快指针还在原来位置循环, 放慢快指针脚步, 让快慢指针各走一步, 直到相遇
+    p2 = head.clone();
+
+    // 快慢指针同步前进，相交点就是环起点
+    while p1 != p2 {
+        p1 = p1.unwrap().next;
+        p2 = p2.unwrap().next;
+    }
+
+    p1.as_mut().unwrap().next.take();
+    return p1;
+}
+
 

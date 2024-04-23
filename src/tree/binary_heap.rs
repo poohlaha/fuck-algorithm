@@ -44,7 +44,7 @@ pub trait BinaryHeap<R> {
     **/
     fn parent(&self, i: usize) -> usize {
         if i == 0 {
-            return 0
+            return 0;
         }
 
         return (i - 1) / 2;
