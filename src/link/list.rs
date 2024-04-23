@@ -279,10 +279,10 @@ pub(crate) fn middle_node(v1: Vec<u32>) -> Option<Box<ListNode<u32>>> {
 
 /// 判断链表是否包含环
 /**
-    判断链表是否包含环时，可以使用快慢指针方法
-    使用两个指针，一个慢指针每次移动一个节点，而一个快指针每次移动两个节点。
-    如果链表中存在环，那么快指针最终会追上慢指针。
- */
+   判断链表是否包含环时，可以使用快慢指针方法
+   使用两个指针，一个慢指针每次移动一个节点，而一个快指针每次移动两个节点。
+   如果链表中存在环，那么快指针最终会追上慢指针。
+*/
 pub(crate) fn has_cycle(head: Option<Box<ListNode<u32>>>) -> bool {
     if head.is_none() {
         return false;
@@ -335,7 +335,7 @@ pub(crate) fn detect_cycle(head: Option<Box<ListNode<u32>>>) -> Option<Box<ListN
 
     // 没有环
     if !has_cycle {
-        return None
+        return None;
     }
 
     // 找到环的入口节点, 慢指针从 `头节点` 开始, 此时快指针还在原来位置循环, 放慢快指针脚步, 让快慢指针各走一步, 直到相遇
@@ -361,13 +361,13 @@ pub(crate) fn detect_cycle(head: Option<Box<ListNode<u32>>>) -> Option<Box<ListN
 */
 pub(crate) fn get_intersection_node(v1: Vec<u32>, v2: Vec<u32>) -> Option<Box<ListNode<u32>>> {
     if v1.is_empty() || v2.is_empty() {
-        return None
+        return None;
     }
 
     let len1 = v1.len();
     let len2 = v2.len();
     if len1 == len2 {
-        return None
+        return None;
     }
 
     let head1 = create(v1);
@@ -397,5 +397,3 @@ pub(crate) fn get_intersection_node(v1: Vec<u32>, v2: Vec<u32>) -> Option<Box<Li
     p1.as_mut().unwrap().next.take();
     return p1;
 }
-
-
