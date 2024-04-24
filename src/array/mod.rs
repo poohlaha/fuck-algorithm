@@ -1,2 +1,2 @@
-pub(crate) mod list;
+pub(crate) mod arr;
 pub(crate) mod test;
