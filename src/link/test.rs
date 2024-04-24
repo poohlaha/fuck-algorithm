@@ -1,7 +1,4 @@
-use crate::link::list::{
-    create, detect_cycle, get_intersection_node, has_cycle, merge_k_list, merge_two_list,
-    middle_node, partition, print, remove_n_from_end,
-};
+use crate::link::list::{create, delete_duplicates, detect_cycle, get_intersection_node, has_cycle, merge_k_list, merge_two_list, middle_node, partition, print, remove_n_from_end};
 use crate::tree::binary_heap::{BinaryHeap, BinaryMaxHeap, BinaryMinHeap};
 
 /// 测试 `合并两个有序链表`
@@ -66,6 +63,14 @@ fn test_detect_cycle() {
 fn test_get_intersection_node() {
     println!("get intersection node");
     let head = get_intersection_node(vec![1, 2, 5, 7, 4], vec![3, 8, 1, 2]);
+    println!("{:#?}", head);
+    println!("\n")
+}
+
+/// 测试 `删除排序列表中的重复元素`
+fn test_delete_duplicates() {
+    println!("delete duplicates");
+    let head = delete_duplicates(vec![1, 2, 2, 3, 4, 4, 5, 7, 8, 8]);
     println!("{:#?}", head);
     println!("\n")
 }
@@ -183,6 +188,7 @@ pub(crate) fn test() {
     test_has_cycle();
     test_detect_cycle();
     test_get_intersection_node();
+    test_delete_duplicates();
     test_min_binary_heap();
     test_max_binary_heap();
 }

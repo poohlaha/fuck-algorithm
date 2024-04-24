@@ -397,3 +397,35 @@ pub(crate) fn get_intersection_node(v1: Vec<u32>, v2: Vec<u32>) -> Option<Box<Li
     p1.as_mut().unwrap().next.take();
     return p1;
 }
+
+/// 删除排序列表中的重复元素(同数组 `删除有序数组中的重复项`)
+pub(crate) fn delete_duplicates(v1: Vec<u32>) -> Option<Box<ListNode<u32>>> {
+    if v1.is_empty() {
+        return None
+    }
+
+    let mut head1 = create(v1.clone());
+    let mut head2 = create(v1); // 保存头节点的引用
+    let mut p1 = &mut head1; // 快指针
+    let mut p2 = &mut head2; // 慢指针
+
+    while p1.is_some() {
+        if p1 != p2 {
+            p2.as_mut().unwrap().next = Some(p1.as_ref().unwrap().clone());
+            p2 = &mut p2.as_mut().unwrap().next;
+        }
+
+        p1 = &mut p1.as_mut().unwrap().next;
+    }
+
+    // 断开连接
+    if p1.is_some() && p1.as_mut().unwrap().next.is_some() {
+        p1.as_mut().unwrap().next.take();
+    }
+
+    if p2.is_some() && p2.as_mut().unwrap().next.is_some() {
+        p2.as_mut().unwrap().next.take();
+    }
+
+    return head2
+}

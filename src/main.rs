@@ -4,6 +4,6 @@ mod link;
 mod tree;
 
 fn main() {
-    // link::test::test();
+    link::test::test();
     array::test::test();
 }
