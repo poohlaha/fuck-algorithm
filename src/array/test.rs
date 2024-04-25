@@ -1,4 +1,4 @@
-use crate::array::arr::{binary_search, binary_search_first, move_k_element, remove_duplicates, remove_k_element};
+use crate::array::arr::{binary_search, find_left_bound, find_right_bound, move_k_element, remove_duplicates, remove_k_element};
 
 /// 测试 `删除有序数组中的重复项`
 fn test_remove_duplicates() {
@@ -31,10 +31,17 @@ fn test_binary_search() {
 }
 
 /// 测试 `寻找一个数, 如果有重复值, 则返回第一个找到的位置`
-fn test_binary_search_first() {
-    println!("binary search first");
-    let index = binary_search_first(vec![0, 0, 1, 1, 1, 2, 2, 3, 3, 4, 5, 5], 2);
-    println!("binary search first find index: {}", index);
+fn test_find_left_bound() {
+    println!("find left bound");
+    let index = find_left_bound(vec![0, 0, 1, 1, 1, 2, 2, 3, 3, 4, 5, 5], 2);
+    println!("find left bound index: {}", index);
+}
+
+/// 测试 `寻找一个数, 如果有重复值, 则返回第一个找到的位置`
+fn test_find_right_bound() {
+    println!("find right bound");
+    let index = find_right_bound(vec![0, 0, 1, 1, 1, 2, 2, 3, 3, 4, 5, 5], 1);
+    println!("find right bound index: {}", index);
 }
 
 pub(crate) fn test() {
@@ -42,5 +49,6 @@ pub(crate) fn test() {
     test_remove_k_element();
     test_move_k_element();
     test_binary_search();
-    test_binary_search_first();
+    test_find_left_bound();
+    test_find_right_bound();
 }
