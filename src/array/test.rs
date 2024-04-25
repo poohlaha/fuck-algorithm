@@ -1,4 +1,4 @@
-use crate::array::arr::{binary_search, move_k_element, remove_duplicates, remove_k_element};
+use crate::array::arr::{binary_search, binary_search_first, move_k_element, remove_duplicates, remove_k_element};
 
 /// 测试 `删除有序数组中的重复项`
 fn test_remove_duplicates() {
@@ -30,9 +30,17 @@ fn test_binary_search() {
     println!("binary search find index: {}", index);
 }
 
+/// 测试 `寻找一个数, 如果有重复值, 则返回第一个找到的位置`
+fn test_binary_search_first() {
+    println!("binary search first");
+    let index = binary_search_first(vec![0, 0, 1, 1, 1, 2, 2, 3, 3, 4, 5, 5], 2);
+    println!("binary search first find index: {}", index);
+}
+
 pub(crate) fn test() {
     test_remove_duplicates();
     test_remove_k_element();
     test_move_k_element();
     test_binary_search();
+    test_binary_search_first();
 }

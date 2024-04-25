@@ -81,7 +81,7 @@ pub(crate) fn move_k_element(v1: Vec<u32>, k: u32) -> Vec<u32> {
 }
 
 /// 二分查找
-pub(crate) fn binary_search(mut v1: Vec<u32>, k: u32) -> i32 {
+pub(crate) fn binary_search(v1: Vec<u32>, k: u32) -> i32 {
     if v1.is_empty() {
         return -1;
     }
@@ -108,7 +108,8 @@ pub(crate) fn binary_search(mut v1: Vec<u32>, k: u32) -> i32 {
     }
 
     while left <= right {
-        let middle = (left + right).div_ceil(2); // 向下取整
+        // let middle = (left + right).div_ceil(2); // 向下取整, 可能有益处风险
+        let middle = left + (right - left).div_ceil(2); // left + [left, right] 的中位数
         let value1 = v1.get(middle).unwrap().clone();
         if k == value1 {
             return middle as i32;
@@ -118,10 +119,47 @@ pub(crate) fn binary_search(mut v1: Vec<u32>, k: u32) -> i32 {
             left = middle + 1; // 当大于时, 左边界在 middle 右边
         }
 
-        if left < 0 || right > v1.len() - 1 {
+        if right <= 0 || left >= v1.len() - 1 {
             return -1;
         }
     }
 
     return -1;
+}
+
+/// 寻找一个数, 如果有重复值, 则返回第一个找到的位置
+pub(crate) fn binary_search_first(v1: Vec<u32>, k: u32) -> i32 {
+    if v1.is_empty() {
+        return -1;
+    }
+
+    let mut left = 0;
+    let mut right = v1.len() - 1;
+    let mut result: i32 = -1;
+
+    // 判断第一个值是否等于 k
+    let first = v1.get(left).unwrap().clone();
+    if first == k {
+        return left as i32;
+    }
+
+    while left <= right {
+        // let middle = (left + right).div_ceil(2); // 向下取整, 可能有益处风险
+        let middle = left + (right - left).div_ceil(2); // left + [left, right] 的中位数
+        let value1 = v1.get(middle).unwrap().clone();
+        if k == value1 {
+            result = middle as i32;
+            right = middle - 1; // 继续向左搜索
+        } else if k < value1 {
+            right = middle - 1; // 当小于时, 右边界在 middle 左边
+        } else if k > value1 {
+            left = middle + 1; // 当大于时, 左边界在 middle 右边
+        }
+
+        if right <= 0 || left >= v1.len() - 1 {
+            return -1;
+        }
+    }
+
+    result
 }
