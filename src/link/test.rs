@@ -1,4 +1,7 @@
-use crate::link::list::{create, delete_duplicates, detect_cycle, get_intersection_node, has_cycle, merge_k_list, merge_two_list, middle_node, partition, print, remove_n_from_end};
+use crate::link::list::{
+    create, delete_duplicates, detect_cycle, get_intersection_node, has_cycle, merge_k_list,
+    merge_two_list, middle_node, partition, print, remove_n_from_end,
+};
 use crate::tree::binary_heap::{BinaryHeap, BinaryMaxHeap, BinaryMinHeap};
 
 /// 测试 `合并两个有序链表`

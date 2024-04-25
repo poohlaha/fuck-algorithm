@@ -401,7 +401,7 @@ pub(crate) fn get_intersection_node(v1: Vec<u32>, v2: Vec<u32>) -> Option<Box<Li
 /// 删除排序列表中的重复元素(同数组 `删除有序数组中的重复项`)
 pub(crate) fn delete_duplicates(v1: Vec<u32>) -> Option<Box<ListNode<u32>>> {
     if v1.is_empty() {
-        return None
+        return None;
     }
 
     let mut head1 = create(v1.clone());
@@ -427,5 +427,5 @@ pub(crate) fn delete_duplicates(v1: Vec<u32>) -> Option<Box<ListNode<u32>>> {
         p2.as_mut().unwrap().next.take();
     }
 
-    return head2
+    return head2;
 }
