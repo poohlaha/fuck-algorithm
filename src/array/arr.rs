@@ -35,3 +35,93 @@ pub(crate) fn remove_duplicates(v1: Vec<u32>) -> (u32, Vec<u32>) {
 
     return (i, v);
 }
+
+/// 移除所有数值等于 k 的元素
+pub(crate) fn remove_k_element(v1: Vec<u32>, k: u32) -> (u32, Vec<u32>) {
+    if v1.is_empty() {
+        return (0, Vec::new());
+    }
+
+    let len = v1.len();
+    let mut p1 = 0; // 快指针
+    let mut p2 = 0; // 慢指针
+
+    let mut v: Vec<u32> = Vec::new();
+    let mut i = 0;
+    while p1 < len {
+        let value1 = v1.get(p1).unwrap();
+        if value1.clone() != k {
+            p2 = p1;
+            i += 1;
+            v.push(value1.clone());
+        }
+
+        p1 += 1;
+    }
+
+    return (i, v);
+}
+
+/// 将数组中的所有为 k 的元素移动到数组末尾
+pub(crate) fn move_k_element(v1: Vec<u32>, k: u32) -> Vec<u32> {
+    let (new_len, new_v1) = remove_k_element(v1.clone(), k);
+    if new_len == 0 || new_v1.len() == 0 {
+        return Vec::new();
+    }
+
+    let i = v1.len() as u32 - new_len;
+    let mut v2 = new_v1.clone();
+    if i > 0 {
+        for _ in 0..i {
+            v2.push(k);
+        }
+    }
+
+    return v2;
+}
+
+/// 二分查找
+pub(crate) fn binary_search(mut v1: Vec<u32>, k: u32) -> i32 {
+    if v1.is_empty() {
+        return -1;
+    }
+
+    // 升序
+    // v1.sort();
+
+    // 降序
+    // v1.sort_by(|a, b| b.cmp(a));
+
+    let mut left = 0;
+    let mut right = v1.len() - 1;
+
+    // 判断第一个值是否等于 k
+    let first = v1.get(left).unwrap().clone();
+    if first == k {
+        return left as i32;
+    }
+
+    // 判断最后一个会是是否等于 k
+    let last = v1.get(right).unwrap().clone();
+    if last == k {
+        return right as i32;
+    }
+
+    while left <= right {
+        let middle = (left + right).div_ceil(2); // 向下取整
+        let value1 = v1.get(middle).unwrap().clone();
+        if k == value1 {
+            return middle as i32;
+        } else if k < value1 {
+            right = middle - 1; // 当小于时, 右边界在 middle 左边
+        } else if k > value1 {
+            left = middle + 1; // 当大于时, 左边界在 middle 右边
+        }
+
+        if left < 0 || right > v1.len() - 1 {
+            return -1;
+        }
+    }
+
+    return -1;
+}
