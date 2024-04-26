@@ -1,4 +1,7 @@
-use crate::array::arr::{binary_search, find_left_bound, find_right_bound, move_k_element, remove_duplicates, remove_k_element};
+use crate::array::arr::{
+    binary_search, find_left_bound, find_right_bound, move_k_element, remove_duplicates,
+    remove_k_element,
+};
 
 /// 测试 `删除有序数组中的重复项`
 fn test_remove_duplicates() {
