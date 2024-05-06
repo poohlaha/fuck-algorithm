@@ -75,6 +75,14 @@ pub(crate) fn find_min_str(s: &str, t: &str) -> String {
 }
 
 /// 查找所有字母异位词
+/**
+  把 t 字符串中的字符存入到集合A中, 设置左、右、有效指针, 初始化的值为 0, 设置集合 B, 用于存放 t 中字符值的出现个数
+  1. 读取集合中的字符, 当存在于集合中 A 中时, B 集合统计出现次数, 当 B 集合中出现的次数 = A集中的次数时, 有效指针加 1
+  2. 当左指针 - 右指针 >= 集合 A 的长度时
+   1) 当左指针 - 右指针 = 集合 A 的长度, 说明满足要求, 存起来
+   2) 读取左指针对应的字符, 当存在于集合中A中时, B 集合统计出现次数, 当 B 集合中出现的次数 = A集中的次数时, 有效指针减 1,
+      当存在于集合中A中时, 集合中出现次数滅 1, 然后收缩窗口(左指针加 1), 直到不再包含集合A中的所有字符
+**/
 pub(crate) fn find_anagrams(s: &str, t: &str) -> Vec<usize> {
     if s.is_empty() || t.is_empty() {
         return Vec::new();
@@ -131,6 +139,12 @@ pub(crate) fn find_anagrams(s: &str, t: &str) -> Vec<usize> {
 }
 
 /// 最长无重复子串
+/**
+设置左、右、有效指针、最大长度、开始位置、结束位置, 初始化的值为 0, 设置集合 A, 用于存放 t 中字符值的出现个数
+1. 读取集合中的字符, 把字符存入集合 A 中, 并统计出现的次数
+2. 当集合 A 中出现次数 > 1 个时, 获取左指针对应字符, 集合 A 中字符减 1, 然后收缩窗口(左指针加 1)
+3. 当 右指针 - 左指针 > 最大长度时, 设置最大长度 = 右指针 - 左指针, 并设置开始位置 = 左指针, 结束位置 = 右指针
+ **/
 pub(crate) fn length_of_longest_sub_string(s: &str) -> String {
     if s.is_empty() {
         return String::new();
@@ -165,4 +179,29 @@ pub(crate) fn length_of_longest_sub_string(s: &str) -> String {
     }
 
     s[start..end].to_string()
+}
+
+/// 反转字符串
+/**
+  使用左右指针
+  1. 左指针初始值为 0, 右指针初始化值 为 最后一个数
+  2. 当左指针值 < 右指针值时, 交换两索引位置
+**/
+pub(crate) fn reverse_str(s: &str) -> String {
+    if s.is_empty() {
+        return String::new();
+    }
+
+    let str = s.clone();
+    let mut chars: Vec<char> = s.chars().collect();
+    let mut left = 0;
+    let mut right = chars.len() - 1;
+
+    while left < right {
+        chars.swap(left, right);
+        left += 1;
+        right -= 1;
+    }
+
+    chars.iter().collect()
 }

@@ -183,6 +183,7 @@ fn test_max_binary_heap() {
 }
 
 pub(crate) fn test() {
+    println!("----- link start ------");
     test_merge_two_list();
     test_partition();
     test_merge_k_list();
@@ -194,4 +195,6 @@ pub(crate) fn test() {
     test_delete_duplicates();
     test_min_binary_heap();
     test_max_binary_heap();
+    println!("----- link end ------");
+    println!();
 }
