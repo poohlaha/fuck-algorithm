@@ -73,3 +73,96 @@ pub(crate) fn find_min_str(s: &str, t: &str) -> String {
 
     chars[start..start + len].iter().collect()
 }
+
+/// 查找所有字母异位词
+pub(crate) fn find_anagrams(s: &str, t: &str) -> Vec<usize> {
+    if s.is_empty() || t.is_empty() {
+        return Vec::new();
+    }
+
+    let mut target: HashMap<char, usize> = HashMap::new(); // 目标字符串, 用来存储字符串 t 中每个字符出现的次数
+    let mut window: HashMap<char, usize> = HashMap::new(); // 待搜索字符串, 用来存储当前窗口中每个字符出现的次数
+
+    // 统计字符串 t 中的字符
+    for ch in t.chars() {
+        *target.entry(ch).or_insert(0) += 1;
+    }
+
+    // 设置左右指针, 分别指向开头
+    let mut left = 0; // 左指针
+    let mut right = 0; // 右指针
+    let mut validate = 0; // 有效值, 等于 target 的长度
+    let mut result: Vec<usize> = Vec::new();
+
+    let chars: Vec<char> = s.chars().collect();
+    while right < chars.len() {
+        let c = chars[right];
+        right += 1;
+
+        // 判断是否存在, 存在则添加到 window 中
+        if let Some(b) = target.get(&c) {
+            *window.entry(c).or_insert(0) += 1; // 存在则插入并增加1, 不存在则插入并增加1
+            if window[&c] == *b {
+                validate += 1;
+            }
+        }
+
+        // 判断左侧窗口是否要收缩
+        while right - left >= target.len() {
+            if validate == target.len() {
+                result.push(left);
+            }
+
+            let d = chars[left];
+            left += 1;
+
+            // 直到窗口不再包含目标字符串中的所有字符
+            if let Some(b) = target.get(&d) {
+                if window[&d] == *b {
+                    validate -= 1;
+                }
+
+                window.entry(d).and_modify(|x| *x -= 1);
+            }
+        }
+    }
+
+    result
+}
+
+/// 最长无重复子串
+pub(crate) fn length_of_longest_sub_string(s: &str) -> String {
+    if s.is_empty() {
+        return String::new();
+    }
+
+    let mut window: HashMap<char, usize> = HashMap::new(); // 待搜索字符串, 用来存储当前窗口中每个字符出现的次数
+    let mut left = 0; // 左指针
+    let mut right = 0; // 右指针
+    let mut max_length = 0;
+    let mut start = 0;
+    let mut end = 0;
+
+    let chars: Vec<char> = s.chars().collect();
+    while right < chars.len() {
+        let c = chars[right];
+        right += 1;
+
+        *window.entry(c).or_insert(0) += 1; // 存在则插入并增加1, 不存在则插入并增加1
+
+        while window[&c] > 1 {
+            let d = chars[left];
+            left += 1;
+
+            window.entry(d).and_modify(|x| *x -= 1);
+        }
+
+        if right - left > max_length {
+            max_length = right - left;
+            start = left;
+            end = right;
+        }
+    }
+
+    s[start..end].to_string()
+}
