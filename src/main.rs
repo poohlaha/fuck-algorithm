@@ -8,4 +8,5 @@ fn main() {
     link::test::test();
     array::test::test();
     string::test::test();
+    tree::test::test();
 }
