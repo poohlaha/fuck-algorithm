@@ -1,6 +1,7 @@
 //! 字符串操作
 
 use std::collections::HashMap;
+use std::os::unix::raw::ino_t;
 
 /// 最小覆盖子串
 /// 给一个字符串 s 、一个字符串 t 。返回 s 中涵盖 t 所有字符的最小子串。如果 s 中不存在涵盖 t 所有字符的子串，则返回空字符串 ""
@@ -184,7 +185,7 @@ pub(crate) fn length_of_longest_sub_string(s: &str) -> String {
 /// 反转字符串
 /**
   使用左右指针
-  1. 左指针初始值为 0, 右指针初始化值 为 最后一个数
+  1. 左指针初始值为 0, 右指针初始化值为 最后一个数
   2. 当左指针值 < 右指针值时, 交换两索引位置
 **/
 pub(crate) fn reverse_str(s: &str) -> String {
@@ -192,7 +193,6 @@ pub(crate) fn reverse_str(s: &str) -> String {
         return String::new();
     }
 
-    let str = s.clone();
     let mut chars: Vec<char> = s.chars().collect();
     let mut left = 0;
     let mut right = chars.len() - 1;
@@ -204,4 +204,79 @@ pub(crate) fn reverse_str(s: &str) -> String {
     }
 
     chars.iter().collect()
+}
+
+/// 回文串判断
+/**
+使用左右指针, 左指针指向开头, 右指针指向结果, 同时相向移动指针，判断是否相等, 如果有一个值不相等，那第就不是回文串
+回文串: level, aba, abba 等
+ **/
+pub(crate) fn is_palindrome(s: &str) -> bool {
+    if s.is_empty() {
+        return false;
+    }
+
+    let mut chars: Vec<char> = s.chars().collect();
+    let mut left = 0;
+    let mut right = chars.len() - 1;
+
+    while left <= right {
+        let value1 = chars.get(left).unwrap().clone();
+        let value2 = chars.get(right).unwrap().clone();
+        if value1 != value2 {
+            return false;
+        }
+        left += 1;
+        right -= 1;
+    }
+
+    true
+}
+
+/// 查找最长回文串
+/**
+ 从某个字符开始向两边扩散查找
+ 如果输入相同的 left 和 right，就相当于寻找长度为奇数的回文串
+ 如果输入相邻的 left 和 right，则相当于寻找长度为偶数的回文串。
+*/
+pub(crate) fn longest_palindrome(s: &str) -> String {
+    if s.is_empty() {
+        return String::new();
+    }
+
+    let mut chars: Vec<char> = s.chars().collect();
+    let palindrome = |l: usize, r: usize| -> String {
+        let mut left = l.clone() as i32;
+        let mut right = r.clone() as i32;
+
+        if left == 0 && right == 0 {
+            return s[l..=r].to_string();
+        }
+
+        let len = (s.len() - 1) as i32;
+        while left >= 0
+            && right <= len
+            && chars.get(left as usize).unwrap().clone()
+                == chars.get(right as usize).unwrap().clone()
+        {
+            left -= 1;
+            right += 1;
+        }
+
+        let ll = (left + 1) as usize;
+        let rr = right as usize;
+        s[ll..rr].to_string() // 右边不包含
+    };
+
+    // 如果输入相同的 left 和 right，就相当于寻找长度为奇数的回文串
+    // 如果输入相邻的 left 和 right，则相当于寻找长度为偶数的回文串。
+    let mut result = String::new();
+    for i in 0..chars.len() {
+        let s1 = palindrome(i, i); // 以当前字符为中心，回文串为奇数长度
+        let s2 = palindrome(i, i + 1); // 以当前字符和下一个字符为中心，回文串为偶数长度
+        result = if result.len() > s1.len() { result } else { s1 };
+        result = if result.len() > s2.len() { result } else { s2 }
+    }
+
+    result
 }
