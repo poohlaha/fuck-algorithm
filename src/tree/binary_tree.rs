@@ -141,7 +141,7 @@ pub(crate) fn get_node_count(root: Option<Box<TreeNode<u32>>>) -> u32 {
     0
 }
 
-/// 计算二叉树的最长直径长度
+/// 计算二叉树的最长直径长度(后序遍历)
 pub(crate) fn diameter_of_binary_tree(root: TreeNode<u32>) -> u32 {
     let mut max_diameter: u32 = 0;
 
