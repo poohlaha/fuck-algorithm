@@ -104,3 +104,36 @@ pub(crate) fn postorder_traverse(root: Option<Box<TreeNode<u32>>>) -> Vec<u32> {
     }
     result
 }
+
+/// 计算每个节点所在的层数
+/**
+ 根节点看做第一层
+*/
+pub(crate) fn get_pre_node_layer(root: Option<Box<TreeNode<u32>>>, level: u32) {
+    if let Some(node) = root {
+        // 打印当前节点的层数和节点值
+        println!("Node {} is at level {}", node.element, level);
+
+        // 递归处理左子树和右子树，层数加 1
+        get_pre_node_layer(node.left, level + 1);
+        get_pre_node_layer(node.right, level + 1);
+    }
+}
+
+/// 计算每个节点的左右子树各有多少节点
+pub(crate) fn get_node_count(root: Option<Box<TreeNode<u32>>>) -> u32 {
+    if let Some(node) = root {
+        let left_count = get_node_count(node.left);
+        let right_count = get_node_count(node.right);
+
+        // 后序位置
+        println!(
+            "node `{}` left count: {}, right count:{}",
+            node.element, left_count, right_count
+        );
+
+        return left_count + right_count + 1;
+    }
+
+    0
+}

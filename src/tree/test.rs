@@ -1,41 +1,57 @@
 use crate::tree::binary_tree::{
-    get_max_depth, get_max_depth2, inorder_traverse, postorder_traverse, preorder_traverse,
-    TreeNode,
+    get_max_depth, get_max_depth2, get_node_count, get_pre_node_layer, inorder_traverse,
+    postorder_traverse, preorder_traverse, TreeNode,
 };
 
 /// 测试 `合并两个有序链表`
 fn test_get_max_depth() {
     let root = test_create_tree1();
     let deep = get_max_depth(root);
-    println!("get max depth: {}", deep);
+    println!("get max depth: {}\n", deep);
 }
 
 /// 测试 `查找二叉树的最大深度`
 fn test_get_max_depth2() {
     let root = test_create_tree1();
     let deep = get_max_depth2(Some(Box::new(root)));
-    println!("get max depth2: {}", deep);
+    println!("get max depth2: {}\n", deep);
 }
 
 /// 测试 `前序遍历`
 fn test_preorder_traverse() {
     let root = test_create_tree2();
     let arr = preorder_traverse(Some(Box::new(root)));
-    println!("preorder traverse: {:?}", arr);
+    println!("preorder traverse: {:?}\n", arr);
 }
 
 /// 测试 `中序遍历`
 fn test_inorder_traverse() {
     let root = test_create_tree2();
     let arr = inorder_traverse(Some(Box::new(root)));
-    println!("inorder traverse: {:?}", arr);
+    println!("inorder traverse: {:?}\n", arr);
 }
 
 /// 测试 `后序遍历`
 fn test_postorder_traverse() {
     let root = test_create_tree2();
     let arr = postorder_traverse(Some(Box::new(root)));
-    println!("postorder traverse: {:?}", arr);
+    println!("postorder traverse: {:?}\n", arr);
+}
+
+/// 测试 `计算每个节点所在的层数`
+fn test_get_pre_node_layer() {
+    println!("get pre node layer ...");
+    let root = test_create_tree2();
+    get_pre_node_layer(Some(Box::new(root)), 1);
+    println!("");
+}
+
+/// 测试 `计算每个节点的左右子树各有多少节点`
+fn test_get_node_count() {
+    println!("get node count ...");
+    let root = test_create_tree2();
+    get_node_count(Some(Box::new(root)));
+    println!("");
 }
 
 /**
@@ -106,6 +122,8 @@ pub(crate) fn test() {
     test_preorder_traverse();
     test_inorder_traverse();
     test_postorder_traverse();
+    test_get_pre_node_layer();
+    test_get_node_count();
     println!("----- tree end ------");
     println!();
 }
