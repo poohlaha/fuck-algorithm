@@ -1,5 +1,7 @@
 //! 二叉树
 
+use std::collections::VecDeque;
+
 pub(crate) struct TreeNode<E> {
     pub(crate) element: E,
     pub(crate) left: Option<Box<TreeNode<E>>>,
@@ -159,4 +161,36 @@ pub(crate) fn diameter_of_binary_tree(root: TreeNode<u32>) -> u32 {
     }
 
     max_depth(Some(Box::new(root)), &mut max_diameter)
+}
+
+/// 层序遍历(广度优先搜索（BFS))
+/**
+    层序遍历的过程中，可以使用队列（FIFO）来保存待访问的节点，保证按照从上到下、从左到右的顺序逐层遍历。这样遍历的结果就是二叉树节点的层级顺序。
+  1. 将根节点放入队列中。
+  2. 从队列中取出一个节点，访问该节点，并将其所有未访问过的子节点（如果有）依次放入队列中。
+  3. 重复步骤 2 直到队列为空，表示所有节点都已访问。
+*/
+pub(crate) fn level_traverse(root: Option<Box<TreeNode<u32>>>) -> Vec<u32> {
+    let mut queue = VecDeque::new(); // 双端队列
+    let mut result = Vec::new();
+
+    if let Some(root) = root {
+        queue.push_back(root);
+
+        while !queue.is_empty() {
+            if let Some(node) = queue.pop_front() {
+                result.push(node.element);
+
+                if let Some(left) = node.left {
+                    queue.push_back(left)
+                }
+
+                if let Some(right) = node.right {
+                    queue.push_back(right)
+                }
+            }
+        }
+    }
+
+    result
 }

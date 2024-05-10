@@ -1,6 +1,6 @@
 use crate::tree::binary_tree::{
     diameter_of_binary_tree, get_max_depth, get_max_depth2, get_node_count, get_pre_node_layer,
-    inorder_traverse, postorder_traverse, preorder_traverse, TreeNode,
+    inorder_traverse, level_traverse, postorder_traverse, preorder_traverse, TreeNode,
 };
 
 /// 测试 `合并两个有序链表`
@@ -59,6 +59,13 @@ fn test_diameter_of_binary_tree() {
     let root = test_create_tree3();
     let max = diameter_of_binary_tree(root);
     println!("diameter of binary tree: {}", max);
+}
+
+/// 测试 `层序遍历`
+fn test_level_traverse() {
+    let root = test_create_tree2();
+    let arr = level_traverse(Some(Box::new(root)));
+    println!("level traverse: {:?}", arr);
 }
 
 /**
@@ -159,6 +166,7 @@ pub(crate) fn test() {
     test_get_pre_node_layer();
     test_get_node_count();
     test_diameter_of_binary_tree();
+    test_level_traverse();
     println!("----- tree end ------");
     println!();
 }
