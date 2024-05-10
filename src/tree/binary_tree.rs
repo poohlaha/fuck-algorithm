@@ -56,6 +56,7 @@ pub(crate) fn get_max_depth2(root: Option<Box<TreeNode<u32>>>) -> u32 {
         let left_depth = get_max_depth2(root.left);
         let right_depth = get_max_depth2(root.right);
 
+        // 返回当前节点的深度（左右子树中深度较大的一个加上当前节点）
         return std::cmp::max(left_depth, right_depth) + 1; // 1 是根节点
     }
 
@@ -136,4 +137,26 @@ pub(crate) fn get_node_count(root: Option<Box<TreeNode<u32>>>) -> u32 {
     }
 
     0
+}
+
+/// 计算二叉树的最长直径长度
+pub(crate) fn diameter_of_binary_tree(root: TreeNode<u32>) -> u32 {
+    let mut max_diameter: u32 = 0;
+
+    fn max_depth(root: Option<Box<TreeNode<u32>>>, max_diameter: &mut u32) -> u32 {
+        if let Some(node) = root {
+            let left_max = max_depth(node.left, max_diameter);
+            let right_max = max_depth(node.right, max_diameter);
+
+            // 后序位置，顺便计算最大直径
+            *max_diameter = std::cmp::max(*max_diameter, left_max + right_max);
+
+            // 返回当前节点的深度（左右子树中深度较大的一个加上当前节点）
+            return 1 + std::cmp::max(left_max, right_max);
+        }
+
+        0
+    }
+
+    max_depth(Some(Box::new(root)), &mut max_diameter)
 }

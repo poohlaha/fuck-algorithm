@@ -1,6 +1,6 @@
 use crate::tree::binary_tree::{
-    get_max_depth, get_max_depth2, get_node_count, get_pre_node_layer, inorder_traverse,
-    postorder_traverse, preorder_traverse, TreeNode,
+    diameter_of_binary_tree, get_max_depth, get_max_depth2, get_node_count, get_pre_node_layer,
+    inorder_traverse, postorder_traverse, preorder_traverse, TreeNode,
 };
 
 /// 测试 `合并两个有序链表`
@@ -52,6 +52,13 @@ fn test_get_node_count() {
     let root = test_create_tree2();
     get_node_count(Some(Box::new(root)));
     println!("");
+}
+
+/// 测试 `计算二叉树的最长直径长度`
+fn test_diameter_of_binary_tree() {
+    let root = test_create_tree3();
+    let max = diameter_of_binary_tree(root);
+    println!("diameter of binary tree: {}", max);
 }
 
 /**
@@ -115,6 +122,33 @@ fn test_create_tree2() -> TreeNode<u32> {
     return root;
 }
 
+/**
+          9
+            \
+             1
+           /   \
+          2    3
+        /   \
+       5     4
+*/
+fn test_create_tree3() -> TreeNode<u32> {
+    let mut root = TreeNode::new(9);
+    let mut node1 = TreeNode::new(1);
+    let mut node2 = TreeNode::new(2);
+    let node3 = TreeNode::new(3);
+    let node4 = TreeNode::new(4);
+    let node5 = TreeNode::new(5);
+
+    node2.left = Some(Box::new(node5));
+    node2.right = Some(Box::new(node4));
+
+    node1.left = Some(Box::new(node2));
+    node1.right = Some(Box::new(node3));
+    root.right = Some(Box::new(node1));
+
+    return root;
+}
+
 pub(crate) fn test() {
     println!("----- tree start ------");
     test_get_max_depth();
@@ -124,6 +158,7 @@ pub(crate) fn test() {
     test_postorder_traverse();
     test_get_pre_node_layer();
     test_get_node_count();
+    test_diameter_of_binary_tree();
     println!("----- tree end ------");
     println!();
 }
