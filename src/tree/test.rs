@@ -1,4 +1,7 @@
-use crate::tree::binary_tree::{get_max_depth, get_max_depth2, TreeNode};
+use crate::tree::binary_tree::{
+    get_max_depth, get_max_depth2, inorder_traverse, postorder_traverse, preorder_traverse,
+    TreeNode,
+};
 
 /// 测试 `合并两个有序链表`
 fn test_get_max_depth() {
@@ -12,6 +15,27 @@ fn test_get_max_depth2() {
     let root = test_create_tree1();
     let deep = get_max_depth2(Some(Box::new(root)));
     println!("get max depth2: {}", deep);
+}
+
+/// 测试 `前序遍历`
+fn test_preorder_traverse() {
+    let root = test_create_tree2();
+    let arr = preorder_traverse(Some(Box::new(root)));
+    println!("preorder traverse: {:?}", arr);
+}
+
+/// 测试 `中序遍历`
+fn test_inorder_traverse() {
+    let root = test_create_tree2();
+    let arr = inorder_traverse(Some(Box::new(root)));
+    println!("inorder traverse: {:?}", arr);
+}
+
+/// 测试 `后序遍历`
+fn test_postorder_traverse() {
+    let root = test_create_tree2();
+    let arr = postorder_traverse(Some(Box::new(root)));
+    println!("postorder traverse: {:?}", arr);
 }
 
 /**
@@ -34,10 +58,54 @@ fn test_create_tree1() -> TreeNode<u32> {
     return root;
 }
 
+/**
+          1
+        /   \
+      2       3
+    /  \    /   \
+   5    4  8    9
+      /   \
+     6    7
+
+           root  ----- root.left -----    -- root.right--
+  preorder: 1    2    5    4    6    7    3    8    9
+  root: 1
+  root.left: 2 5 4 6 7
+  root.right 3 8 9
+**/
+fn test_create_tree2() -> TreeNode<u32> {
+    let mut root = TreeNode::new(1);
+    let mut node2 = TreeNode::new(2);
+    let mut node3 = TreeNode::new(3);
+    let mut node4 = TreeNode::new(4);
+    let node5 = TreeNode::new(5);
+    let node6 = TreeNode::new(6);
+    let node7 = TreeNode::new(7);
+    let node8 = TreeNode::new(8);
+    let node9 = TreeNode::new(9);
+
+    node3.left = Some(Box::new(node8));
+    node3.right = Some(Box::new(node9));
+
+    node4.left = Some(Box::new(node6));
+    node4.right = Some(Box::new(node7));
+
+    node2.left = Some(Box::new(node5));
+    node2.right = Some(Box::new(node4));
+
+    root.left = Some(Box::new(node2));
+    root.right = Some(Box::new(node3));
+
+    return root;
+}
+
 pub(crate) fn test() {
     println!("----- tree start ------");
     test_get_max_depth();
     test_get_max_depth2();
+    test_preorder_traverse();
+    test_inorder_traverse();
+    test_postorder_traverse();
     println!("----- tree end ------");
     println!();
 }

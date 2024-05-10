@@ -16,7 +16,7 @@ impl<E> TreeNode<E> {
     }
 }
 
-/// 查找二叉树的最大深度(时间复杂度为 O(n))
+/// 查找二叉树的最大深度(前序遍历, 快速排序)(时间复杂度为 O(n))
 /**
   根节点深度从 1 开始, 先遍历左子节点, 再遍历右子节点,
   1. 前序位置的代码在刚刚进入一个二叉树节点的时候执行；
@@ -50,7 +50,7 @@ pub(crate) fn get_max_depth(root: TreeNode<u32>) -> u32 {
     result
 }
 
-/// 查找二叉树的最大深度2(时间复杂度为 O(n))
+/// 查找二叉树的最大深度2(后序遍历, 归并排序)(时间复杂度为 O(n))
 pub(crate) fn get_max_depth2(root: Option<Box<TreeNode<u32>>>) -> u32 {
     if let Some(root) = root {
         let left_depth = get_max_depth2(root.left);
@@ -60,4 +60,47 @@ pub(crate) fn get_max_depth2(root: Option<Box<TreeNode<u32>>>) -> u32 {
     }
 
     0
+}
+
+/// 前序遍历
+/**
+  根节点在首位, 然后左子树的前序遍历结果, 最后是右子树的前序遍历结果
+  一棵二叉树的前序遍历结果 = 根节点 + 左子树的前序遍历结果 + 右子树的前序遍历结果
+**/
+pub(crate) fn preorder_traverse(root: Option<Box<TreeNode<u32>>>) -> Vec<u32> {
+    let mut result: Vec<u32> = Vec::new();
+    if let Some(root) = root {
+        result.push(root.element); // 根节点在首位
+        result.extend(preorder_traverse(root.left));
+        result.extend(preorder_traverse(root.right));
+    }
+    result
+}
+
+/// 中序遍历
+/**
+  左子树的前序遍历结果, 然后是根节点在中间, 最后是右子树的前序遍历结果
+*/
+pub(crate) fn inorder_traverse(root: Option<Box<TreeNode<u32>>>) -> Vec<u32> {
+    let mut result: Vec<u32> = Vec::new();
+    if let Some(root) = root {
+        result.extend(preorder_traverse(root.left));
+        result.push(root.element); // 根节点在中间
+        result.extend(preorder_traverse(root.right));
+    }
+    result
+}
+
+/// 后序遍历
+/**
+左子树的前序遍历结果, 然后是右子树的前序遍历结果, 最后是根节点在末尾
+ */
+pub(crate) fn postorder_traverse(root: Option<Box<TreeNode<u32>>>) -> Vec<u32> {
+    let mut result: Vec<u32> = Vec::new();
+    if let Some(root) = root {
+        result.extend(preorder_traverse(root.left));
+        result.extend(preorder_traverse(root.right));
+        result.push(root.element); // 根节点在末尾
+    }
+    result
 }
