@@ -1,6 +1,7 @@
 mod array;
 mod error;
 mod link;
+mod math;
 mod string;
 mod tree;
 
@@ -9,4 +10,5 @@ fn main() {
     array::test::test();
     string::test::test();
     tree::test::test();
+    math::test::test();
 }
