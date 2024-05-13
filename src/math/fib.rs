@@ -84,3 +84,118 @@ pub(crate) fn db_normal_fib(n: u32) -> u32 {
 
     dp_i_1
 }
+
+/// 零钱兑换(暴力递归)
+/**
+给你 k 种面值的硬币，面值分别为 c1, c2 ... ck，每种硬币的数量无限，再给一个总金额 amount，问你最少需要几枚硬币凑出这个金额
+1、确定 base case，这个很简单，显然目标金额 amount 为 0 时算法返回 0，因为不需要任何硬币就已经凑出目标金额了。
+2、确定「状态」，也就是原问题和子问题中会变化的变量。由于硬币数量无限，硬币的面额也是题目给定的，只有目标金额会不断地向 base case 靠近，所以唯一的「状态」就是目标金额 amount。
+3、确定「选择」，也就是导致「状态」产生变化的行为。目标金额为什么变化呢，因为你在选择硬币，你每选择一枚硬币，就相当于减少了目标金额。所以说所有硬币的面值，就是你的「选择」。
+4、明确 dp 函数/数组的定义。我们这里讲的是自顶向下的解法，所以会有一个递归的 dp 函数，一般来说函数的参数就是状态转移中会变化的量，也就是上面说到的「状态」；函数的返回值就是题目要求我们计算的量。就本题来说，状态只有一个，即「目标金额」，题目要求我们计算凑出目标金额所需的最少硬币数量。
+所以我们可以这样定义 dp 函数：dp(n) 表示，输入一个目标金额 n，返回凑出目标金额 n 所需的最少硬币数量。
+*/
+pub(crate) fn coin_change(coins: &Vec<u32>, amount: i32) -> i32 {
+    if coins.is_empty() {
+        return -1;
+    }
+
+    // base case
+    if amount == 0 {
+        return 0;
+    }
+
+    if amount < 0 {
+        return -1;
+    }
+
+    let mut result = i32::MAX;
+    for coin in coins.iter() {
+        let coin = *coin as i32;
+
+        // 计算子问题的结果
+        let res = coin_change(coins, amount - coin);
+
+        // 子问题无解则跳过
+        if res == -1 {
+            continue;
+        }
+
+        result = std::cmp::min(result, res + 1); // 选择 1 个硬币尝试
+    }
+
+    return if result == i32::MAX { -1 } else { result };
+}
+
+/// 零钱兑换(带备忘录的递归)
+pub(crate) fn dp_coin_change(coins: &Vec<u32>, amount: i32) -> i32 {
+    if coins.is_empty() {
+        return -1;
+    }
+
+    let max = amount as usize;
+    let mut memo = vec![-666i32; max + 1];
+
+    fn dp(coins: &Vec<u32>, amount: i32, memo: &mut Vec<i32>) -> i32 {
+        // base case
+        if amount == 0 {
+            return 0;
+        }
+
+        if amount < 0 {
+            return -1;
+        }
+
+        if memo[amount as usize] != -666 {
+            return memo[amount as usize];
+        }
+
+        let mut result = i32::MAX;
+        for coin in coins.iter() {
+            let coin = *coin as i32;
+
+            // 计算子问题的结果
+            let res = coin_change(coins, amount - coin);
+
+            // 子问题无解则跳过
+            if res == -1 {
+                continue;
+            }
+
+            result = std::cmp::min(result, res + 1); // 选择 1 个硬币尝试
+        }
+
+        memo[amount as usize] = if result == i32::MAX { -1 } else { result };
+        return memo[amount as usize];
+    }
+
+    dp(coins, amount, &mut memo)
+}
+
+/// 零钱兑换(dp 数组的迭代解法, 自底向上)
+pub(crate) fn db_cycle_coin_change(coins: &Vec<u32>, amount: i32) -> i32 {
+    if coins.is_empty() {
+        return -1;
+    }
+
+    let max = amount as usize;
+    let mut memo = vec![amount + 1; max + 1];
+
+    memo[0] = 0;
+
+    for i in 0..memo.len() {
+        for coin in coins.iter() {
+            let v = i as i32 - *coin as i32; // 计算减去当前硬币面额后的金额
+            if v < 0 {
+                continue;
+            }
+
+            memo[i] = std::cmp::min(memo[i], memo[v as usize] + 1);
+        }
+    }
+
+    return if memo[amount as usize] == -amount + 1 {
+        -1
+    } else {
+        memo[amount as usize]
+    };
+}
