@@ -202,17 +202,17 @@ pub(crate) fn db_cycle_coin_change(coins: &Vec<u32>, amount: i32) -> i32 {
 
 /// 最长递增子序列, 动态规划解法, 时间复杂度 O(N^2)
 /// 其实最长递增子序列和一种叫做 patience game 的纸牌游戏有关，甚至有一种排序方法就叫做 patience sorting（耐心排序）
-pub(crate) fn length_of_lis(v1: Vec<u32>) -> i32 {
-    if v1.is_empty() {
+pub(crate) fn length_of_lis(v: Vec<u32>) -> i32 {
+    if v.is_empty() {
         return 0;
     }
 
-    let max = v1.len();
+    let max = v.len();
     let mut memo = vec![1; max];
 
     for i in 0..max {
         for j in 0..i {
-            if v1[j] < v1[i] {
+            if v[j] < v[i] {
                 memo[i] = std::cmp::max(memo[i], memo[j] + 1)
             }
         }
@@ -232,16 +232,16 @@ pub(crate) fn length_of_lis(v1: Vec<u32>) -> i32 {
    2. 如果当前牌点数较大没有可以放置的堆，则新建一个堆，把这张牌放进去
    3. 如果当前牌有多个堆可供选择，则选择最左边的那一堆放置。
 */
-pub(crate) fn length_of_lis_with_two(v1: Vec<u32>) -> i32 {
-    if v1.is_empty() {
+pub(crate) fn length_of_lis_with_two(v: Vec<u32>) -> i32 {
+    if v.is_empty() {
         return 0;
     }
 
-    let max = v1.len();
+    let max = v.len();
     let mut memo = vec![0; max];
     let mut piles: usize = 0; // 牌堆数初始化为 0
     for i in 0..max {
-        let poker = v1[i]; // 要处理的扑克牌
+        let poker = v[i]; // 要处理的扑克牌
 
         // 二分查找
         let mut left: usize = 0;
@@ -266,4 +266,28 @@ pub(crate) fn length_of_lis_with_two(v1: Vec<u32>) -> i32 {
     }
 
     piles as i32
+}
+
+/// 俄罗斯套娃信封问题, 时间复杂度为 O(NlogN)
+/**
+给定一组信封的宽度和高度对(𝑤,ℎ),求最大的嵌套序列长度
+1. 先对宽度 w 进行升序排序，如果遇到 w 相同的情况，则按照高度 h 降序排序
+2. 之后把所有的 h 作为一个数组，在这个数组上计算 LIS 的长度
+*/
+pub(crate) fn max_envelopes(v: Vec<(u32, u32)>) -> i32 {
+    if v.is_empty() {
+        return 0
+    }
+
+    let mut envelopes = v;
+    envelopes.sort_by(|a, b| {
+        if a.0 == b.0 {
+            b.1.cmp(&a.1)
+        } else {
+            a.0.cmp(&b.0)
+        }
+    });
+
+    let heights: Vec<u32> = envelopes.iter().map(|&(_, h)| h).collect();
+    return length_of_lis_with_two(heights);
 }

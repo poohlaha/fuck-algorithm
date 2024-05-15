@@ -1,7 +1,4 @@
-use crate::math::fib::{
-    coin_change, db_cycle_coin_change, db_cycle_fib, db_normal_fib, dp_coin_change, dp_fib, fib,
-    length_of_lis, length_of_lis_with_two,
-};
+use crate::math::fib::{coin_change, db_cycle_coin_change, db_cycle_fib, db_normal_fib, dp_coin_change, dp_fib, fib, length_of_lis, length_of_lis_with_two, max_envelopes};
 
 fn test_fib() {
     let str = fib(10);
@@ -50,6 +47,12 @@ fn test_length_of_lis_with_two() {
     println!("length of lis with two: {}", str);
 }
 
+/// 测试 `俄罗斯套娃信封问题`
+fn test_max_envelopes() {
+    let str = max_envelopes(vec![(5, 4), (6, 4), (6, 7), (2, 3)]);
+    println!("max envelopes: {}", str);
+}
+
 pub(crate) fn test() {
     println!("----- math start ------");
     test_fib();
@@ -61,6 +64,7 @@ pub(crate) fn test() {
     test_db_cycle_coin_change();
     test_length_of_lis();
     test_length_of_lis_with_two();
+    test_max_envelopes();
     println!("----- math end ------");
     println!();
 }
