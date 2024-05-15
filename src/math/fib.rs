@@ -199,3 +199,28 @@ pub(crate) fn db_cycle_coin_change(coins: &Vec<u32>, amount: i32) -> i32 {
         memo[amount as usize]
     };
 }
+
+/// 最长递增子序列, 时间复杂度 O(N^2)
+pub(crate) fn length_of_lis(v1: Vec<u32>) -> i32 {
+    if v1.is_empty() {
+        return 0;
+    }
+
+    let max = v1.len();
+    let mut memo = vec![1; max];
+
+    for i in 0..max {
+        for j in 0..i {
+            if v1[j] < v1[i] {
+                memo[i] = std::cmp::max(memo[i], memo[j] + 1)
+            }
+        }
+    }
+
+    let mut result = 0;
+    for i in 0..memo.len() {
+        result = std::cmp::max(result, memo[i]);
+    }
+
+    result
+}
