@@ -200,7 +200,8 @@ pub(crate) fn db_cycle_coin_change(coins: &Vec<u32>, amount: i32) -> i32 {
     };
 }
 
-/// 最长递增子序列, 时间复杂度 O(N^2)
+/// 最长递增子序列, 动态规划解法, 时间复杂度 O(N^2)
+/// 其实最长递增子序列和一种叫做 patience game 的纸牌游戏有关，甚至有一种排序方法就叫做 patience sorting（耐心排序）
 pub(crate) fn length_of_lis(v1: Vec<u32>) -> i32 {
     if v1.is_empty() {
         return 0;
@@ -223,4 +224,46 @@ pub(crate) fn length_of_lis(v1: Vec<u32>) -> i32 {
     }
 
     result
+}
+
+/// 最长递增子序列, 二分查找解法, 时间复杂度为 O(NlogN)
+/**
+`  1. 只能把点数小的牌压到点数比它大的牌上
+   2. 如果当前牌点数较大没有可以放置的堆，则新建一个堆，把这张牌放进去
+   3. 如果当前牌有多个堆可供选择，则选择最左边的那一堆放置。
+*/
+pub(crate) fn length_of_lis_with_two(v1: Vec<u32>) -> i32 {
+    if v1.is_empty() {
+        return 0;
+    }
+
+    let max = v1.len();
+    let mut memo = vec![0; max];
+    let mut piles: usize = 0; // 牌堆数初始化为 0
+    for i in 0..max {
+        let poker = v1[i]; // 要处理的扑克牌
+
+        // 二分查找
+        let mut left: usize = 0;
+        let mut right: usize = piles;
+        while left < right {
+            // 向下取整
+            let middle = left + (right - left) / 2; // left + [left, right] 的中位数
+            if poker <= memo[middle] {
+                right = middle; // poker <= 最后一个数大于, 则替代最后一个数
+            } else if poker > memo[middle] {
+                left = middle + 1; // poker > 最后一个数大于, 则添加到最后
+            }
+        }
+
+        // 没找到合适的牌堆，新建一堆
+        if left == piles {
+            piles += 1;
+        }
+
+        // 把这张牌放到牌堆顶
+        memo[left] = poker;
+    }
+
+    piles as i32
 }

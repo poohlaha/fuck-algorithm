@@ -1,6 +1,6 @@
 use crate::math::fib::{
     coin_change, db_cycle_coin_change, db_cycle_fib, db_normal_fib, dp_coin_change, dp_fib, fib,
-    length_of_lis,
+    length_of_lis, length_of_lis_with_two,
 };
 
 fn test_fib() {
@@ -44,6 +44,12 @@ fn test_length_of_lis() {
     println!("length of lis: {}", str);
 }
 
+/// 测试 `最长递增子序列, 二分查找解法`
+fn test_length_of_lis_with_two() {
+    let str = length_of_lis_with_two(vec![10, 9, 2, 5, 3, 7, 101, 18]);
+    println!("length of lis with two: {}", str);
+}
+
 pub(crate) fn test() {
     println!("----- math start ------");
     test_fib();
@@ -54,6 +60,7 @@ pub(crate) fn test() {
     test_dp_coin_change();
     test_db_cycle_coin_change();
     test_length_of_lis();
+    test_length_of_lis_with_two();
     println!("----- math end ------");
     println!();
 }
