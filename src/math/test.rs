@@ -1,4 +1,8 @@
-use crate::math::fib::{coin_change, db_cycle_coin_change, db_cycle_fib, db_normal_fib, dp_coin_change, dp_fib, fib, length_of_lis, length_of_lis_with_two, max_envelopes};
+use crate::math::fib::{
+    coin_change, db_cycle_coin_change, db_cycle_fib, db_normal_fib, dp_coin_change, dp_fib, fib,
+    length_of_lis, length_of_lis_with_two, max_envelopes, max_sub_array, max_sub_array_dynamic,
+    max_sub_array_kadane,
+};
 
 fn test_fib() {
     let str = fib(10);
@@ -53,6 +57,24 @@ fn test_max_envelopes() {
     println!("max envelopes: {}", str);
 }
 
+/// 测试 `最大子数组和(滑动窗口算法)`
+fn test_max_sub_array() {
+    let str = max_sub_array(vec![-3, 1, 3, -1, 2, -4, 2]);
+    println!("max sub array: {}", str);
+}
+
+/// 测试 `最大子数组和(Kadane算法, 动态规划算法的一种)`
+fn test_max_sub_array_kadane() {
+    let str = max_sub_array_kadane(vec![-2, 1, -3, 4, -1, 2, 1, -5, 4]);
+    println!("max sub array kadane: {}", str);
+}
+
+/// 测试 `最大子数组和(动态规划算法)`
+fn test_max_sub_array_dynamic() {
+    let str = max_sub_array_dynamic(vec![-2, 1, -3, 4, -1, 2, 1, -5, 4]);
+    println!("max sub array dynamic: {}", str);
+}
+
 pub(crate) fn test() {
     println!("----- math start ------");
     test_fib();
@@ -65,6 +87,9 @@ pub(crate) fn test() {
     test_length_of_lis();
     test_length_of_lis_with_two();
     test_max_envelopes();
+    test_max_sub_array();
+    test_max_sub_array_kadane();
+    test_max_sub_array_dynamic();
     println!("----- math end ------");
     println!();
 }

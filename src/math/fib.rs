@@ -1,4 +1,5 @@
 //! 斐波那契数列
+
 /**
 斐波那契数列是指这样一个数列：1、1、2、3、5、8、13、21、34、……在数学上，斐波那契数列以递归的方法定义：
 F{1} = 1, F{2} = 1, F(n) = F(n - 1) + F(n - 2)(n >= 3)
@@ -11,7 +12,6 @@ F{1} = 1, F{2} = 1, F(n) = F(n - 1) + F(n - 2)(n >= 3)
 自底向上:
 - 使用迭代的方式解决问题，通常从最小的子问题开始，逐步计算出所有的子问题的解，直到达到目标问题的解。
 - 通常不使用递归，而是使用循环来迭代计算。
-
 **/
 
 /// 暴力递归
@@ -230,7 +230,7 @@ pub(crate) fn length_of_lis(v: Vec<u32>) -> i32 {
 /**
 `  1. 只能把点数小的牌压到点数比它大的牌上
    2. 如果当前牌点数较大没有可以放置的堆，则新建一个堆，把这张牌放进去
-   3. 如果当前牌有多个堆可供选择，则选择最左边的那一堆放置。
+   3. 如果当前牌有多个堆可供选择，则选择最左边的那一堆放置
 */
 pub(crate) fn length_of_lis_with_two(v: Vec<u32>) -> i32 {
     if v.is_empty() {
@@ -276,7 +276,7 @@ pub(crate) fn length_of_lis_with_two(v: Vec<u32>) -> i32 {
 */
 pub(crate) fn max_envelopes(v: Vec<(u32, u32)>) -> i32 {
     if v.is_empty() {
-        return 0
+        return 0;
     }
 
     let mut envelopes = v;
@@ -290,4 +290,92 @@ pub(crate) fn max_envelopes(v: Vec<(u32, u32)>) -> i32 {
 
     let heights: Vec<u32> = envelopes.iter().map(|&(_, h)| h).collect();
     return length_of_lis_with_two(heights);
+}
+
+/// 最大子数组和
+/**
+  使用滑动窗口算法, 当当前累加值 < 0 时, 收缩窗口
+**/
+pub(crate) fn max_sub_array(v: Vec<i32>) -> i32 {
+    if v.is_empty() {
+        return -1;
+    }
+
+    let mut left = 0;
+    let mut right = 0;
+    let mut current_sum = 0;
+    let mut max_sum = i32::MIN;
+    while right < v.len() {
+        current_sum += v[right];
+        max_sum = std::cmp::max(max_sum, current_sum);
+        right += 1;
+
+        while current_sum < 0 {
+            current_sum -= v[left];
+            left += 1;
+        }
+    }
+
+    max_sum
+}
+
+/// 最大子数组和
+/**
+ 使用 Kadane算法(卡丹算法或卡丹尼算法), 动态规划算法的一种
+ 1. 设置 current_num 和 max_sum 为数组的第一个元素
+ 2. 遍历数组, current_num 取 每一项值 和 current_num + 每一项值的累计值中的最大值, max_sum 取其和 current_num 中的最大值
+*/
+pub(crate) fn max_sub_array_kadane(v: Vec<i32>) -> i32 {
+    if v.is_empty() {
+        return -1;
+    }
+
+    let mut current_num = v[0];
+    let mut max_sum = v[0];
+
+    for i in v.iter().skip(1) {
+        let v = i.clone();
+        current_num = std::cmp::max(v, current_num + v);
+        max_sum = std::cmp::max(max_sum, current_num);
+    }
+
+    max_sum
+}
+
+/// 最大子数组和
+/**
+  使用动态规划算法
+  1. 确定 base case
+    dp[0] 为第一个元素
+  2. 确定 `状态`，也就是原问题和子问题中会变化的变量
+    用 dp[i] 表示以 nums[i] 结尾的子数组的最大和
+  3. 确定 `选择`，也就是导致 `状态` 产生变化的行为
+    dp[i] = max(nums[i], dp[i-1] + nums[i])。即对于每一个元素，决定是将其包含在当前子数组中（dp[i-1] + nums[i]），还是从它开始一个新的子数组（nums[i]）。
+  4. 明确 `dp 函数/数组` 的定义
+    dp = vec![-1;max]
+  结果: 整个数组的最大子数组和为 max(dp[0], dp[1], ..., dp[n-1])。
+*/
+pub(crate) fn max_sub_array_dynamic(v: Vec<i32>) -> i32 {
+    if v.is_empty() {
+        return -1;
+    }
+
+    let max = v.len();
+    let mut dp = vec![-1; max];
+
+    // 1. base case
+    dp[0] = v[0];
+
+    // 状态转移方程
+    for (i, _) in v.iter().skip(1).enumerate() {
+        let index = i + 1;
+        dp[index] = std::cmp::max(v[index], v[index] + dp[index - 1]);
+    }
+
+    let mut res = i32::MIN;
+    for i in dp.iter() {
+        res = std::cmp::max(res, i.clone());
+    }
+
+    res
 }
