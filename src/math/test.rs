@@ -1,8 +1,4 @@
-use crate::math::fib::{
-    coin_change, db_cycle_coin_change, db_cycle_fib, db_normal_fib, dp_coin_change, dp_fib, fib,
-    length_of_lis, length_of_lis_with_two, max_envelopes, max_sub_array, max_sub_array_dynamic,
-    max_sub_array_kadane,
-};
+use crate::math::fib::{coin_change, db_cycle_coin_change, db_cycle_fib, db_normal_fib, dp_coin_change, dp_fib, fib, length_of_lis, length_of_lis_with_two, longest_common_subsequence, max_envelopes, max_sub_array, max_sub_array_dynamic, max_sub_array_kadane};
 
 fn test_fib() {
     let str = fib(10);
@@ -75,6 +71,12 @@ fn test_max_sub_array_dynamic() {
     println!("max sub array dynamic: {}", str);
 }
 
+/// 测试 `最长公共子序列`
+fn test_longest_common_subsequence() {
+    let str = longest_common_subsequence("ABCBDAB", "BDCAB");
+    println!("longest common subsequence: {}", str);
+}
+
 pub(crate) fn test() {
     println!("----- math start ------");
     test_fib();
@@ -90,6 +92,7 @@ pub(crate) fn test() {
     test_max_sub_array();
     test_max_sub_array_kadane();
     test_max_sub_array_dynamic();
+    test_longest_common_subsequence();
     println!("----- math end ------");
     println!();
 }
