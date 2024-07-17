@@ -232,14 +232,17 @@ pub(crate) fn length_of_lis(v: Vec<u32>) -> i32 {
    2. 如果当前牌点数较大没有可以放置的堆，则新建一个堆，把这张牌放进去
    3. 如果当前牌有多个堆可供选择，则选择最左边的那一堆放置
 */
-pub(crate) fn length_of_lis_with_two(v: Vec<u32>) -> i32 {
+pub(crate) fn length_of_lis_with_two(v: Vec<u32>) -> (i32, Vec<u32>) {
     if v.is_empty() {
-        return 0;
+        return (0, Vec::new());
     }
 
     let max = v.len();
     let mut memo = vec![0; max];
     let mut piles: usize = 0; // 牌堆数初始化为 0
+    let mut predecessor = vec![-1; max]; // 前驱索引
+    let mut pile_tops = vec![-1; max]; // 每堆牌的顶牌索引
+
     for i in 0..max {
         let poker = v[i]; // 要处理的扑克牌
 
@@ -250,9 +253,9 @@ pub(crate) fn length_of_lis_with_two(v: Vec<u32>) -> i32 {
             // 向下取整
             let middle = left + (right - left) / 2; // left + [left, right] 的中位数
             if poker <= memo[middle] {
-                right = middle; // poker <= 最后一个数大于, 则替代最后一个数
+                right = middle; // poker <= 最后一个数, 则替代最后一个数
             } else if poker > memo[middle] {
-                left = middle + 1; // poker > 最后一个数大于, 则添加到最后
+                left = middle + 1; // poker > 最后一个数, 则添加到最后
             }
         }
 
@@ -261,11 +264,26 @@ pub(crate) fn length_of_lis_with_two(v: Vec<u32>) -> i32 {
             piles += 1;
         }
 
+        if left > 0 {
+            predecessor[i] = pile_tops[left - 1]
+        }
+
+        pile_tops[left] = i as i32;
+
         // 把这张牌放到牌堆顶
         memo[left] = poker;
     }
+    
+    let mut lis = vec![];
+    let mut k = pile_tops[piles - 1];
+    while k >= 0 {
+        lis.push(v[k as usize]);
+        k = predecessor[k as usize];
+    }
 
-    piles as i32
+    lis.reverse();
+
+    (piles as i32, lis)
 }
 
 /// 俄罗斯套娃信封问题, 时间复杂度为 O(NlogN)
@@ -289,7 +307,8 @@ pub(crate) fn max_envelopes(v: Vec<(u32, u32)>) -> i32 {
     });
 
     let heights: Vec<u32> = envelopes.iter().map(|&(_, h)| h).collect();
-    return length_of_lis_with_two(heights);
+    let (max, _) = length_of_lis_with_two(heights);
+    return max
 }
 
 /// 最大子数组和

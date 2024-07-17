@@ -43,8 +43,8 @@ fn test_length_of_lis() {
 
 /// 测试 `最长递增子序列, 二分查找解法`
 fn test_length_of_lis_with_two() {
-    let str = length_of_lis_with_two(vec![10, 9, 2, 5, 3, 7, 101, 18]);
-    println!("length of lis with two: {}", str);
+    let (str, lis) = length_of_lis_with_two(vec![10, 9, 2, 5, 3, 7, 101, 18]);
+    println!("length of lis with two: {}, lis: {:?}", str, lis);
 }
 
 /// 测试 `俄罗斯套娃信封问题`
