@@ -1,4 +1,8 @@
-use crate::math::fib::{coin_change, db_cycle_coin_change, db_cycle_fib, db_normal_fib, dp_coin_change, dp_fib, fib, length_of_lis, length_of_lis_with_two, longest_common_subsequence, max_envelopes, max_sub_array, max_sub_array_dynamic, max_sub_array_kadane};
+use crate::math::fib::{
+    coin_change, db_cycle_coin_change, db_cycle_fib, db_normal_fib, dp_coin_change, dp_fib, fib,
+    length_of_lis, length_of_lis_with_two, longest_common_subsequence, max_envelopes,
+    max_sub_array, max_sub_array_dynamic, max_sub_array_kadane,
+};
 
 fn test_fib() {
     let str = fib(10);

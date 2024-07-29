@@ -1,6 +1,7 @@
 use crate::tree::binary_tree::{
     diameter_of_binary_tree, get_max_depth, get_max_depth2, get_node_count, get_pre_node_layer,
-    inorder_traverse, level_traverse, postorder_traverse, preorder_traverse, TreeNode,
+    inorder_traverse, level_traverse, permute, permute_new, postorder_traverse, preorder_traverse,
+    solve_n_queens, TreeNode,
 };
 
 /// 测试 `合并两个有序链表`
@@ -156,6 +157,23 @@ fn test_create_tree3() -> TreeNode<u32> {
     return root;
 }
 
+fn test_permute() {
+    let nums = vec![1, 2, 3];
+    let result = permute(nums);
+    println!("permute: {:?}", result);
+}
+
+fn test_permute_new() {
+    let nums = vec![1, 2, 3];
+    let result = permute_new(nums);
+    println!("permute new: {:?}", result);
+}
+
+fn test_solve_n_queens() {
+    let result = solve_n_queens(2);
+    println!("solve 8 queens: {:?}", result);
+}
+
 pub(crate) fn test() {
     println!("----- tree start ------");
     test_get_max_depth();
@@ -167,6 +185,9 @@ pub(crate) fn test() {
     test_get_node_count();
     test_diameter_of_binary_tree();
     test_level_traverse();
+    test_permute();
+    test_permute_new();
+    test_solve_n_queens();
     println!("----- tree end ------");
     println!();
 }

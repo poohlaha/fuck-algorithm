@@ -194,3 +194,150 @@ pub(crate) fn level_traverse(root: Option<Box<TreeNode<u32>>>) -> Vec<u32> {
 
     result
 }
+
+/// 全排列问题(交换)
+pub fn permute(nums: Vec<u32>) -> Vec<Vec<u32>> {
+    let mut res: Vec<Vec<u32>> = Vec::new();
+    let start: usize = 0;
+
+    let mut new_nums = nums.clone();
+
+    fn backtrack(start: usize, nums: &mut Vec<u32>, result: &mut Vec<Vec<u32>>) {
+        if start == nums.len() {
+            result.push(nums.clone());
+            return;
+        }
+
+        for i in start..nums.len() {
+            nums.swap(start, i);
+            backtrack(start + 1, nums, result);
+            nums.swap(start, i); // 回溯
+        }
+    }
+
+    backtrack(start, &mut new_nums, &mut res);
+    return res;
+}
+
+/// 全排列问题(非交换)
+pub fn permute_new(nums: Vec<u32>) -> Vec<Vec<u32>> {
+    let mut res: Vec<Vec<u32>> = Vec::new();
+    let mut track: Vec<u32> = Vec::new();
+    let max = nums.len() as usize;
+    let mut used = vec![false; max];
+
+    fn backtrack(
+        track: &mut Vec<u32>,
+        nums: &Vec<u32>,
+        res: &mut Vec<Vec<u32>>,
+        used: &mut Vec<bool>,
+    ) {
+        if track.len() == nums.len() {
+            res.push(nums.clone());
+            return;
+        }
+
+        for i in 0..nums.len() {
+            if used[i] {
+                // 已存在, 跳过
+                continue;
+            }
+
+            // 做选择
+            track.push(nums[i]);
+            used[i] = true;
+            backtrack(track, nums, res, used);
+
+            // 取消选择
+            track.pop();
+            used[i] = false;
+        }
+    };
+
+    backtrack(&mut track, &nums, &mut res, &mut used);
+    return res;
+}
+
+/// 8皇后问题
+pub fn solve_n_queens(n: usize) -> Vec<Vec<String>> {
+    // 初始化 n * n 的横盘
+    let mut board = vec![vec![".".to_string(); n]; n]; // '.' 表示空，'Q' 表示皇后，初始化空棋盘
+    let mut res: Vec<Vec<String>> = Vec::new();
+
+    // 路径：board 中小于 row 的那些行都已经成功放置了皇后
+    // 选择列表：第 row 行的所有列都是放置皇后的选择
+    // 结束条件：row 超过 board 的最后一行
+    fn backtrack(board: &mut Vec<Vec<String>>, row: usize, res: &mut Vec<Vec<String>>) {
+        // 触发结束条件
+        if row == board.len() {
+            let solution: Vec<String> = board.iter().map(|r| r.join("")).collect();
+            res.push(solution);
+            return;
+        }
+
+        let n = board[row].len();
+        for col in 0..n {
+            // 排除不合法选择
+            if row > 0 {
+                if !is_valid(board, row, col) {
+                    continue;
+                }
+            }
+
+            // 做选择
+            board[row][col] = "Q".to_string();
+            // 进入下一行决策
+            backtrack(board, row + 1, res);
+            // 撤销选择
+            board[row][col] = ".".to_string();
+        }
+    }
+
+    // 是否可以在 board[row][col] 放置皇后？
+    fn is_valid(board: &mut Vec<Vec<String>>, row: usize, col: usize) -> bool {
+        let n = board.len();
+        // 检查列是否有皇后互相冲突
+        for i in 0..=row {
+            if board[i][col] == "Q".to_string() {
+                return false;
+            }
+        }
+
+        // 检查左上方是否有皇后互相冲突
+        let mut i = row - 1;
+        let mut j = col - 1;
+        while i >= 0 && j >= 0 {
+            if board[i][col] == "Q".to_string() {
+                return false;
+            }
+
+            if i == 0 || j == 0 {
+                break
+            }
+
+            i -= 1;
+            j -= 1;
+        }
+
+        //  检查右上方是否有皇后互相冲突
+        let mut i = row - 1;
+        let mut j = col + 1;
+        while i >= 0 && j < n {
+            if board[i][col] == "Q".to_string() {
+                return false;
+            }
+
+            if i == 0 {
+                break;
+            }
+
+            i -= 1;
+            j += 1;
+        }
+
+        return true;
+    }
+
+    backtrack(&mut board, 0, &mut res);
+    return res;
+}

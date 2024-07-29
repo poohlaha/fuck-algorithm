@@ -273,7 +273,7 @@ pub(crate) fn length_of_lis_with_two(v: Vec<u32>) -> (i32, Vec<u32>) {
         // 把这张牌放到牌堆顶
         memo[left] = poker;
     }
-    
+
     let mut lis = vec![];
     let mut k = pile_tops[piles - 1];
     while k >= 0 {
@@ -308,7 +308,7 @@ pub(crate) fn max_envelopes(v: Vec<(u32, u32)>) -> i32 {
 
     let heights: Vec<u32> = envelopes.iter().map(|&(_, h)| h).collect();
     let (max, _) = length_of_lis_with_two(heights);
-    return max
+    return max;
 }
 
 /// 最大子数组和
