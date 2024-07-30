@@ -295,7 +295,7 @@ pub fn solve_n_queens(n: usize) -> Vec<Vec<String>> {
 
     // 是否可以在 board[row][col] 放置皇后？
     fn is_valid(board: &mut Vec<Vec<String>>, row: usize, col: usize) -> bool {
-        let n = board.len();
+        let n = board.len() as i32;
         // 检查列是否有皇后互相冲突
         for i in 0..=row {
             if board[i][col] == "Q".to_string() {
@@ -304,15 +304,15 @@ pub fn solve_n_queens(n: usize) -> Vec<Vec<String>> {
         }
 
         // 检查左上方是否有皇后互相冲突
-        let mut i = row - 1;
-        let mut j = col - 1;
+        let mut i = row as i32 - 1;
+        let mut j = col as i32 - 1;
         while i >= 0 && j >= 0 {
-            if board[i][col] == "Q".to_string() {
+            if board[i as usize][col] == "Q".to_string() {
                 return false;
             }
 
             if i == 0 || j == 0 {
-                break
+                break;
             }
 
             i -= 1;
@@ -320,10 +320,10 @@ pub fn solve_n_queens(n: usize) -> Vec<Vec<String>> {
         }
 
         //  检查右上方是否有皇后互相冲突
-        let mut i = row - 1;
-        let mut j = col + 1;
+        let mut i = row as i32 - 1;
+        let mut j = col as i32 + 1;
         while i >= 0 && j < n {
-            if board[i][col] == "Q".to_string() {
+            if board[i as usize][col] == "Q".to_string() {
                 return false;
             }
 
