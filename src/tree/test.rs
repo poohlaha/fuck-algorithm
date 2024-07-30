@@ -170,7 +170,7 @@ fn test_permute_new() {
 }
 
 fn test_solve_n_queens() {
-    let result = solve_n_queens(2);
+    let result = solve_n_queens(8);
     println!("solve 8 queens: {:?}", result);
 }
 
