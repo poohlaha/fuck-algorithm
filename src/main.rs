@@ -1,4 +1,5 @@
 mod array;
+mod backtrace;
 mod error;
 mod link;
 mod math;
@@ -11,4 +12,5 @@ fn main() {
     string::test::test();
     tree::test::test();
     math::test::test();
+    backtrace::test::test();
 }

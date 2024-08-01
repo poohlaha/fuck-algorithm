@@ -157,18 +157,21 @@ fn test_create_tree3() -> TreeNode<u32> {
     return root;
 }
 
+/// 测试 `全排列问题(交换)`
 fn test_permute() {
     let nums = vec![1, 2, 3];
     let result = permute(nums);
     println!("permute: {:?}", result);
 }
 
+/// 测试 `全排列问题(非交换)`
 fn test_permute_new() {
     let nums = vec![1, 2, 3];
     let result = permute_new(nums);
     println!("permute new: {:?}", result);
 }
 
+/// 测试 `8皇后问题`
 fn test_solve_n_queens() {
     let result = solve_n_queens(8);
     println!("solve 8 queens: {:?}", result);
