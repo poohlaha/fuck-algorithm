@@ -219,7 +219,20 @@ pub fn permute(nums: Vec<u32>) -> Vec<Vec<u32>> {
     return res;
 }
 
-/// 全排列问题(非交换)
+/**
+    全排列问题(非交换)
+    力扣: https://leetcode.cn/problems/permutations/description/
+
+                         []
+              1/            2|             3\
+              [1]           [2]             [3]
+          2/     3\      1/    3|         1/    2|
+         [1,2]  [1,3]   [2,1]   [2,3]    [3,1]   [3,2]
+           |      |       |       |       |        |
+       [1,2,3]  [1,3,2] [2,1,3] [2,3,1] [3,1,2]  [3,2,1]
+
+    排列问题本身就是让你穷举元素的位置，nums[i] 之后也可以出现 nums[i] 左边的元素，所以之前的那一套玩不转了，需要额外使用 used 数组来标记哪些元素还可以被选择。
+*/
 pub fn permute_new(nums: Vec<u32>) -> Vec<Vec<u32>> {
     let mut res: Vec<Vec<u32>> = Vec::new();
     let mut track: Vec<u32> = Vec::new();
