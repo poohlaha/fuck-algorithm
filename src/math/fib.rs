@@ -76,7 +76,7 @@ pub(crate) fn db_normal_fib(n: u32) -> u32 {
     // 从 0 开始
     let mut dp_i_1 = 1;
     let mut dp_i_2 = 0;
-    for i in 2..=n {
+    for _ in 2..=n {
         let dp_i = dp_i_1 + dp_i_2;
         dp_i_2 = dp_i_1;
         dp_i_1 = dp_i

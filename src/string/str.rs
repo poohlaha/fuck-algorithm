@@ -215,7 +215,7 @@ pub(crate) fn is_palindrome(s: &str) -> bool {
         return false;
     }
 
-    let mut chars: Vec<char> = s.chars().collect();
+    let chars: Vec<char> = s.chars().collect();
     let mut left = 0;
     let mut right = chars.len() - 1;
 
@@ -243,7 +243,7 @@ pub(crate) fn longest_palindrome(s: &str) -> String {
         return String::new();
     }
 
-    let mut chars: Vec<char> = s.chars().collect();
+    let chars: Vec<char> = s.chars().collect();
     let palindrome = |l: usize, r: usize| -> String {
         let mut left = l.clone() as i32;
         let mut right = r.clone() as i32;

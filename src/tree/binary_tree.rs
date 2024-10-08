@@ -28,7 +28,7 @@ impl<E> TreeNode<E> {
 
 pub(crate) fn get_max_depth(root: TreeNode<u32>) -> u32 {
     let mut result: u32 = 0; // 记录最大深度
-    let mut depth: u32 = 0; //记录遍历到的节点的深度
+    let depth: u32 = 0; //记录遍历到的节点的深度
 
     fn traverse(node: Option<Box<TreeNode<u32>>>, depth: u32, result: &mut u32) {
         if let Some(node) = node {
@@ -63,6 +63,46 @@ pub(crate) fn get_max_depth2(root: Option<Box<TreeNode<u32>>>) -> u32 {
     }
 
     0
+}
+
+/**
+二叉树的最小深度
+力扣: https://leetcode.cn/problems/minimum-depth-of-binary-tree/description/
+题目: 给定一个二叉树，找出其最小深度。最小深度是从根节点到最近叶子节点的最短路径上的节点数量。说明：叶子节点是指没有子节点的节点。
+答: `起点` 就是 `root` 根节点, `终点` 就是最靠近根节点的那个 `叶子节点`
+`while` 循环和 `for` 循环的配合，`while` 循环控制 `一层一层往下走`，`for` 循环利用 `size` 变量控制 `从左到右遍历每一层二叉树节点`
+ */
+pub(crate) fn get_min_dept(root: TreeNode<u32>) -> u32 {
+    let mut queue: Vec<TreeNode<u32>> = Vec::new();
+    queue.push(root); // start
+
+    // root 本身就是一层，depth 初始化为 1
+    let mut dept: u32 = 1;
+
+    while queue.len() > 0 {
+        let size = queue.len();
+        // 将当前队列中的所有节点向四周扩散
+        for i in 0..size {
+            let cur = queue.remove(i);
+            // 判断是否到达终点
+            if cur.left.is_none() && cur.right.is_none() {
+                return dept;
+            }
+
+            // 将 cur 的相邻节点加入队列
+            if let Some(left) = cur.left {
+                queue.push(*left);
+            }
+
+            if let Some(right) = cur.right {
+                queue.push(*right);
+            }
+        }
+
+        dept += 1;
+    }
+
+    dept
 }
 
 /// 前序遍历
@@ -265,7 +305,7 @@ pub fn permute_new(nums: Vec<u32>) -> Vec<Vec<u32>> {
             track.pop();
             used[i] = false;
         }
-    };
+    }
 
     backtrack(&mut track, &nums, &mut res, &mut used);
     return res;

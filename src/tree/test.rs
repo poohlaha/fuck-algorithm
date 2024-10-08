@@ -1,21 +1,42 @@
 use crate::tree::binary_tree::{
-    diameter_of_binary_tree, get_max_depth, get_max_depth2, get_node_count, get_pre_node_layer,
-    inorder_traverse, level_traverse, permute, permute_new, postorder_traverse, preorder_traverse,
-    solve_n_queens, TreeNode,
+    diameter_of_binary_tree, get_max_depth, get_max_depth2, get_min_dept, get_node_count,
+    get_pre_node_layer, inorder_traverse, level_traverse, permute, permute_new, postorder_traverse,
+    preorder_traverse, solve_n_queens, TreeNode,
 };
 
-/// 测试 `合并两个有序链表`
+/// 测试 `查找二叉树的最大深度`
 fn test_get_max_depth() {
     let root = test_create_tree1();
-    let deep = get_max_depth(root);
-    println!("get max depth: {}\n", deep);
+    let dept = get_max_depth(root);
+    println!("get max depth: {}\n", dept);
 }
 
 /// 测试 `查找二叉树的最大深度`
 fn test_get_max_depth2() {
     let root = test_create_tree1();
-    let deep = get_max_depth2(Some(Box::new(root)));
-    println!("get max depth2: {}\n", deep);
+    let dept = get_max_depth2(Some(Box::new(root)));
+    println!("get max depth2: {}\n", dept);
+}
+
+/// 测试 `二叉树的最小深度`
+/**
+   3
+ /   \
+9     20
+    /    \
+  15      7
+ **/
+fn test_get_min_depth() {
+    let mut root = TreeNode::new(3);
+    let left = TreeNode::new(9);
+    let mut right = TreeNode::new(20);
+    right.left = Some(Box::new(TreeNode::new(15)));
+    right.right = Some(Box::new(TreeNode::new(7)));
+
+    root.left = Some(Box::new(left));
+    root.right = Some(Box::new(right));
+    let dept = get_min_dept(root);
+    println!("get min dept: {}\n", dept);
 }
 
 /// 测试 `前序遍历`
@@ -181,6 +202,7 @@ pub(crate) fn test() {
     println!("----- tree start ------");
     test_get_max_depth();
     test_get_max_depth2();
+    test_get_min_depth();
     test_preorder_traverse();
     test_inorder_traverse();
     test_postorder_traverse();
@@ -190,7 +212,7 @@ pub(crate) fn test() {
     test_level_traverse();
     test_permute();
     test_permute_new();
-    test_solve_n_queens();
+    // test_solve_n_queens();
     println!("----- tree end ------");
     println!();
 }

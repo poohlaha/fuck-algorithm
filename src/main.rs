@@ -1,5 +1,6 @@
 mod array;
 mod backtrace;
+mod bfs;
 mod error;
 mod link;
 mod math;
@@ -13,4 +14,5 @@ fn main() {
     tree::test::test();
     math::test::test();
     backtrace::test::test();
+    bfs::test::test();
 }
