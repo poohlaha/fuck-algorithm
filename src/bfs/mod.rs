@@ -1,4 +1,4 @@
-//! BFS, 广度优先遍历
+//! BFS, 广度优先遍历, 层序遍历
 
 use std::char::from_digit;
 

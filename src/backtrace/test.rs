@@ -1,13 +1,20 @@
 use crate::backtrace::subset::{
-    combination_sum, combination_sum2, combine, permute_repeat, permute_unique, subsets,
+    combination_sum, combination_sum2, combine, permute_repeat, permute_unique, subsets, subsets2,
     subsets_with_dup,
 };
 
-/// 测试 `子集 - 元素无重不可复选`
+/// 测试 `子集 - 元素无重不可复选, 以 `盒` 视角`
 fn test_subsets() {
     let nums = vec![1, 2, 3];
     let results = subsets(nums);
-    println!("subset: {:?}", results);
+    println!("subset box: {:?}", results);
+}
+
+/// 测试 `子集 - 元素无重不可复选, 以 `球` 视角`
+fn test_subsets2() {
+    let nums = vec![1, 2, 3];
+    let results = subsets2(nums);
+    println!("subset ball: {:?}", results);
 }
 
 /// 测试 `组合 - 元素无重不可复选`
@@ -54,6 +61,7 @@ fn test_permute_repeat() {
 pub(crate) fn test() {
     println!("----- backtrace start ------");
     test_subsets();
+    test_subsets2();
     test_combine();
     test_subsets_with_dup();
     test_combination_sum();

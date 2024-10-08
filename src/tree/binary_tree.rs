@@ -20,6 +20,8 @@ impl<E> TreeNode<E> {
 
 /// 查找二叉树的最大深度(前序遍历, 快速排序)(时间复杂度为 O(n))
 /**
+  力扣: https://leetcode.cn/problems/maximum-depth-of-binary-tree/description/
+  题目: 给定一个二叉树 root ，返回其最大深度。二叉树的 `最大深度` 是指从根节点到最远叶子节点的最长路径上的节点数。
   根节点深度从 1 开始, 先遍历左子节点, 再遍历右子节点,
   1. 前序位置的代码在刚刚进入一个二叉树节点的时候执行；
   2. 后序位置的代码在将要离开一个二叉树节点的时候执行；
@@ -66,12 +68,12 @@ pub(crate) fn get_max_depth2(root: Option<Box<TreeNode<u32>>>) -> u32 {
 }
 
 /**
-二叉树的最小深度
-力扣: https://leetcode.cn/problems/minimum-depth-of-binary-tree/description/
-题目: 给定一个二叉树，找出其最小深度。最小深度是从根节点到最近叶子节点的最短路径上的节点数量。说明：叶子节点是指没有子节点的节点。
-答: `起点` 就是 `root` 根节点, `终点` 就是最靠近根节点的那个 `叶子节点`
-`while` 循环和 `for` 循环的配合，`while` 循环控制 `一层一层往下走`，`for` 循环利用 `size` 变量控制 `从左到右遍历每一层二叉树节点`
- */
+   二叉树的最小深度
+   力扣: https://leetcode.cn/problems/minimum-depth-of-binary-tree/description/
+   题目: 给定一个二叉树，找出其最小深度。最小深度是从根节点到最近叶子节点的最短路径上的节点数量。说明：叶子节点是指没有子节点的节点。
+   答: `起点` 就是 `root` 根节点, `终点` 就是最靠近根节点的那个 `叶子节点`
+       `while` 循环和 `for` 循环的配合，`while` 循环控制 `一层一层往下走`，`for` 循环利用 `size` 变量控制 `从左到右遍历每一层二叉树节点`
+*/
 pub(crate) fn get_min_dept(root: TreeNode<u32>) -> u32 {
     let mut queue: Vec<TreeNode<u32>> = Vec::new();
     queue.push(root); // start
@@ -107,6 +109,8 @@ pub(crate) fn get_min_dept(root: TreeNode<u32>) -> u32 {
 
 /// 前序遍历
 /**
+  力扣: https://leetcode.cn/problems/binary-tree-preorder-traversal/description/
+  题目: 给你二叉树的根节点 `root` ，返回它节点值的 `前序遍历`。
   根节点在首位, 然后左子树的前序遍历结果, 最后是右子树的前序遍历结果
   一棵二叉树的前序遍历结果 = 根节点 + 左子树的前序遍历结果 + 右子树的前序遍历结果
 **/
@@ -182,6 +186,12 @@ pub(crate) fn get_node_count(root: Option<Box<TreeNode<u32>>>) -> u32 {
 }
 
 /// 计算二叉树的最长直径长度(后序遍历)
+/**
+  力扣: https://leetcode.cn/problems/diameter-of-binary-tree/description/
+  题目: 给你一棵二叉树的根节点，返回该树的 `直径` 。
+       二叉树的 `直径` 是指树中任意两个节点之间最长路径的 `长度` 。这条路径可能经过也可能不经过根节点 `root` 。
+       两节点之间路径的 `长度` 由它们之间边数表示。
+*/
 pub(crate) fn diameter_of_binary_tree(root: TreeNode<u32>) -> u32 {
     let mut max_diameter: u32 = 0;
 
@@ -235,7 +245,7 @@ pub(crate) fn level_traverse(root: Option<Box<TreeNode<u32>>>) -> Vec<u32> {
     result
 }
 
-/// 全排列问题(交换)
+/// 全排列问题(交换), 以 `盒` 的视角进行穷举的
 pub fn permute(nums: Vec<u32>) -> Vec<Vec<u32>> {
     let mut res: Vec<Vec<u32>> = Vec::new();
     let start: usize = 0;
@@ -243,6 +253,7 @@ pub fn permute(nums: Vec<u32>) -> Vec<Vec<u32>> {
     let mut new_nums = nums.clone();
 
     fn backtrack(start: usize, nums: &mut Vec<u32>, result: &mut Vec<Vec<u32>>) {
+        // 到达叶子节点
         if start == nums.len() {
             result.push(nums.clone());
             return;
@@ -276,7 +287,7 @@ pub fn permute(nums: Vec<u32>) -> Vec<Vec<u32>> {
 pub fn permute_new(nums: Vec<u32>) -> Vec<Vec<u32>> {
     let mut res: Vec<Vec<u32>> = Vec::new();
     let mut track: Vec<u32> = Vec::new();
-    let max = nums.len() as usize;
+    let max = nums.len();
     let mut used = vec![false; max];
 
     fn backtrack(

@@ -31,7 +31,29 @@
 */
 
 /**
-   子集 - 元素无重不可复选
+ 球盒模型
+ 排列: P(n, k) = n! / (n - k)!
+ 组合: C(n, k) = n! / k!(n - k)!
+
+ 排列:
+ 1. 站在 `盒子` 的视角，每个盒子必然要选择一个球
+    第一个盒子可以选择 `n` 个球中的任意一个，然后你需要让剩下 `k - 1` 个盒子在 `n - 1` 个球中选择（这就是子问题 P(n - 1, k - 1))
+ 2. 可以站在 `球` 的视角，因为并不是每个球都会被装进盒子，所以球的视角分两种情况
+    - 第一个球可以不装进任何一个盒子，这样的话你就需要将剩下 `n - 1` 个球放入 `k` 个盒子。
+    - 第一个球可以装进 `k` 个盒子中的任意一个，这样的话你就需要将剩下 `n - 1` 个球放入 `k - 1` 个盒子。
+
+ 组合:
+ 不需要对盒进行编号，可以认为只有一个盒，其容量是 k。
+ 1. 站在 `盒子` 的视角，盒子必然要装 k 个球。
+    那么第一个球可以选择 n 个球中的任意一个，然后盒子剩余 k - 1 个位置，你需要在剩下的 n - 1 个球中选择（这就是子问题 C(n - 1, k - 1)）。
+    直接 nC(n - 1, k - 1) 是有重复的，正确的答案应该是 nC(n - 1, k - 1) / k
+ 2. 站在 `球` 的视角，因为并不是每个球都会被装进盒子，所以球的视角分两种情况
+    - 第一个球可以不装进盒子，这样的话你就需要将剩下 n - 1 个球放入 k 个盒子。
+    - 第一个球可以装进盒子，这样的话你就需要将剩下 n - 1 个球放入 k - 1 个盒子。
+*/
+
+/**
+   子集 - 元素无重不可复选, 以 `盒` 视角
    力扣: https://leetcode.cn/problems/subsets/description/
    题目: 输入一个无重复元素的数组 nums，其中每个元素最多使用一次，请你返回 nums 的所有子集。
    答: 输入 nums = [1,2,3]，算法应该返回如下子集: [ [],[1],[2],[3],[1,2],[1,3],[2,3],[1,2,3] ]
@@ -61,7 +83,7 @@ pub(crate) fn subsets(nums: Vec<u32>) -> Vec<Vec<u32>> {
     let mut track: Vec<u32> = Vec::new();
 
     fn backtrace(results: &mut Vec<Vec<u32>>, track: &mut Vec<u32>, nums: &Vec<u32>, start: usize) {
-        // 前序遍历位置，每个节 点的值都是一个子集
+        // 前序遍历位置，每个节点的值都是一个子集
         results.push(track.clone());
 
         for i in start..nums.len() {
@@ -69,6 +91,39 @@ pub(crate) fn subsets(nums: Vec<u32>) -> Vec<Vec<u32>> {
             backtrace(results, track, nums, i + 1);
             track.pop();
         }
+    }
+
+    backtrace(&mut results, &mut track, &nums, 0);
+    return results;
+}
+
+/**
+   子集 - 元素无重不可复选, 以 `球` 视角
+   站在 `球` 的视角，因为并不是每个球都会被装进盒子，所以球的视角分两种情况
+    - 第一个球可以不装进盒子，这样的话你就需要将剩下 n - 1 个球放入 k 个盒子。
+    - 第一个球可以装进盒子，这样的话你就需要将剩下 n - 1 个球放入 k - 1 个盒子。
+*/
+pub(crate) fn subsets2(nums: Vec<u32>) -> Vec<Vec<u32>> {
+    if nums.is_empty() {
+        return Vec::new();
+    }
+
+    let mut results: Vec<Vec<u32>> = Vec::new();
+    let mut track: Vec<u32> = Vec::new();
+
+    fn backtrace(results: &mut Vec<Vec<u32>>, track: &mut Vec<u32>, nums: &Vec<u32>, start: usize) {
+        if start == nums.len() {
+            results.push(track.clone());
+            return;
+        }
+
+        // 做第一种选择，元素在子集中
+        track.push(nums[start]);
+        backtrace(results, track, nums, start + 1);
+        track.pop(); // 撤销选择
+
+        // 做第二种选择，元素不在子集中
+        backtrace(results, track, nums, start + 1);
     }
 
     backtrace(&mut results, &mut track, &nums, 0);
