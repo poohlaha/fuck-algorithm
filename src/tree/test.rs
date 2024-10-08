@@ -212,7 +212,7 @@ pub(crate) fn test() {
     test_level_traverse();
     test_permute();
     test_permute_new();
-    // test_solve_n_queens();
+    test_solve_n_queens();
     println!("----- tree end ------");
     println!();
 }
