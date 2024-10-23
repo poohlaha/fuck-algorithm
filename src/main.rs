@@ -8,11 +8,11 @@ mod string;
 mod tree;
 
 fn main() {
-    link::test::test();
-    array::test::test();
-    string::test::test();
-    tree::test::test();
-    math::test::test();
+    // link::test::test();
+    // array::test::test();
+    //string::test::test();
+    // tree::test::test();
+    // math::test::test();
     backtrace::test::test();
-    bfs::test::test();
+    // bfs::test::test();
 }

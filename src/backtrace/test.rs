@@ -1,3 +1,7 @@
+use crate::backtrace::island::{
+    closed_islands_count, count_sub_islands, islands_count, islands_count_by_bfs,
+    max_area_of_island,
+};
 use crate::backtrace::subset::{
     combination_sum, combination_sum2, combine, permute_repeat, permute_unique, subsets, subsets2,
     subsets_with_dup,
@@ -93,6 +97,120 @@ fn test_solve_sudo_su() {
     }
 }
 
+/// 测试 `飞地的数量`
+fn test_islands_count() {
+    let nums = vec![
+        vec!['0', '0', '0', '0'],
+        vec!['1', '0', '1', '0'],
+        vec!['0', '1', '1', '0'],
+        vec!['0', '0', '0', '0'],
+    ];
+
+    let count = islands_count(nums);
+    println!("island count: {}", count);
+}
+
+/// 测试 `飞地的数量 - BFS`
+fn test_islands_count_by_bfs() {
+    let nums = vec![
+        vec!['0', '0', '0', '0'],
+        vec!['1', '0', '1', '0'],
+        vec!['0', '1', '1', '0'],
+        vec!['0', '0', '0', '0'],
+    ];
+
+    let count = islands_count_by_bfs(nums);
+    println!("island count: {}", count);
+}
+
+/// 测试 `统计封闭岛屿的数目`
+fn test_closed_islands_count() {
+    let nums = vec![
+        vec!['1', '1', '1', '1', '1', '1', '1', '0'],
+        vec!['1', '0', '0', '0', '0', '1', '1', '0'],
+        vec!['1', '0', '1', '0', '1', '1', '1', '0'],
+        vec!['1', '0', '0', '0', '0', '1', '0', '1'],
+        vec!['1', '1', '1', '1', '1', '1', '1', '0'],
+    ];
+
+    let count = closed_islands_count(nums);
+    println!("closed island count: {}", count);
+}
+
+/// 测试 `岛屿的最大面积`
+fn test_max_area_of_island() {
+    let nums = vec![
+        vec![
+            '0', '0', '1', '0', '0', '0', '0', '1', '0', '0', '0', '0', '0',
+        ],
+        vec![
+            '0', '0', '0', '0', '0', '0', '0', '1', '1', '1', '0', '0', '0',
+        ],
+        vec![
+            '0', '1', '1', '0', '1', '0', '0', '1', '0', '0', '0', '0', '0',
+        ],
+        vec![
+            '0', '1', '0', '0', '1', '1', '0', '0', '1', '0', '1', '0', '0',
+        ],
+        vec![
+            '0', '1', '0', '0', '1', '1', '0', '0', '1', '1', '1', '0', '0',
+        ],
+        vec![
+            '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0',
+        ],
+        vec![
+            '0', '0', '0', '0', '0', '0', '0', '1', '1', '1', '0', '0', '0',
+        ],
+        vec![
+            '0', '0', '0', '0', '0', '0', '0', '1', '1', '0', '0', '0', '0',
+        ],
+    ];
+
+    let count = max_area_of_island(nums);
+    println!("max island area: {}", count);
+}
+
+/// 测试 `统计子岛屿`
+fn test_count_sub_islands() {
+    let grid1 = vec![
+        vec!['1', '1', '1', '0', '0'],
+        vec!['0', '1', '1', '1', '1'],
+        vec!['0', '0', '0', '0', '0'],
+        vec!['1', '0', '0', '0', '0'],
+        vec!['1', '1', '0', '1', '1'],
+    ];
+
+    let grid2 = vec![
+        vec!['1', '1', '1', '0', '0'],
+        vec!['0', '0', '1', '1', '1'],
+        vec!['0', '1', '0', '0', '0'],
+        vec!['1', '0', '1', '1', '0'],
+        vec!['0', '1', '0', '1', '0'],
+    ];
+
+    let count = count_sub_islands(grid1, grid2);
+    println!("sub islands count: {}", count);
+
+    let grid1 = vec![
+        vec!['1', '0', '1', '0', '1'],
+        vec!['1', '1', '1', '1', '1'],
+        vec!['0', '0', '0', '0', '0'],
+        vec!['1', '1', '1', '1', '1'],
+        vec!['1', '0', '1', '0', '1'],
+    ];
+
+    let grid2 = vec![
+        vec!['0', '0', '0', '0', '0'],
+        vec!['1', '1', '1', '1', '1'],
+        vec!['0', '1', '0', '1', '0'],
+        vec!['0', '1', '0', '1', '0'],
+        vec!['1', '0', '0', '0', '1'],
+    ];
+
+    let count = count_sub_islands(grid1, grid2);
+    println!("sub islands count: {}", count);
+}
+
 pub(crate) fn test() {
     println!("----- backtrace start ------");
     test_subsets();
@@ -104,6 +222,11 @@ pub(crate) fn test() {
     test_combination_sum2();
     test_permute_repeat();
     test_solve_sudo_su();
+    test_islands_count();
+    test_islands_count_by_bfs();
+    test_closed_islands_count();
+    test_max_area_of_island();
+    test_count_sub_islands();
     println!("----- backtrace end ------");
     println!();
 }
