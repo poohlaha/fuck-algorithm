@@ -501,3 +501,51 @@ pub(crate) fn permute_repeat(nums: Vec<u32>) -> Vec<Vec<u32>> {
     backtrace(&mut results, &mut track, &new_nums);
     return results;
 }
+
+/**
+  括号生成
+  力扣: https://leetcode.cn/problems/generate-parentheses/description/
+  题目: 数字 n 代表生成括号的对数，请你设计一个函数，用于能够生成所有可能的并且 有效的 括号组合
+  解: 现在有 2n 个位置，每个位置可以放置字符 ( 或者 )，组成的所有括号组合中，有多少个是合法的
+*/
+pub(crate) fn generate_parenthesis(n: i32) -> Vec<String> {
+    if n <= 0 {
+        return Vec::new();
+    }
+
+    let mut track = String::new();
+    let mut res: Vec<String> = Vec::new();
+
+    fn backtrack(left: i32, right: i32, res: &mut Vec<String>, track: &mut String) {
+        //  若左括号剩下的多, 不合法
+        if right < left {
+            return;
+        }
+
+        //  数量小于 0, 不合法
+        if left < 0 || right < 0 {
+            return;
+        }
+
+        // 当所有括号都恰好用完时，得到一个合法的括号组合
+        if left == 0 && right == 0 {
+            res.push(track.clone());
+            return;
+        }
+
+        // 做选择，尝试放一个左括号
+        track.push_str("(");
+        backtrack(left - 1, right, res, track);
+        // 撤销选择
+        track.pop();
+
+        // 做选择，尝试放一个右括号
+        track.push_str(")");
+        backtrack(left, right - 1, res, track);
+        // 撤销选择
+        track.pop();
+    }
+
+    backtrack(n, n, &mut res, &mut track);
+    res
+}

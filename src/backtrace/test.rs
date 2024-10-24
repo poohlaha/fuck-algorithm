@@ -3,8 +3,8 @@ use crate::backtrace::island::{
     max_area_of_island,
 };
 use crate::backtrace::subset::{
-    combination_sum, combination_sum2, combine, permute_repeat, permute_unique, subsets, subsets2,
-    subsets_with_dup,
+    combination_sum, combination_sum2, combine, generate_parenthesis, permute_repeat,
+    permute_unique, subsets, subsets2, subsets_with_dup,
 };
 use crate::backtrace::topic::solve_sudo_su;
 
@@ -211,6 +211,12 @@ fn test_count_sub_islands() {
     println!("sub islands count: {}", count);
 }
 
+/// 测试 `括号生成`
+fn test_generate_parenthesis() {
+    let results = generate_parenthesis(3);
+    println!("generate parenthesis: {:#?}", results);
+}
+
 pub(crate) fn test() {
     println!("----- backtrace start ------");
     test_subsets();
@@ -227,6 +233,7 @@ pub(crate) fn test() {
     test_closed_islands_count();
     test_max_area_of_island();
     test_count_sub_islands();
+    test_generate_parenthesis();
     println!("----- backtrace end ------");
     println!();
 }
