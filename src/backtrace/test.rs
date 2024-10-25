@@ -3,8 +3,8 @@ use crate::backtrace::island::{
     max_area_of_island,
 };
 use crate::backtrace::subset::{
-    combination_sum, combination_sum2, combine, generate_parenthesis, permute_repeat,
-    permute_unique, subsets, subsets2, subsets_with_dup,
+    can_partition_k_subsets, combination_sum, combination_sum2, combine, generate_parenthesis,
+    permute_repeat, permute_unique, subsets, subsets2, subsets_with_dup,
 };
 use crate::backtrace::topic::solve_sudo_su;
 
@@ -217,6 +217,11 @@ fn test_generate_parenthesis() {
     println!("generate parenthesis: {:#?}", results);
 }
 
+/// 测试 `划分为k个相等的子集`
+fn test_can_partition_k_subsets() {
+    can_partition_k_subsets(vec![4, 3, 2, 3, 5, 2, 1], 4);
+}
+
 pub(crate) fn test() {
     println!("----- backtrace start ------");
     test_subsets();
@@ -234,6 +239,7 @@ pub(crate) fn test() {
     test_max_area_of_island();
     test_count_sub_islands();
     test_generate_parenthesis();
+    test_can_partition_k_subsets();
     println!("----- backtrace end ------");
     println!();
 }

@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 /**!
    回溯算法 --- 子集/组合/排列
    1. 元素无重不可复选，即 nums 中的元素都是唯一的，每个元素最多只能被使用一次，这也是最基本的形式。
@@ -548,4 +550,146 @@ pub(crate) fn generate_parenthesis(n: i32) -> Vec<String> {
 
     backtrack(n, n, &mut res, &mut track);
     res
+}
+
+/**
+  划分为k个相等的子集(球盒模型)
+  力扣: https://leetcode.cn/problems/partition-to-k-equal-sum-subsets/description/
+  题目: 给定一个整数数组  nums 和一个正整数 k，找出是否有可能把这个数组分成 k 个非空子集，其总和都相等
+  解:
+*/
+pub(crate) fn can_partition_k_subsets(nums: Vec<u32>, k: u32) {
+    if nums.is_empty() {
+        return;
+    }
+
+    if k as usize > nums.len() {
+        return;
+    }
+
+    // 判断总和
+    let sum: u32 = nums.iter().sum();
+    if sum % k != 0 {
+        return;
+    }
+
+    // 设置 k 个桶
+    let max = k as usize;
+    let mut buckets: Vec<Vec<u32>> = vec![vec![]; max];
+
+    // 计算每个桶的值
+    let target = sum / max as u32;
+    if target == 0 {
+        return;
+    }
+
+    // 球盒模型中的球: 以球的视角, 每个数字都要选择进入到 k 个桶中的某一个
+    fn backtrack_1(
+        nums: &Vec<u32>,
+        k: u32,
+        index: usize,
+        target: u32,
+        buckets: &mut Vec<Vec<u32>>,
+    ) -> bool {
+        if index == nums.len() {
+            // 检查所有桶的数字之和是否都是 target
+            for bucket in buckets.iter() {
+                if bucket.iter().sum::<u32>() != target {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        // 遍历桶
+        for i in 0..k {
+            // 桶满了
+            if buckets[i as usize].iter().sum::<u32>() + nums[index] > target {
+                continue;
+            }
+
+            // 装入桶
+            buckets[i as usize].push(nums[index]);
+
+            // 递归穷举下一个数字的选择
+            if backtrack_1(nums, k, index + 1, target, buckets) {
+                return true;
+            }
+
+            // 回退
+            buckets[i as usize].pop();
+        }
+
+        false
+    }
+
+    let success = backtrack_1(&nums, k, 0, target, &mut buckets);
+    println!("split bucket result: {}", success);
+    println!("bucket: {:?}", buckets);
+
+    // 球盒模型中的球: 以桶的视角进行穷举，每个桶需要遍历 nums 中的所有数字，决定是否把当前数字装进桶中；当装满一个桶之后，还要装下一个桶，直到所有桶都装满为止
+    let used: u32 = 0;
+    let mut buckets: Vec<Vec<u32>> = vec![vec![]; max];
+    let mut memo: HashMap<u32, bool> = HashMap::new();
+
+    fn backtrack_2(
+        nums: &Vec<u32>,
+        k: u32,
+        bucket: usize,
+        start: usize,
+        mut used: u32,
+        target: u32,
+        buckets: &mut Vec<Vec<u32>>,
+        memo: &mut HashMap<u32, bool>,
+    ) -> bool {
+        // 所有桶都装满
+        if k == 0 {
+            return true;
+        }
+
+        // 当前桶装满, 下一个桶
+        if buckets[bucket].iter().sum::<u32>() == target {
+            let res: bool = backtrack_2(nums, k - 1, bucket + 1, 0, used, target, buckets, memo);
+            // 缓存结果
+            memo.entry(used.clone()).or_insert_with(|| res);
+            return res;
+        }
+
+        // 避免冗余计算
+        if let Some(&result) = memo.get(&used) {
+            return result;
+        }
+
+        for i in start..nums.len() {
+            // 判断第 i 位是否是 1
+            if ((used >> i) & 1) == 1 {
+                continue;
+            }
+
+            if nums[i] + buckets[bucket].iter().sum::<u32>() > target {
+                continue;
+            }
+
+            // 将第 i 位置为 1
+            used |= 1 << i;
+            buckets[bucket].push(nums[i]);
+
+            if backtrack_2(nums, k, bucket, i + 1, used, target, buckets, memo) {
+                return true;
+            }
+
+            // 撤销选择
+            // 使用异或运算将第 i 位恢复 0
+            used ^= 1 << i;
+            buckets[bucket].pop();
+        }
+
+        false
+    }
+
+    backtrack_2(&nums, k, 0, 0, used, target, &mut buckets, &mut memo);
+    println!("split bucket result: {}", success);
+    println!("bucket: {:?}", buckets);
+    return;
 }
