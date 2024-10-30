@@ -3,6 +3,7 @@ use crate::math::fib::{
     length_of_lis, length_of_lis_with_two, longest_common_subsequence, max_envelopes,
     max_sub_array, max_sub_array_dynamic, max_sub_array_kadane,
 };
+use crate::math::operator::operator;
 
 fn test_fib() {
     let str = fib(10);
@@ -81,6 +82,11 @@ fn test_longest_common_subsequence() {
     println!("longest common subsequence: {}", str);
 }
 
+/// 测试 `位操作符`
+fn test_operator() {
+    operator();
+}
+
 pub(crate) fn test() {
     println!("----- math start ------");
     test_fib();
@@ -97,6 +103,7 @@ pub(crate) fn test() {
     test_max_sub_array_kadane();
     test_max_sub_array_dynamic();
     test_longest_common_subsequence();
+    test_operator();
     println!("----- math end ------");
     println!();
 }
