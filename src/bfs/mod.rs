@@ -63,6 +63,7 @@ pub(crate) fn open_lock(deadends: Vec<&str>, target: &str) -> i32 {
 /// 双向 BFS
 /// 传统的 BFS 框架就是从起点开始向四周扩散，遇到终点时停止；而双向 BFS 则是从起点和终点同时开始扩散，当两边有交集的时候停止。
 /// 双向 BFS 其实只遍历了半棵树就出现了交集，也就是找到了最短距离
+/// 顶部循环和顶部循环交替进行
 pub(crate) fn bidirectional_open_lock(deadends: Vec<&str>, target: &str) -> i32 {
     if deadends.is_empty() || target.is_empty() {
         return -1;
@@ -91,7 +92,7 @@ pub(crate) fn bidirectional_open_lock(deadends: Vec<&str>, target: &str) -> i32 
 
             visited.push(cur.clone());
 
-            // 将节点的相邻节点加入队列
+            // 将一个节点的未遍历相邻节点加入集合
             for j in 0..4 {
                 let up = plus_one(&cur, j);
                 let down = minus_one(&cur, j);
@@ -106,8 +107,8 @@ pub(crate) fn bidirectional_open_lock(deadends: Vec<&str>, target: &str) -> i32 
         }
 
         step += 1;
-        q1 = q2;
-        q2 = temp;
+        q1 = q2; // 将 q2 的状态转移到 q1
+        q2 = temp; // 将新生成的密码队列转移到 q2
     }
 
     step
@@ -151,4 +152,128 @@ fn minus_one(s: &str, j: i32) -> String {
     }
 
     return String::new();
+}
+
+/**
+  滑动谜题
+  力扣: https://leetcode.cn/problems/sliding-puzzle/description/
+  题目: 在一个 2 x 3 的板上（board）有 5 块砖瓦，用数字 1~5 来表示, 以及一块空缺用 0 来表示。一次 移动 定义为选择 0 与一个相邻的数字（上下左右）进行交换.
+       最终当板 board 的结果是 [[1,2,3],[4,5,0]] 谜板被解开。
+       给出一个谜板的初始状态 board ，返回最少可以通过多少次移动解开谜板，如果不能解开谜板，则返回 -1 。
+
+      2 4 1
+      5 0 3
+  答: 转换成一维数组: 2 4 1 5 0 3 -> 其中 neighbor[4] = { 1, 3, 5}, 第4个位置 0 的上索引为 1(数字 4), 左索引为 3(数字 5), 右索引为 5(数字 3), 没有下索引
+*/
+pub(crate) fn sliding_puzzle(
+    nums: Vec<Vec<usize>>,
+    target: Vec<Vec<usize>>,
+    m: usize,
+    n: usize,
+) -> i32 {
+    if nums.is_empty() || target.is_empty() {
+        return -1;
+    }
+
+    fn convert_to_string(values: Vec<Vec<usize>>) -> String {
+        return values
+            .iter()
+            .flat_map(|inner| inner.iter())
+            .map(|&num| num.to_string())
+            .collect::<Vec<String>>()
+            .join("");
+    }
+
+    // 将 nums 转成一维数组字符串
+    let target = convert_to_string(target);
+    let start = convert_to_string(nums);
+
+    let mut visited: Vec<String> = Vec::new(); // 记录已经穷举过的密码，防止走回头路
+    let mut queue: Vec<String> = Vec::new();
+    queue.push(start);
+
+    let mut step = 0;
+
+    while queue.len() > 0 {
+        for i in (0..queue.len()).rev() {
+            let cur = queue.remove(i); // swap_remove 会改变向量数据
+
+            // 是否到达目标
+            if cur == target {
+                return step;
+            }
+
+            // 找到数字 0 的索引
+            let mut index = 0;
+            while cur.chars().nth(index).unwrap() != '0' {
+                index += 1;
+            }
+
+            // 获取其相邻位置
+            let neighbor: Vec<Vec<usize>> = generate_neighbor(m as i32, n as i32);
+
+            if index >= neighbor.len() {
+                continue;
+            }
+
+            // 将数字 0 和相邻的数字交换位置
+            let neighbors = neighbor.get(index).unwrap();
+            for nei in neighbors.iter() {
+                let new_board = swap_neighbor(cur.clone(), nei.clone(), index);
+                // 防止走回头路
+                if !visited.contains(&new_board) {
+                    visited.push(new_board.clone());
+                    queue.push(new_board)
+                }
+            }
+        }
+
+        step += 1;
+    }
+
+    // 交换
+    fn swap_neighbor(cur: String, nei: usize, index: usize) -> String {
+        let mut chars: Vec<char> = cur.chars().collect();
+        if nei < chars.len() && index < chars.len() {
+            chars.swap(index, nei);
+        }
+
+        chars.iter().collect()
+    }
+
+    // 生成上下左右索引
+    fn generate_neighbor(m: i32, n: i32) -> Vec<Vec<usize>> {
+        let max = m * n;
+        let mut neighbor = Vec::new();
+
+        for i in 0..max {
+            let mut neighbors: Vec<usize> = Vec::new();
+
+            // 如果不是第一列，有左侧邻居
+            if i % n != 0 {
+                neighbors.push((i - 1) as usize)
+            }
+
+            // 如果不是最后一列，有右侧邻居
+            if i % n != n - 1 {
+                neighbors.push((i + 1) as usize)
+            }
+
+            // 如果不是第一行，有上方邻居
+            if i >= n {
+                neighbors.push((i - n) as usize);
+            }
+
+            // 如果不是最后一行，有下方邻居
+            if i + n < m * n {
+                neighbors.push((i + n) as usize);
+            }
+
+            neighbor.push(neighbors);
+        }
+
+        neighbor
+    }
+
+    step
 }
