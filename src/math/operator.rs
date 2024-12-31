@@ -276,7 +276,6 @@ pub fn single_number(nums: Vec<i32>) -> i32 {
      索引和数字成对出现, 可以抵消
 */
 pub fn missing_number(nums: Vec<i32>) -> i32 {
-
     // 索引和数字成对出现, 可以抵消
     fn missing1(nums: Vec<i32>) -> i32 {
         let mut res = nums.len() as i32; // 初始化为 n

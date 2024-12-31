@@ -271,7 +271,7 @@ pub(crate) fn closed_islands_count(grid: Vec<Vec<char>>) -> u32 {
 */
 pub(crate) fn max_area_of_island(grid: Vec<Vec<char>>) -> u32 {
     let rows = grid.len();
-    let mut count: u32 = 0;
+    let count: u32 = 0;
     if rows == 0 {
         return count;
     }
