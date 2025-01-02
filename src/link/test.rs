@@ -2,6 +2,7 @@ use crate::link::list::{
     create, delete_duplicates, detect_cycle, get_intersection_node, has_cycle, merge_k_list,
     merge_two_list, middle_node, partition, print, remove_n_from_end,
 };
+use crate::link::single::LinkedList;
 use crate::tree::binary_heap::{BinaryHeap, BinaryMaxHeap, BinaryMinHeap};
 
 /// 测试 `合并两个有序链表`
@@ -182,6 +183,41 @@ fn test_max_binary_heap() {
     println!("\n")
 }
 
+pub(crate) fn test_single() {
+    println!("----- link single start ------");
+    let arr: Vec<u32> = vec![1, 2, 3, 4, 5];
+    let mut link_list = LinkedList::new();
+    link_list.create(arr);
+    link_list.print();
+
+    println!("\ninsert first:");
+    link_list.insert(7, 0);
+    link_list.print();
+
+    println!("\ninsert middle:");
+    link_list.insert(6, 3);
+    link_list.print();
+
+    println!("\ninsert last:");
+    link_list.insert(8, link_list.len);
+    link_list.print();
+
+    println!("\ndelete first:");
+    link_list.delete(0);
+    link_list.print();
+
+    println!("\ndelete middle:");
+    link_list.delete(3);
+    link_list.print();
+
+    println!("\ndelete last:");
+    link_list.delete(link_list.len);
+    link_list.print();
+
+    println!();
+    println!("----- link single end ------");
+}
+
 pub(crate) fn test() {
     println!("----- link start ------");
     test_merge_two_list();
@@ -195,6 +231,7 @@ pub(crate) fn test() {
     test_delete_duplicates();
     test_min_binary_heap();
     test_max_binary_heap();
+    test_single();
     println!("----- link end ------");
     println!();
 }

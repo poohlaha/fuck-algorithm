@@ -182,7 +182,3 @@ impl<T: Clone + Debug> LinkedList<T> {
         }
     }
 }
-
-
-
-
