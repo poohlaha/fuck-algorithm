@@ -65,7 +65,7 @@ impl<T: Clone + Debug> CircularArray<T> {
     }
 
     /// 自动收容, 如果元素数量减少到原大小的四分之一，则减小大小为一半
-    pub fn house(&mut self) {
+    pub fn shrink(&mut self) {
         if self.size > 0 && self.size == self.capacity / 4 {
             self.resize(self.capacity / 2);
         }
@@ -107,7 +107,7 @@ impl<T: Clone + Debug> CircularArray<T> {
         self.data[self.front].take();
         self.front = (self.front + 1) % self.capacity;
         self.size -= 1;
-        self.house();
+        self.shrink();
         true
     }
 
@@ -121,7 +121,7 @@ impl<T: Clone + Debug> CircularArray<T> {
         self.rear = (self.rear - 1) % self.capacity;
         self.data[self.rear].take();
         self.size -= 1;
-        self.house();
+        self.shrink();
         true
     }
 

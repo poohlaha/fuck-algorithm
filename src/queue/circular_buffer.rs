@@ -77,7 +77,7 @@ ps: 利用求模（余数）运算，将普通数组变成逻辑上的环形数�
 
 use std::fmt::Debug;
 
-/// 全封闭
+/// 全封
 pub struct CircularBuffer<T> {
     data: Vec<Option<T>>, // 存储数据的底层容器
     front: usize,         // 头指针（读取位置）
@@ -112,7 +112,7 @@ impl<T: Clone + Debug> CircularBuffer<T> {
     }
 
     /// 自动收容, 如果元素数量减少到原大小的四分之一，则减小大小为一半
-    pub fn house(&mut self) {
+    pub fn shrink(&mut self) {
         if self.size > 0 && self.size == self.capacity / 4 {
             self.resize(self.capacity / 2);
         }
@@ -134,7 +134,7 @@ impl<T: Clone + Debug> CircularBuffer<T> {
         let value = self.data[self.front].take();
         self.front = (self.front + 1) % self.capacity;
         self.size -= 1;
-        self.house();
+        self.shrink();
         value
     }
 
