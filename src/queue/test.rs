@@ -1,7 +1,29 @@
-use crate::queue::circular::CircularArray;
+use crate::queue::circular_array::CircularArray;
+use crate::queue::circular_buffer::CircularBuffer;
+
+pub(crate) fn test_circular_buffer() {
+    println!("----- circular buffer start ------");
+    let mut circular_buffer = CircularBuffer::new(3);
+    println!("push:");
+    circular_buffer.push(1);
+    circular_buffer.push(2);
+    circular_buffer.push(3);
+    circular_buffer.print();
+
+    println!("pop:");
+    circular_buffer.pop();
+    circular_buffer.pop();
+
+    circular_buffer.push(4);
+    circular_buffer.push(5);
+    circular_buffer.push(6);
+    circular_buffer.print();
+
+    println!("----- circular buffer end ------");
+}
 
 pub(crate) fn test_circular_array() {
-    println!("----- circular start ------");
+    println!("----- circular array start ------");
     let mut circular_array = CircularArray::new(3);
 
     println!("push front:");
@@ -31,11 +53,12 @@ pub(crate) fn test_circular_array() {
     circular_array.pop_back();
     circular_array.pop_back();
     circular_array.print();
-    println!("----- circular end ------");
+    println!("----- circular array end ------");
 }
 
 pub(crate) fn test() {
     println!("----- queue start ------");
+    test_circular_buffer();
     test_circular_array();
     println!("----- queue end ------");
 }
