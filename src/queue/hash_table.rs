@@ -232,6 +232,9 @@ impl<K: Eq + Hash + Clone + Display, V: Clone + Debug> HashTable<K, V> {
 
         let old_table = self.table.clone();
         for entry in old_table.iter() {
+            if entry.is_empty() {
+                continue;
+            }
             entries.push(entry);
         }
 
@@ -242,7 +245,7 @@ impl<K: Eq + Hash + Clone + Display, V: Clone + Debug> HashTable<K, V> {
                 let mut index = self.hash(&key) % capacity;
 
                 // 线性探测法解决哈希冲突
-                while let Some((existing_key, _)) = self.table[index].front() {
+                while let Some((existing_key, _)) = table[index].front() {
                     if existing_key == key {
                         // 如果桶中已经有该键，则不需要重新计算位置
                         // 直接将新的值插入到该桶对应的 LinkedList 中
@@ -250,7 +253,7 @@ impl<K: Eq + Hash + Clone + Display, V: Clone + Debug> HashTable<K, V> {
                         break;
                     }
 
-                    index = (index + 1) % self.capacity;
+                    index = (index + 1) % capacity;
                 }
 
                 // 如果没有找到该键，直接插入
@@ -289,8 +292,6 @@ impl<K: Eq + Hash + Clone + Display, V: Clone + Debug> HashTable<K, V> {
         loop {
             // 获取桶对应的链表
             let bucket = &mut self.table[index];
-            // 查找该键是否已存在，如果存在则更新值
-
             for entry in bucket.iter_mut() {
                 if entry.0 == key {
                     bucket.push_back((key.clone(), value.clone()));
@@ -338,23 +339,36 @@ impl<K: Eq + Hash + Clone + Display, V: Clone + Debug> HashTable<K, V> {
     pub fn remove(&mut self, key: &K) -> bool {
         let mut index = self.hash(&key);
         let start = index;
+        let mut i = -1;
+        let mut x = 0;
         loop {
-            let bucket = &mut self.table[index];
-            let mut i: i32 = -1;
-            for (x, entry) in bucket.iter().enumerate() {
-                if entry.0 == key.clone() {
-                    i = x as i32;
+            let table = &mut self.table;
+            for (_, entry) in table[index].iter().enumerate() {
+                if entry.0 != key.clone() {
+                    i = -1;
+                } else {
+                    i = index as i32;
                 }
+
+                break;
             }
 
             if i != -1 {
-                let mut split_list = bucket.split_off(i as usize);
-                split_list.pop_front();
-                bucket.append(&mut split_list);
+                if let Some(bucket) = table.get_mut(i as usize) {
+                    *bucket = LinkedList::new();
+                }
+
+                self.size -= 1;
+                self.shrink();
                 return true;
             }
 
+            if x == 0 {
+                index = self.capacity - 1;
+            }
+
             index = (index + 1) % self.capacity;
+            x += 1;
             if index == start {
                 break;
             }

@@ -1,4 +1,3 @@
-use crate::link::single::LinkedList;
 use crate::queue::circular_array::CircularArray;
 use crate::queue::circular_buffer::CircularBuffer;
 use crate::queue::hash_table::{HashMap, HashTable};
@@ -142,6 +141,7 @@ fn test_hash_table() {
     hash_table.put(6, 7);
     hash_table.print();
 
+    println!("get:");
     print(hash_table.get(&1));
     print(hash_table.get(&2));
     print(hash_table.get(&3));
@@ -153,14 +153,28 @@ fn test_hash_table() {
     print(hash_table.get(&9));
     print(hash_table.get(&10));
     print(hash_table.get(&11));
+
+    println!("remove:");
+    hash_table.remove(&1);
+    hash_table.remove(&2);
+    hash_table.remove(&3);
+    hash_table.remove(&4);
+    hash_table.remove(&5);
+    hash_table.remove(&6);
+    hash_table.remove(&7);
+    hash_table.remove(&8);
+    hash_table.remove(&9);
+    hash_table.remove(&10);
+    hash_table.remove(&11);
+    hash_table.print();
     println!("----- hash table end ------");
 }
 
 pub(crate) fn test() {
     println!("----- queue start ------");
-    test_circular_buffer();
-    test_circular_array();
-    test_hash_map();
+    // test_circular_buffer();
+    // test_circular_array();
+    // test_hash_map();
     test_hash_table();
     println!("----- queue end ------");
 }
