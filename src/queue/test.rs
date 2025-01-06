@@ -88,6 +88,12 @@ fn test_hash_map() {
     println!("{:?}", hash_map.get(&10));
     println!("{:?}", hash_map.get(&11));
 
+    println!("random:");
+    println!("{:?}", hash_map.get_random());
+    println!("{:?}", hash_map.get_random());
+    println!("{:?}", hash_map.get_random());
+    println!("{:?}", hash_map.get_random());
+
     println!("remove:");
     hash_map.remove(&1);
     hash_map.remove(&2);
@@ -172,9 +178,9 @@ fn test_hash_table() {
 
 pub(crate) fn test() {
     println!("----- queue start ------");
-    // test_circular_buffer();
-    // test_circular_array();
-    // test_hash_map();
+    test_circular_buffer();
+    test_circular_array();
+    test_hash_map();
     test_hash_table();
     println!("----- queue end ------");
 }

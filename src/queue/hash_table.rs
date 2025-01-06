@@ -43,6 +43,7 @@
 
 */
 
+use rand::{random, Rng};
 use std::collections::LinkedList;
 use std::fmt::{Debug, Display};
 use std::hash::{DefaultHasher, Hash, Hasher};
@@ -56,6 +57,7 @@ const LOAD_FACTOR: f32 = 0.75;
 ///  线性探查法(开放寻址法)
 pub struct HashMap<K, V> {
     table: Vec<Option<(K, V)>>,
+    valid_indices: Vec<usize>, // 记录非空槽位的索引
     capacity: usize,
     size: usize,
 }
@@ -65,6 +67,7 @@ impl<K: Eq + Hash + Clone + Display, V: Clone + Debug> HashMap<K, V> {
         Self {
             table: vec![None; capacity],
             capacity,
+            valid_indices: Vec::new(),
             size: 0,
         }
     }
@@ -73,6 +76,7 @@ impl<K: Eq + Hash + Clone + Display, V: Clone + Debug> HashMap<K, V> {
     fn resize(&mut self, capacity: usize) {
         let mut table = vec![None; capacity];
         let mut entries = Vec::new();
+        self.valid_indices.clear();
 
         for entry in self.table.iter_mut() {
             if let Some(kv) = entry.take() {
@@ -90,6 +94,7 @@ impl<K: Eq + Hash + Clone + Display, V: Clone + Debug> HashMap<K, V> {
                 index = (index + 1) % capacity; // 重新计算位置
             }
             table[index] = Some((key, value));
+            self.valid_indices.push(index);
         }
 
         self.table = table;
@@ -130,6 +135,7 @@ impl<K: Eq + Hash + Clone + Display, V: Clone + Debug> HashMap<K, V> {
 
         self.table[index] = Some((key, value));
         self.size += 1;
+        self.valid_indices.push(index);
     }
 
     /// 查，复杂度 O(1)
@@ -167,6 +173,7 @@ impl<K: Eq + Hash + Clone + Display, V: Clone + Debug> HashMap<K, V> {
                 if existing_key == key {
                     self.table[index] = None;
                     self.size -= 1;
+                    self.valid_indices.retain(|i| i != &index);
                     self.shrink();
                     return true;
                 }
@@ -180,6 +187,17 @@ impl<K: Eq + Hash + Clone + Display, V: Clone + Debug> HashMap<K, V> {
         }
 
         false
+    }
+
+    /// 随机获取一个数
+    pub fn get_random(&self) -> Option<(&K, &V)> {
+        if self.valid_indices.is_empty() {
+            return None;
+        }
+
+        let mut random = rand::thread_rng();
+        let index = self.valid_indices[random.gen_range(0..self.valid_indices.len())];
+        self.table[index].as_ref().map(|(k, v)| (k, v))
     }
 
     /// 哈希函数，把 key 转化成 table 中的合法索引
