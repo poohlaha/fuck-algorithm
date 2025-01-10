@@ -5,6 +5,7 @@ mod error;
 mod link;
 mod math;
 mod queue;
+mod sort;
 mod string;
 mod tree;
 
@@ -14,7 +15,8 @@ fn main() {
     // string::test::test();
     // tree::test::test();
     // math::test::test();
-    queue::test::test();
+    // queue::test::test();
+    sort::test::test();
     // backtrace::test::test();
     // bfs::test::test();
 }
