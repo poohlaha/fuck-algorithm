@@ -15,7 +15,7 @@
 */
 
 pub fn selection_sort<T: Ord + Copy>(arr: &mut [T]) {
-    let mut n = arr.len();
+    let n = arr.len();
     if n == 0 || n == 1 {
         return;
     }

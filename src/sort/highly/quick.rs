@@ -40,7 +40,7 @@ use rand::Rng;
         - 左侧 [6, 7] 和右侧 [9] 继续递归
 */
 pub fn quick_sort<T: Ord>(arr: &mut [T]) {
-    let mut n = arr.len();
+    let n = arr.len();
     if n == 0 || n == 1 {
         return;
     }

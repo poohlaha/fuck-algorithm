@@ -43,7 +43,7 @@
 
 */
 
-use rand::{random, Rng};
+use rand::Rng;
 use std::collections::LinkedList;
 use std::fmt::{Debug, Display};
 use std::hash::{DefaultHasher, Hash, Hasher};
