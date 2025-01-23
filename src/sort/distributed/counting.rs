@@ -182,7 +182,15 @@ where
         count[i_num as usize] -= 1;
         println!(
             "num: {}, count[{}]: {}, count[{}] - 1: {}, result[{}]: {}, result: {:?}, count: {:?}",
-            i_num, i_num, count_index_value, i_num, count_value, index, result[index], result, count
+            i_num,
+            i_num,
+            count_index_value,
+            i_num,
+            count_value,
+            index,
+            result[index],
+            result,
+            count
         )
     }
 

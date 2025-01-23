@@ -34,3 +34,25 @@ ps: `BFS` 找到的路径一定是最短的，但代价就是空间复杂度可�
 - 明确 `start` 和 `target`
 - 通过 `队列` 实现
 - 多维数组可以转成一维数组字符串, 以些作为 `target`
+
+### 算法
+分为 `基本排序算法`、`高效排序算法`、`分布式排序算法`、`特殊排序算法` 等
+
+  - 基本排序算法
+    - 冒泡排序(Bubble Sort)
+    - 插入排序(Insertion Sort)
+    - 选择排序(Selection Sort)
+    
+  - 高效排序算法
+    - 快速排序(Quick Sort)
+    - 归并排序(Merge Sort)
+    - 堆排序(Heap Sort)
+    
+  - 分布式排序算法
+    - 桶排序(Bucket Sort)
+    - 计数排序(Counting Sort)
+    - 基数排序(Radix Sort)
+
+  - 特殊排序算法
+    - 冒泡改进算法(鸡尾酒排序)(双向冒泡排序)(Cocktail Shaker Sort)
+    - 希尔排序(Shell Sort)
