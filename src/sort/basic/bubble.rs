@@ -14,12 +14,14 @@ pub fn bubble_sort<T: Ord>(arr: &mut [T]) {
         return;
     }
 
+    let mut swapped = false;
+    let mut end = n - 1;
+
     loop {
         // 是否有交换, 如果没有交换，说明列表已经是有序的
-        let mut swapped = false;
-        for i in 1..n {
-            if arr[i - 1] > arr[i] {
-                arr.swap(i - 1, i);
+        for i in 0..end {
+            if arr[i] > arr[i + 1] {
+                arr.swap(i, i + 1);
                 swapped = true;
             }
         }
@@ -30,6 +32,7 @@ pub fn bubble_sort<T: Ord>(arr: &mut [T]) {
         }
 
         // 每次遍历，最大的元素会到正确的位置
-        n -= 1;
+        end -= 1;
+        swapped = false;
     }
 }

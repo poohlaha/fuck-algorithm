@@ -5,7 +5,7 @@ use crate::sort::basic::selection::selection_sort;
 /// 测试 `冒泡排序`
 pub fn test_bubble() {
     println!("bubble sort[O(n2)]:");
-    let mut arr = vec![64, 34, 25, 12, 22, 11, 90];
+    let mut arr = vec![4, 2, 2, 2, 8, 8, 3, 3, 1, 9];
     bubble_sort(&mut arr);
     println!("{:?}", arr);
     println!();

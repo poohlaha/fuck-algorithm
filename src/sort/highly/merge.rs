@@ -6,7 +6,7 @@
        - 最差：O(n log n)
        - 平均: O(n log n)
     3. 空间复杂度: O(n) (额外的临时数组)
-    4. 特点: 稳定排序，适合链表，适合外部排序（大数据）
+    4. 特点: 稳定排序，适合链表，适合外部排序(大数据)
 
      步骤:
      1. 分解(Divide)
@@ -83,8 +83,8 @@ pub fn merge_sort<T: Ord + Clone>(arr: &mut [T]) -> Vec<T> {
 
     // Step 1: 分解
     let mid = n / 2;
-    let left = merge_sort(&mut arr[..mid].to_vec());
-    let right = merge_sort(&mut arr[mid..].to_vec());
+    let left = merge_sort(&mut arr[..mid]);
+    let right = merge_sort(&mut arr[mid..]);
 
     // Step 2: 合并
     merge(left, right)
