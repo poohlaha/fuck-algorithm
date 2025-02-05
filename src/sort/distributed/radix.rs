@@ -67,19 +67,28 @@ pub fn radix_sort(arr: &mut [u32]) {
 
     // 1. 找到最大数
     let max = *arr.iter().max().unwrap();
+
+    // 2 使用计数排序, 对每一位进行排序, 以保证其稳定性
+    // 2.1 设定基数 `exp = 1`
     let mut exp = 1; // 指数，表示当前位：1 -> 个位, 10 -> 十位，依次类推
 
     while max / exp > 0 {
         counting_sort(arr, exp);
+        // 2.2 提取每个数的位数, 按位数排序
         exp *= 10; // 进入下一位
     }
 }
 
-/// 计数统计
+/// 计数排序
 fn counting_sort(arr: &mut [u32], exp: u32) {
     // 1. 初始化计数数组
-    let mut results = vec![0; arr.len()];
-    let mut count = vec![0; 10]; // 每个位的数字范围是 0~9
+    let n = arr.len();
+
+    // 1.1 计数数组长度 `k = 数组长度 + 1`
+    let k = 10;  // 每个位的数字范围是 0~9
+
+    // 1.2 初始化计算数组 count
+    let mut count: Vec<u32> = vec![0; k];
 
     // 2. 统计输入数组元素出现次数( + 1)
     for &num in arr.iter() {
@@ -92,13 +101,23 @@ fn counting_sort(arr: &mut [u32], exp: u32) {
         count[i] += count[i - 1];
     }
 
-    // 4. 反向遍历输入数组，并将元素放到排序结果数组的正确位置
+    // 4. 反向遍历数组，并将元素放到排序结果数组的正确位置
+    // 4.1 定义结果集 results
+    let mut results = vec![0; n];
     for &num in arr.iter().rev() {
+        // 计算 x
         let digit = (num / exp % 10) as usize;
+
+        // 4.2 获取数组元素 `x` 的索引第一个位置, `index = count[x] - 1`
         let index = count[digit] - 1;
-        results[index] = num;
+
+        // 4.3 把 `x` 放到结果集 `results` 中正确的位置, `results[index] = x`
+        results[index as usize] = num;
+
+        // 4.4 计算数组减少一位, count[x] -= 1
         count[digit] -= 1;
     }
 
+    // 5. 输出排序结果
     arr.copy_from_slice(&results);
 }

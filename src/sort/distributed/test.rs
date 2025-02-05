@@ -1,5 +1,6 @@
 use crate::sort::distributed::bucket::bucket_sort;
 use crate::sort::distributed::counting::counting_sort;
+use crate::sort::distributed::radix::radix_sort;
 
 /// 测试 `计数排序`
 fn test_counting() {
@@ -21,9 +22,20 @@ fn test_bucket() {
     println!();
 }
 
+/// 测试 `基数排序`
+fn test_radix() {
+    println!("radix sort[n + k]:");
+    let mut arr = vec![4, 2, 2, 2, 8, 8, 3, 3, 1, 9];
+    radix_sort(&mut arr);
+    println!("{:?}", arr);
+    println!();
+}
+
+
 pub fn test() {
     println!("----- distributed sort start ------");
     test_bucket();
     test_counting();
+    test_radix();
     println!("----- distributed sort end ------");
 }
