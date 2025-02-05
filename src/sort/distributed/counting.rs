@@ -163,8 +163,8 @@ where
 
     // 4. 反向遍历输入数组，并将元素放到排序结果数组的正确位置
     println!();
-    let mut result: Vec<T> = vec![arr[0].clone(); n];
-    println!("init result: {:?}, count: {:?}", result, count);
+    let mut results: Vec<T> = vec![arr[0].clone(); n];
+    println!("init result: {:?}, count: {:?}", results, count);
     println!(
         "arr: {:?}, arr rev: {:?}",
         arr,
@@ -178,7 +178,7 @@ where
         let count_index_value = count[i_num as usize];
         let count_value = count_index_value - 1;
         let index = count_value;
-        result[index] = num;
+        results[index] = num;
         count[i_num as usize] -= 1;
         println!(
             "num: {}, count[{}]: {}, count[{}] - 1: {}, result[{}]: {}, result: {:?}, count: {:?}",
@@ -188,12 +188,12 @@ where
             i_num,
             count_value,
             index,
-            result[index],
-            result,
+            results[index],
+            results,
             count
         )
     }
 
     // 5. 输出排序结果
-    arr.copy_from_slice(&result); // 将一个切片（slice）的内容复制到另一个切片中
+    arr.copy_from_slice(&results); // 将一个切片（slice）的内容复制到另一个切片中
 }

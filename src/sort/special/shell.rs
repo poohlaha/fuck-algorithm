@@ -65,8 +65,8 @@ pub fn shell_sort<T: Ord + Clone>(arr: &mut [T]) {
             let mut j = i;
 
             // 插入排序逻辑：比较当前元素与 gap 之前的元素
-            while j >= gap && arr[j] < arr[j - gap] {
-                arr.swap(j, j - gap); // 如果当前元素更小，则交换
+            while j >= gap && arr[j - gap] > arr[j] {
+                arr.swap(j - gap, j); // 如果当前元素更小，则交换
                 j -= gap;
             }
         }

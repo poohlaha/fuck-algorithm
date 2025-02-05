@@ -107,7 +107,7 @@ where
     for num in arr.iter() {
         let i_num: isize = (*num).into();
         // 计算桶索引: ((值 - 最小值) / 桶范围).floor(), 向取整数, 2.5 -> 2
-        let bucket_index = ((i_num / range) as f32).floor() as usize; // 向下取整 2.5 -> 2
+        let bucket_index = (((i_num - min) / range) as f32).floor() as usize; // 向下取整 2.5 -> 2
         let bucket_index = bucket_index.min(count - 1); // 确保计算出来的桶索引不会超出桶的范围
         buckets[bucket_index].push(*num)
     }
