@@ -85,7 +85,7 @@ fn counting_sort(arr: &mut [u32], exp: u32) {
     let n = arr.len();
 
     // 1.1 计数数组长度 `k = 数组长度 + 1`
-    let k = 10;  // 每个位的数字范围是 0~9
+    let k = 10; // 每个位的数字范围是 0~9
 
     // 1.2 初始化计算数组 count
     let mut count: Vec<u32> = vec![0; k];

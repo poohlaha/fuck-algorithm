@@ -31,7 +31,6 @@ fn test_radix() {
     println!();
 }
 
-
 pub fn test() {
     println!("----- distributed sort start ------");
     test_bucket();

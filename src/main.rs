@@ -1,6 +1,7 @@
 mod array;
 mod backtrace;
 mod bfs;
+mod data_structure;
 mod error;
 mod link;
 mod math;
@@ -17,6 +18,7 @@ fn main() {
     // math::test::test();
     // queue::test::test();
     sort::test::test();
+    data_structure::test::test()
     // backtrace::test::test();
     // bfs::test::test();
 }
