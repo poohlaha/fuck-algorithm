@@ -42,7 +42,7 @@ where
 
     let first = arr.get(0);
     if let Some(first) = first {
-        let mut head = Some(Box::new(ListNode::<E>::new(first.clone())));
+        let mut head = Some(Box::new(ListNode::new(first.clone())));
         let mut cur = &mut head;
 
         for x in arr.iter().skip(1) {
