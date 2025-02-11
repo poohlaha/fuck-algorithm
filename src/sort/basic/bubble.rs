@@ -9,7 +9,7 @@
  4. 特点: 简单易懂, 适合小规模数据; 效率较低
 */
 pub fn bubble_sort<T: Ord>(arr: &mut [T]) {
-    let mut n = arr.len();
+    let n = arr.len();
     if n == 0 || n == 1 {
         return;
     }

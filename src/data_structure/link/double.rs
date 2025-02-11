@@ -166,9 +166,9 @@ impl<T: Clone + Debug> Link<T> {
             return;
         }
 
-        let mut current = self.head.clone();
+        let current = self.head.clone();
         if let Some(mut cur) = current {
-            for i in 0..self.size - 2 {
+            for _ in 0..self.size - 2 {
                 let next = cur.borrow_mut().next.clone();
                 if let Some(next) = next {
                     cur = next.clone()
@@ -197,7 +197,7 @@ impl<T: Clone + Debug> Link<T> {
             return;
         }
 
-        let mut current = self.head.clone();
+        let current = self.head.clone();
         if let Some(mut cur) = current {
             for _ in 0..index - 1 {
                 let next = cur.borrow_mut().next.clone();
@@ -232,11 +232,11 @@ impl<T: Clone + Debug> Link<T> {
         }
 
         let mut iter = arr.into_iter();
-        let mut head = Some(Node::crete(iter.next().unwrap()));
+        let head = Some(Node::crete(iter.next().unwrap()));
         let mut current = head.clone();
 
         for t in iter {
-            if let Some(mut cur) = current {
+            if let Some(cur) = current {
                 let node = Node::crete(t);
 
                 // 新节点的前一个节点 = 当前节点

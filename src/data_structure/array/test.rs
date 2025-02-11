@@ -1,9 +1,10 @@
-use crate::data_structure::array::Array;
+use crate::data_structure::array::normal;
+use crate::data_structure::array::ring::Ring;
 
 /// 测试 `动态数组`
 fn test_dynamic_array() {
     println!("dynamic array:");
-    let mut arr = Array::new();
+    let mut arr = normal::Array::new();
     // add
     arr.add(1);
     arr.add(5);
@@ -39,8 +40,46 @@ fn test_dynamic_array() {
     println!();
 }
 
+/// 测试 `环形数组`
+fn test_ring_array() {
+    println!("ring array:");
+    let mut ring = Ring::new();
+
+    // 1. add first
+    println!("add first:");
+    ring.add_first(3);
+    ring.add_first(2);
+    ring.add_first(1);
+    ring.print();
+
+    // 2. add last
+    println!("add last:");
+    ring.add_last(4);
+    ring.add_last(5);
+    ring.add_last(6);
+    ring.print();
+
+    // 3. remove fist
+    println!("remove first:");
+    ring.remove_first();
+    ring.remove_first();
+    ring.remove_first();
+    ring.print();
+
+    println!("remove last:");
+    ring.remove_last();
+    ring.print();
+
+    // 3. get first
+    println!("get first: {:?}", ring.get_first());
+    println!("get last: {:?}", ring.get_last());
+
+    println!();
+}
+
 pub fn test() {
     println!("----- array start ------");
     test_dynamic_array();
+    test_ring_array();
     println!("----- array end ------");
 }
