@@ -81,7 +81,9 @@ fn test_ring_array() {
 /// 测试 `跳表`
 pub fn test_skip() {
     println!("skip list:");
-    let mut skip = Skip::new();
+    let mut skip = Skip::new(None);
+
+    println!("add:");
     skip.add(3);
     skip.add(6);
     skip.add(7);
@@ -89,10 +91,30 @@ pub fn test_skip() {
     skip.add(12);
     skip.add(19);
     skip.add(17);
-    skip.add(26);
-    skip.add(21);
-    skip.add(25);
+    // skip.add(26);
+    // skip.add(21);
+    // skip.add(25);
     skip.print();
+
+    println!("get:");
+    println!("0: {:?}", skip.get(0));
+    println!("21: {:?}", skip.get(21));
+    println!("12: {:?}", skip.get(12));
+
+    println!("remove:");
+    // println!("0: {:?}", skip.remove(0));
+    println!("7: {:?}", skip.remove(7));
+    println!("9: {:?}", skip.remove(9));
+    println!("12: {:?}", skip.remove(12));
+
+    println!("list:");
+    skip.print();
+    println!();
+
+    println!("update:");
+    println!("3: {:?}", skip.update(3, 1));
+    skip.print();
+
     println!();
 }
 

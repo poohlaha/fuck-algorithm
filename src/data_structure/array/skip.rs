@@ -210,7 +210,7 @@ impl<T: Debug + Clone + Ord> Skip<T> {
     // 插入
     pub fn add(&mut self, value: T) {
         // 1. 定义 `update` 数组, 用于存储 `每一层的前驱节点`
-        let mut update = vec![None; MAX_LEVEL];
+        let mut update = vec![None; self.max_level];
         let mut current = self.head.clone();
 
         // 从 1.1 `head` 开始，找到每一层的前驱节点, 从高层向低层查找
@@ -236,13 +236,12 @@ impl<T: Debug + Clone + Ord> Skip<T> {
 
         // 2. 随机决定新节点的层数
         let new_level = self.random_level();
-        println!("new level: {}", new_level);
 
         // 3.1 如果新节点的层数超过最高 > 当前层数(new_level > self.level)
         if new_level > self.level {
             // 3.2 把超出部分指向 `新的虚拟头节点`, 即为 None, 因为它们没有任何元素
             for i in self.level..new_level {
-                update[i] = Some(Node::create(Some(value.clone()), MAX_LEVEL));
+                update[i] = Some(Rc::clone(&self.head));
             }
 
             // 3.3 设置当前层数等于新节点的层数, self.level = new_level
@@ -250,10 +249,8 @@ impl<T: Debug + Clone + Ord> Skip<T> {
         }
 
         // 4. 创建新节点
-        let new_node = Node::create(Some(value), MAX_LEVEL);
+        let new_node = Node::create(Some(value), self.max_level);
 
-        // println!("before {:#?}", update);
-        // println!("before head {:#?}", self.head);
         // 5. 从高层开始插入, 设置 `forwards` 指针
         for i in 0..new_level {
             if let Some(prev) = &update[i] {
@@ -266,9 +263,6 @@ impl<T: Debug + Clone + Ord> Skip<T> {
         }
 
         self.size += 1;
-
-        // println!("after {:#?}", update);
-        // println!("head {:#?}", self.head);
     }
 
     // 查找
@@ -280,6 +274,8 @@ impl<T: Debug + Clone + Ord> Skip<T> {
             while let Some(forward) = &current.clone().borrow().forwards[i] {
                 if forward.borrow().value < Some(value.clone()) {
                     current = Rc::clone(&forward);
+                } else {
+                    break;
                 }
             }
         }
@@ -294,14 +290,20 @@ impl<T: Debug + Clone + Ord> Skip<T> {
     // 删除
     pub fn remove(&mut self, value: T) -> bool {
         // 定义 `update` 数组, 用于存储 `每一层的前驱节点`
-        let mut update = vec![None; MAX_LEVEL];
+        let mut update = vec![None; self.max_level];
 
         let mut current = self.head.clone();
         let mut found = false;
 
         // 从 1.1 `head` 开始，找到每一层的前驱节点, 从高层向低层查找
         for i in (0..self.level).rev() {
-            while let Some(forward) = &current.clone().borrow().forwards[i] {
+            while let Some(forward) = current
+                .clone()
+                .borrow()
+                .forwards
+                .get(i)
+                .and_then(|f| f.as_ref())
+            {
                 if forward.borrow().value < Some(value.clone()) {
                     current = Rc::clone(&forward);
                 } else {
@@ -309,20 +311,24 @@ impl<T: Debug + Clone + Ord> Skip<T> {
                 }
             }
 
+            // 1. 2 存储每一层的前驱节点到 `update` 数组
+            // `update[i]` 代表第 `i + 1` 层的前驱节点，用于连接新插入的节点
             update[i] = Some(Rc::clone(&current));
         }
 
-        if let Some(next) = &current.borrow().forwards[0] {
+        let next = current.borrow().forwards[0].clone();
+        if let Some(next) = next {
             if next.borrow().value != Some(value.clone()) {
                 return false;
             }
 
             found = true;
 
-            // 从高层往下更新 forward 指针, 删除节点
-            for i in 0..self.level {
+            // 从高层开始更新 forward 指针, 删除节点
+            for i in (0..self.level).rev() {
                 if let Some(prev) = &update[i] {
-                    if let Some(forward) = prev.clone().borrow().forwards[i].as_ref() {
+                    let mut next_forward = prev.borrow().forwards[i].clone();
+                    if let Some(forward) = next_forward.as_ref() {
                         if forward.borrow().value == Some(value.clone()) {
                             prev.borrow_mut().forwards[i] = next.borrow_mut().forwards[i].take();
                         }
@@ -362,25 +368,25 @@ impl<T: Debug + Clone + Ord> Skip<T> {
         // 使用 rng.gen_bool(0.5) 会导致要么在 `第一层`, 要么在 `最高层`, 导致缺失中间层
         /*
         let value = rng.gen_bool(0.5);
-        while value && level < MAX_LEVEL {
+        while value && level < self.max_level {
             level += 1;
         }
          */
 
         /*
-        while rng.gen_range(0.0..1.0) < 0.5 && level < MAX_LEVEL {
+        while rng.gen_range(0.0..1.0) < 0.5 && level < self.max_level {
             level += 1;
         }
          */
 
         // 概率逐渐递减
         let mut probability = 0.5;
-        while rng.gen_bool(probability) && level < MAX_LEVEL {
+        while rng.gen_bool(probability) && level < self.max_level {
             level += 1;
             probability *= 0.75; // 递减概率
         }
 
-        println!("level: {}", level);
+        // println!("level: {}", level);
         level
     }
 
@@ -388,6 +394,28 @@ impl<T: Debug + Clone + Ord> Skip<T> {
     pub fn print(&self) {
         for i in (0..self.level).rev() {
             print!("Level {}: head", i + 1);
+            let mut current = Rc::clone(&self.head);
+            while let Some(next) = current
+                .clone()
+                .borrow()
+                .forwards
+                .get(i)
+                .and_then(|f| f.as_ref())
+            {
+                print!(" -> {:?}", next.borrow().value);
+                current = Rc::clone(&next);
+            }
+
+            print!(" -> None");
+            println!()
+        }
+    }
+
+    #[allow(dead_code)]
+    pub fn print_update(&self, update: &Vec<Option<Rc<RefCell<Node<T>>>>>) {
+        println!("update:");
+        for i in 0..update.len() {
+            print!("Update {}: ", i + 1);
             let mut current = Rc::clone(&self.head);
             while let Some(next) = current
                 .clone()
