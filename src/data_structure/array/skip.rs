@@ -195,10 +195,7 @@ pub struct Skip<T> {
 
 impl<T: Debug + Clone + Ord> Skip<T> {
     pub fn new(level: Option<usize>) -> Self {
-        let mut max_level = MAX_LEVEL;
-        if let Some(level) = level {
-            max_level = level
-        }
+        let max_level = level.unwrap_or(MAX_LEVEL);
         Self {
             head: Node::create(None, max_level),
             level: 1,
@@ -327,7 +324,7 @@ impl<T: Debug + Clone + Ord> Skip<T> {
             // 从高层开始更新 forward 指针, 删除节点
             for i in (0..self.level).rev() {
                 if let Some(prev) = &update[i] {
-                    let mut next_forward = prev.borrow().forwards[i].clone();
+                    let next_forward = prev.borrow().forwards[i].clone();
                     if let Some(forward) = next_forward.as_ref() {
                         if forward.borrow().value == Some(value.clone()) {
                             prev.borrow_mut().forwards[i] = next.borrow_mut().forwards[i].take();

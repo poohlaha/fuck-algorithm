@@ -1,6 +1,5 @@
 use crate::data_structure::array::normal;
 use crate::data_structure::array::ring::Ring;
-use crate::data_structure::array::skip::Skip;
 
 /// 测试 `动态数组`
 fn test_dynamic_array() {
@@ -81,7 +80,7 @@ fn test_ring_array() {
 /// 测试 `跳表`
 pub fn test_skip() {
     println!("skip list:");
-    let mut skip = Skip::new(None);
+    let mut skip = crate::data_structure::array::skip::Skip::new(None);
 
     println!("add:");
     skip.add(3);
@@ -91,9 +90,9 @@ pub fn test_skip() {
     skip.add(12);
     skip.add(19);
     skip.add(17);
-    // skip.add(26);
-    // skip.add(21);
-    // skip.add(25);
+    skip.add(26);
+    skip.add(21);
+    skip.add(25);
     skip.print();
 
     println!("get:");
@@ -102,7 +101,50 @@ pub fn test_skip() {
     println!("12: {:?}", skip.get(12));
 
     println!("remove:");
-    // println!("0: {:?}", skip.remove(0));
+    println!("0: {:?}", skip.remove(0));
+    println!("7: {:?}", skip.remove(7));
+    println!("9: {:?}", skip.remove(9));
+    println!("12: {:?}", skip.remove(12));
+
+    println!("list:");
+    skip.print();
+    println!();
+
+    println!("update:");
+    println!("3: {:?}", skip.update(3, 1));
+    skip.print();
+
+    println!();
+}
+
+/// 测试 `跳表(多并发)`
+pub fn test_skip_arc() {
+    println!("skip list arc:");
+    let mut skip = crate::data_structure::array::skip_arc::Skip::new(None);
+
+    println!("add:");
+    skip.add(3);
+    skip.add(6);
+    skip.add(7);
+    skip.add(3);
+    skip.add(6);
+    skip.add(7);
+    skip.add(9);
+    skip.add(12);
+    skip.add(19);
+    skip.add(17);
+    skip.add(26);
+    skip.add(21);
+    skip.add(25);
+    skip.print();
+
+    println!("get:");
+    println!("0: {:?}", skip.get(0));
+    println!("21: {:?}", skip.get(21));
+    println!("12: {:?}", skip.get(12));
+
+    println!("remove:");
+    println!("0: {:?}", skip.remove(0));
     println!("7: {:?}", skip.remove(7));
     println!("9: {:?}", skip.remove(9));
     println!("12: {:?}", skip.remove(12));
@@ -123,5 +165,6 @@ pub fn test() {
     test_dynamic_array();
     test_ring_array();
     test_skip();
+    test_skip_arc();
     println!("----- array end ------");
 }
