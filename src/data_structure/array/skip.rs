@@ -76,7 +76,7 @@
      - 随机决定新节点的层数
        - 使用 rng.gen_bool(0.5) 以 `50% 的概率` 递增层数
      - 如果新节点的层数超过最高 > 当前层数(new_level > self.level)
-       - 把超出部分指向 `新的虚拟头节点`, 即为 None, 因为它们没有任何元素
+       - 把超出部分指向 `虚拟头节点`, 即为 head, 因为它们没有任何元素
          - 假设 level = 3，现在插入一个新节点，随机生成了 new_level = 5，那么 update 之前的情况
            - Level 5: head -> None
            - Level 4: head -> None
@@ -164,9 +164,6 @@ use std::rc::Rc;
 // 跳表最大层数
 const MAX_LEVEL: usize = 4;
 
-// 每一层最大节点数
-const PER_MAX_LEVEL: usize = 5;
-
 #[derive(Debug)]
 pub struct Node<T> {
     value: Option<T>,
@@ -236,7 +233,7 @@ impl<T: Debug + Clone + Ord> Skip<T> {
 
         // 3.1 如果新节点的层数超过最高 > 当前层数(new_level > self.level)
         if new_level > self.level {
-            // 3.2 把超出部分指向 `新的虚拟头节点`, 即为 None, 因为它们没有任何元素
+            // 3.2 把超出部分指向 `虚拟头节点`, 即为 head, 因为它们没有任何元素
             for i in self.level..new_level {
                 update[i] = Some(Rc::clone(&self.head));
             }
