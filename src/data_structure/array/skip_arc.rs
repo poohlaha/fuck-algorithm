@@ -62,7 +62,7 @@ impl<T: Debug + Clone + Ord> Skip<T> {
                 let mut next_current = Arc::clone(&current); // 用于存储下一个 current，初始值为当前 current
                 loop {
                     {
-                        let mut current_ref = current.lock().unwrap();
+                        let current_ref = current.lock().unwrap();
                         let mut updated = false;
                         if let Some(forward) = current_ref.forwards.get(i).and_then(|f| f.as_ref())
                         {
@@ -126,7 +126,6 @@ impl<T: Debug + Clone + Ord> Skip<T> {
     // 查找
     pub fn get(&self, value: T) -> bool {
         let mut current = Arc::clone(&self.head);
-        let mut cur = Arc::clone(&current);
 
         // 从高层开始查找
         {
@@ -135,7 +134,7 @@ impl<T: Debug + Clone + Ord> Skip<T> {
                 let mut next_current = Arc::clone(&current); // 用于存储下一个 current，初始值为当前 current
                 loop {
                     {
-                        let mut current_ref = current.lock().unwrap();
+                        let current_ref = current.lock().unwrap();
                         let mut updated = false;
                         if let Some(forward) = current_ref.forwards.get(i).and_then(|f| f.as_ref())
                         {
@@ -180,7 +179,7 @@ impl<T: Debug + Clone + Ord> Skip<T> {
                 let mut next_current = Arc::clone(&current); // 用于存储下一个 current，初始值为当前 current
                 loop {
                     {
-                        let mut current_ref = current.lock().unwrap();
+                        let current_ref = current.lock().unwrap();
                         let mut updated = false;
                         if let Some(forward) = current_ref.forwards.get(i).and_then(|f| f.as_ref())
                         {
@@ -297,7 +296,7 @@ impl<T: Debug + Clone + Ord> Skip<T> {
             let mut next_current = Arc::clone(&current); // 用于存储下一个 current，初始值为当前 current
             loop {
                 {
-                    let mut current_ref = current.lock().unwrap();
+                    let current_ref = current.lock().unwrap();
                     let mut updated = false;
                     if let Some(next) = current_ref.forwards.get(i).and_then(|f| f.as_ref()) {
                         let forward_ref = next.lock().unwrap();
@@ -331,7 +330,7 @@ impl<T: Debug + Clone + Ord> Skip<T> {
             let mut next_current = Arc::clone(&current); // 用于存储下一个 current，初始值为当前 current
             loop {
                 {
-                    let mut current_ref = current.lock().unwrap();
+                    let current_ref = current.lock().unwrap();
                     let mut updated = false;
                     if let Some(next) = current_ref.forwards.get(i).and_then(|f| f.as_ref()) {
                         let forward_ref = next.lock().unwrap();
