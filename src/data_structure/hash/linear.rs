@@ -189,7 +189,7 @@ where
         }
 
         print!("[");
-        for (pari, status) in self.table.iter() {
+        for (i, (pari, status)) in self.table.iter().enumerate() {
             print!("[");
 
             let status_str = match status {
@@ -199,10 +199,12 @@ where
             };
 
             if let Some((k, v)) = pari {
-                print!("({}, {:?}, {}), ", k, v, status_str);
+                print!("({}, {:?}, {})", k, v, status_str);
             }
 
-            print!("],");
+            if i != self.table.len() - 1 {
+                print!("],");
+            }
         }
         print!("]");
         println!();

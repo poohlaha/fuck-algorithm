@@ -175,16 +175,25 @@ where
             return;
         }
 
-        print!("[\n");
-        for bucket in self.table.iter() {
+        print!("[");
+        for (i, bucket) in self.table.iter().enumerate() {
             print!("[");
+            let status = self.status[i].clone();
+            let status_str = match status {
+                Status::Empty => "Empty",
+                Status::Deleted => "Deleted",
+                Status::Occupied => "Occupied",
+            };
+
             if let Some((k, v)) = bucket {
-                print!("({}, {:?}), ", k, v);
+                print!("({}, {:?}, {})", k, v, status_str);
             }
 
-            print!("],");
+            if i != self.table.len() - 1 {
+                print!("],");
+            }
         }
-        print!("\n]");
+        print!("]");
         println!();
     }
 }
