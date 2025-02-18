@@ -145,7 +145,7 @@ where
     pub fn remove(&mut self, key: K) -> bool {
         let index = self.hash(&key);
         while self.status[index] != Status::Empty {
-            if let Some((k, v)) = &self.table[index] {
+            if let Some((k, _)) = &self.table[index] {
                 if k == &key {
                     self.table[index] = None;
                     self.status[index] = Status::Deleted;

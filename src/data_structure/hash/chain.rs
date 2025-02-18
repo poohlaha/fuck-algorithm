@@ -48,7 +48,7 @@ where
 
     /// 扩容
     fn expand(&mut self) {
-        if (self.size / self.capacity) > LOAD_FACTOR as usize {
+        if ((self.size as f32) / (self.capacity as f32)) >= LOAD_FACTOR {
             self.resize(self.capacity * 2);
         }
     }
