@@ -36,4 +36,5 @@
 */
 
 mod chain;
+mod open;
 pub mod test;

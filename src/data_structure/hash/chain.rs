@@ -1,5 +1,5 @@
 /*!
-  通过 `链式地址法(拉链法)` 实现
+  通过 `链式地址法(拉链法)` 实现, 通过 `table` 中存储 `链表`
 */
 use std::collections::LinkedList;
 use std::fmt::{Debug, Display};
@@ -13,7 +13,7 @@ const MIN_CAPACITY: usize = 8;
 
 pub struct HashTable<K, V> {
     table: Vec<LinkedList<(K, V)>>, // 每个槽位用链表存储多个键值对
-    capacity: usize,                // 哈希表的大小
+    capacity: usize,                // 哈希表的容量
     size: usize,                    // 哈希表中存储的元素个数
 }
 
@@ -23,6 +23,7 @@ where
     V: Debug + Clone + Display,
 {
     pub fn new(capacity: usize) -> Self {
+        let capacity = capacity.next_power_of_two(); // 容量应该是2的幂次方
         let table = vec![LinkedList::new(); capacity];
         Self {
             table,
@@ -124,7 +125,10 @@ where
     pub fn hash(&self, key: &K) -> usize {
         let mut hasher = DefaultHasher::new();
         key.hash(&mut hasher);
-        (hasher.finish() as usize) % self.capacity
+        // hasher.finish() as usize % self.capacity
+        // 因为 capacity 为 2 的幂次方, 可以用位运算符(&)代替取模(%), 范围为 0 ~ capacity - 1
+        // 取 capacity - 1 只考虑哈希值的低位，并且正确地将哈希值限制在表的有效索引范围内
+        hasher.finish() as usize & (self.capacity - 1)
     }
 
     pub fn print(&self) {
