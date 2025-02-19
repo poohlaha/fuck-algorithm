@@ -172,6 +172,20 @@ where
         false
     }
 
+    // keys
+    pub fn keys(&self) -> Vec<K> {
+        let mut keys: Vec<K> = vec![];
+        for i in 0..self.capacity {
+            let data = self.table[i].clone();
+            if data.1 == Status::Occupied {
+                if let Some((k, _)) = data.0 {
+                    keys.push(k);
+                }
+            }
+        }
+        keys
+    }
+
     // 哈希函数
     pub fn hash(&self, key: &K) -> usize {
         let mut hasher = DefaultHasher::default();

@@ -21,6 +21,8 @@ fn test_chain() {
     println!("search:");
     println!("search 2: {:?}", hash_table.search(2));
     println!("search 4: {:?}", hash_table.search(4));
+
+    print!("keys: {:?}", hash_table.keys());
     println!();
 }
 
@@ -45,6 +47,8 @@ fn test_open() {
     println!("search:");
     println!("search 2: {:?}", hash_table.search(2));
     println!("search 4: {:?}", hash_table.search(4));
+
+    print!("keys: {:?}", hash_table.keys());
     println!();
 }
 
@@ -69,6 +73,8 @@ fn test_linear() {
     println!("search:");
     println!("search 2: {:?}", hash_table.search(2));
     println!("search 4: {:?}", hash_table.search(4));
+
+    print!("keys: {:?}", hash_table.keys());
     println!();
 }
 

@@ -121,6 +121,18 @@ where
         None
     }
 
+    // keys
+    pub fn keys(&self) -> Vec<K> {
+        let mut keys: Vec<K> = vec![];
+        for i in 0..self.capacity {
+            let data = self.table[i].clone();
+            for pair in data.iter() {
+                keys.push(pair.0.clone());
+            }
+        }
+        keys
+    }
+
     // 哈希函数
     pub fn hash(&self, key: &K) -> usize {
         let mut hasher = DefaultHasher::new();
