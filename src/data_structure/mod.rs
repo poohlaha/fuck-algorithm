@@ -6,3 +6,4 @@ mod link;
 mod queue;
 mod stack;
 pub mod test;
+mod tree;
