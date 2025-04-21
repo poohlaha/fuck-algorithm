@@ -1,14 +1,13 @@
 /*!
-  链式存储
-  - 定义
-    - 存储节点的数据: data
-    - 指向左子节点的指针: left
-    - 指向右子节点的指针: right
-  - 构建二叉搜索树
-    - 每个节点的左子树的所有节点都比当前节点小, 所以查找 `最小节点` 从左子树上找
-    - 右子树的所有节点都比当前节点大, 所以查找 `最大节点` 从右子树上找
+    二叉搜索树(Binary Search Tree，简称 BST)
+    - 特点
+     - 每个节点的左子树的所有节点都比当前节点小, 所以查找 `最小节点` 从左子树上找
+     - 右子树的所有节点都比当前节点大, 所以查找 `最大节点` 从右子树上找
+    - 定义
+      - 存储节点的数据: data
+      - 指向左子节点的指针: left
+      - 指向右子节点的指针: right
 */
-
 use std::collections::VecDeque;
 use std::fmt::{Debug, Display};
 
@@ -74,7 +73,7 @@ impl<T: Clone + Debug + Display + PartialOrd> TreeNode<T> {
             } else if self.right.is_none() {
                 return self.left.take();
             } else {
-                // 2. 删除的节点有两子节点: 找到右子树的最小值或左子树的最大值来替代当前节点的值, 然后递归删除替代的节点
+                // 2. 删除的节点有两子节点: 找到右子树的最小值(中序后继)或左子树的最大值(中序前驱)来替代当前节点的值, 然后递归删除替代的节点
                 let mut right = self.right.take().unwrap();
                 // 找到右子树的最小节点
                 let right_min_node = right.find_right_min().data.clone();
@@ -91,10 +90,9 @@ impl<T: Clone + Debug + Display + PartialOrd> TreeNode<T> {
 
     // 找到左子树的最大值, 左子树的最大值就是它的最右叶子节点
     fn find_left_max(&self) -> &TreeNode<T> {
-        if let Some(ref right) = self.right {
-            right.find_left_max()
-        } else {
-            self
+        match &self.right {
+            None => self,
+            Some(right) => right.find_left_max(),
         }
     }
 
@@ -102,7 +100,7 @@ impl<T: Clone + Debug + Display + PartialOrd> TreeNode<T> {
     fn find_right_min(&self) -> &TreeNode<T> {
         match &self.left {
             None => self,
-            Some(left) => left.find_left_max(),
+            Some(left) => left.find_right_min(),
         }
     }
 
@@ -134,7 +132,7 @@ impl<T: Clone + Debug + Display + PartialOrd> TreeNode<T> {
              /  \   /  \
             20   40 60   80    - 层 3
     */
-    // 前序遍历
+    // 前序遍历, 从 父节点 -> 左节点 -> 右节点 遍历
     // 1. 前序遍历：50 → 30 → 20 → 40 → 70 → 60 → 80    根节点 → 左子树 → 右子树
     pub fn preorder(&self, node: &Option<Box<TreeNode<T>>>) {
         if let Some(node) = node {
@@ -144,7 +142,7 @@ impl<T: Clone + Debug + Display + PartialOrd> TreeNode<T> {
         }
     }
 
-    // 中序遍历
+    // 中序遍历, 从 左节点 -> 父节点 -> 右节点, 左子树 -> 右子树 遍历
     // 2. 中序遍历：20 → 30 → 40 → 50 → 60 → 70 → 80    左子树 → 根节点 → 右子树
     pub fn inorder(&self, node: &Option<Box<TreeNode<T>>>) {
         if let Some(node) = node {
@@ -154,7 +152,7 @@ impl<T: Clone + Debug + Display + PartialOrd> TreeNode<T> {
         }
     }
 
-    // 后序遍历
+    // 后序遍历, 从 左节点 -> 右节点 -> 父节点 遍历
     // 3. 后序遍历：20 → 40 → 30 → 60 → 80 → 70 → 50    左子树(左子节点在最后) → 右子树(右子节点在最后) → 根节点
     pub fn postorder(&self, node: &Option<Box<TreeNode<T>>>) {
         if let Some(node) = node {
