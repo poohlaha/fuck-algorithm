@@ -10,11 +10,20 @@
    - 除根节点外，其他 `非叶子节点` `至少有 ⌈m/2⌉ 个子节点`
      - 最小度数 `t` 表示 每个内部节点 `至少` 有 `t - 1` 个 key
      - 对应地，`最多` 有 `2t - 1` 个 key
-     - `m = 2t`  ⟺  `t = m / 2`
+     - `m = 2t`
    - 所有 `叶子节点` 位于 `同一层`
    - 所有 `关键字` 在节点中 `升序排列`，子树之间具有区间性质
      - 若一个节点有 `k 个关键字`，则它有 `k + 1 个子树`
      - 所有 `左子树的关键字 < 当前关键字 < 所有右子树的关键字`
+   - 判断有没有满
+     - 偶数
+       - `m = 2t`  ⟺  `t = m / 2`, 所以 `2t - 1 = m - 1`
+         - 2t - 1
+         - m - 1
+     - 奇数
+       - `m = 2t`, `t = ceil(m / 2)`(向上取整), 此时 `2t - 1 != m - 1`
+         - m - 1 
+         - 2t - 2
 
 2. 时间复杂度
    - 插入: O(log n)
@@ -135,38 +144,54 @@
 
 8. 步骤
   以下都是从 `t(最小度数)` 维度来考虑, 节点已满判断条件: 2t - 1
-  - 插入
     - 1. 根节点未满
       - 直接调用 `3. 非满插入`
-    - 2. 根节点已满(2t - 1)
+    - 2. 根节点已满(len(node.keys) == 2t - 1)
       此时需要把 `中间值` 提升到 `根节点`
-      - 此时需要分裂 `root`, 调用 `4. 分裂`, 返回 `new_root`
-      - 调用 `3. 非满插入`
+      - 此时需要分裂 `root`, 调用 `4. 分裂`, 返回 `new_node`
+      - 创建新的根节点 `new_root`
+        - `keys` 为 `mid_key`
+        - `childrens` 为 [`旧的root节点`, `new_node`]
       - `new_root` = `root`
+      - 重新锁定新的根节点
+      - 调用 `3. 非满插入`
     - 3. 非满插入
       - 叶子节点
         - 此时没有子节点, 直接插入即可
       - 非叶子节点
-        - 通过 `data < keys[i]`, 找到合适的子节点 `children[i]`
+        - 通过 `key < keys[i]`, 找到合适的子节点 `children[i]`(keys 升序, data 必定存在 children 中)
           - 节点已满, 调用 `4. 分裂`
-          - 重新获取插入位置 `i`, 插入到分裂后的右半部分
-            - `children[i]` 分成了两个节点
-            - 左半部分: `children[i]` → 含 `t - 1` 个 key
-            - 中间部分: 第 `t - 1` 个 key `上升` → 插入 `node.keys[i]`
-            - 右半部分: 新建 `children[i + 1]` → 含 `t - 1` 个 key
+            - 把 `中间的 key` 移到 `父节点`
+             - node.keys.insert(i, mid_key);
+             - node.children.insert(i + 1, new_root.clone());
+            - 把新节点插入到父节点对应位置
+            - 重新获取插入位置 `i`, 插入到分裂后的部分(需要判断左或右半部分)
+              - `children[i]` 分成了两个节点
+              - 左半部分: `children[i]` → 含 `t - 1` 个 key
+              - 中间部分: 第 `t - 1` 个 key `上升` → 插入 `node.keys[i]`
+              - 右半部分: 新建 `children[i + 1]` → 含 `t - 1` 个 key
           ```
              if data > node.keys[i] {
                i += 1; // 插入右边
              }
           ```
-           - `node.keys[i]` 是从 `children[i]` 分裂出来的中间 key
-           - 如果 `data` > `node.keys[i]`，说明应该插入新生成的 `children[i + 1]`
+             - `node.keys[i]` 是从 `children[i]` 分裂出来的中间 key
+             - 如果 `data` > `node.keys[i]`，说明应该插入新生成的 `children[i + 1]`
+           - 重新锁定 child 节点
+             - child = node.children[i].lock().unwrap();
         - 调用 `3. 非满插入`
     - 4. 分裂
-      - 取 `中间的 key`(mid = t - 1)
+      - 取 `中间的 key` (mid = t - 1)
       - 分裂 `节点 node 的 children`
-        - leftChildren = node[0.. t - 1]
-        - rightChildren = node[t.. len]
-      - 创建新节点 `new_root`
-        - new_root.keys = [t - 1]
-        - new_root.children = leftChildren + rightChildren
+        - left_children = node[0.. t]
+        - right_children = node[t.. len]
+      - 创建新节点 `new_node`, `新节点` 拥有 `右半部分`
+        - new_node.keys = node.keys[mid + 1 .. len] (取右半部分 keys )
+        - new_node.children = right_children
+        - new_node.data = node.data[mid + 1 .. len] (如果是叶子节点，也需要分裂 data, 因为 mid_key 也是叶子节点的有效数据，虽然它的 key 被提升了，但它的 data 依然属于左侧)
+        - 为什么 mid_key 不留在左侧?
+          - 因为它会提升到父节点，`左节点不再包含它`
+          - 但对于 `叶子节点的 data`: `mid_key` 的 `data` 还是 `属于左侧节点` ，所以 `data` 是 `mid + 1`
+      - 截取 node.keys 的左半部分留给原节点 (树的有序性)
+        - node.keys = node.keys[0 .. mid]
+        - node.children = left_children
