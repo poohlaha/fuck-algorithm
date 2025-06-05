@@ -96,7 +96,7 @@ impl<K: Ord, V> TreeMap<K, V> {
 
     // 创建一个 TreeMap，并将给定有序映射中的所有键值对添加到 TreeMap 中，并按照给定有序映射中的比较器或者自然顺序进行排序
     pub fn from_sorted_map(map: &TreeMap<K, V>) -> Self {
-        let mut new_map = if let Some(comparator) = &map.comparator {
+        let new_map = if let Some(comparator) = &map.comparator {
             TreeMap {
                 root: None,
                 size: 0,

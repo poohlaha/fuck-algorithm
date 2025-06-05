@@ -1,5 +1,5 @@
 /*!
-B 树, 默认为偶数阶,  m = 2t => t = m / 2 => 2t - 1 = m - 1
+  B+ 树, 默认为偶数阶,  m = 2t => t = m / 2 => 2t - 1 = m - 1
 */
 
 use std::fmt::Debug;
@@ -8,12 +8,16 @@ use std::sync::{Arc, Mutex};
 // 阶数 m：每个节点最多有 m - 1 个键，m 个子节点
 const MIN_DEGREE: usize = 2; // 即 t，最小度数，表示每个非根节点至少有 t-1 个键
 
+#[derive(Clone, Debug, Default)]
 pub struct TreeNode<T> {
     data: Option<T>,                        // 叶子节点存储数据
     key: i32,                               // 节点唯一标识符（可作为节点编号）
     is_leaf: bool, // 是否是叶子节点, true: 当前节点是叶子节点，即没有任何子节点，children 数组应为空。数据都存储在叶子节点中, false: 当前节点是内部节点，有子节点。它只存储索引（keys）和指向子节点的引用
     keys: Vec<i32>, // 子节点的 key(用于搜索)
     children: Vec<Arc<Mutex<TreeNode<T>>>>, // 子节点引用
+    // 叶子节点链表指针
+    prev: Option<Arc<Mutex<TreeNode<T>>>>, // 下一个叶子节点
+    next: Option<Arc<Mutex<TreeNode<T>>>>, // 上一个叶子节点
 }
 
 impl<T: Clone + PartialEq> TreeNode<T> {
@@ -23,6 +27,8 @@ impl<T: Clone + PartialEq> TreeNode<T> {
         is_leaf: bool,
         keys: Vec<i32>,
         children: Vec<Arc<Mutex<TreeNode<T>>>>,
+        prev: Option<Arc<Mutex<TreeNode<T>>>>,
+        next: Option<Arc<Mutex<TreeNode<T>>>>,
     ) -> Self {
         Self {
             data,
@@ -30,6 +36,8 @@ impl<T: Clone + PartialEq> TreeNode<T> {
             key,
             keys,
             children,
+            prev,
+            next,
         }
     }
 
@@ -39,24 +47,26 @@ impl<T: Clone + PartialEq> TreeNode<T> {
         is_leaf: bool,
         keys: Vec<i32>,
         children: Vec<Arc<Mutex<TreeNode<T>>>>,
+        prev: Option<Arc<Mutex<TreeNode<T>>>>,
+        next: Option<Arc<Mutex<TreeNode<T>>>>,
     ) -> Arc<Mutex<TreeNode<T>>> {
         Arc::new(Mutex::new(TreeNode::new(
-            key, data, is_leaf, keys, children,
+            key, data, is_leaf, keys, children, prev, next,
         )))
     }
 }
 
-pub struct BTree<T> {
+pub struct BPlusTree<T> {
     root: Arc<Mutex<TreeNode<T>>>,
     t: usize,           // 最小度数 (每个节点最少 t-1 个 key，最多 2t-1 个 key)
     current_index: i32, // 唯一节点编号生成器
 }
 
-impl<T: Clone + Debug + PartialEq + Ord> BTree<T> {
+impl<T: Clone + Debug + PartialEq + Ord> BPlusTree<T> {
     pub fn new(t: Option<usize>) -> Self {
         let size = if let Some(t) = t { t } else { MIN_DEGREE };
 
-        let root = TreeNode::create(0, None, true, Vec::new(), Vec::new());
+        let root = TreeNode::create(0, None, true, Vec::new(), Vec::new(), None, None);
         Self {
             root,
             t: size,
@@ -79,6 +89,7 @@ impl<T: Clone + Debug + PartialEq + Ord> BTree<T> {
         } else {
             // 2. 根节点已满(len(node.keys) == 2t - 1)
             // 2.1 此时需要分裂 `root`, 调用 `4. 分裂`, 返回 `new_node`
+            // 根节点不需要 设置 prev 和 next
             let (mid_key, new_node) = self.split(None);
             let old_root = self.root.clone();
             let new_root = TreeNode::create(
@@ -87,6 +98,8 @@ impl<T: Clone + Debug + PartialEq + Ord> BTree<T> {
                 false,
                 vec![mid_key],
                 vec![old_root.clone(), new_node],
+                None,
+                None,
             );
             self.current_index += 1;
 
@@ -194,6 +207,8 @@ impl<T: Clone + Debug + PartialEq + Ord> BTree<T> {
             node.is_leaf,
             Vec::new(),
             Vec::new(),
+            None,
+            None,
         );
 
         // 4.3.1 new_node.keys = node.keys[mid + 1 .. len] (右半部分 keys )
@@ -210,6 +225,21 @@ impl<T: Clone + Debug + PartialEq + Ord> BTree<T> {
 
         // 4.4.2 node.children = left_children, 不需要设置了, node.children.split_off(self.t) 自动获取前半部分
         // node.children = left_children;
+        if node.is_leaf {
+            let node_arc = Arc::new(Mutex::new(node.clone()));
+
+            new_node.next = node.next.take();
+            new_node.prev = Some(Arc::clone(&node_arc));
+
+            if let Some(ref next_node) = new_node.next {
+                let mut next_guard = next_node.lock().unwrap();
+                next_guard.prev = Some(Arc::new(Mutex::new(new_node.clone())));
+            }
+
+            node.next = Some(Arc::new(Mutex::new(new_node.clone())));
+        }
+
+        // 维护双向链表
         (mid_key, Arc::new(Mutex::new(new_node)))
     }
 
@@ -250,6 +280,66 @@ impl<T: Clone + Debug + PartialEq + Ord> BTree<T> {
         }
 
         None
+    }
+
+    // 范围查找, 使用双向链表
+    pub fn range_search(&self, start: i32, end: i32) -> Vec<(Option<T>, i32)> {
+        let mut results = Vec::new();
+        // 1. 先找到起始叶子节点
+        let start_node = self.find_leaf_node(start);
+        if start_node.is_none() {
+            return results;
+        }
+
+        let mut current_node = start_node.unwrap();
+        loop {
+            let node_guard = current_node.lock().unwrap();
+            // 遍历叶子节点里的 keys 和 data，找范围内的项
+            for (_, key) in node_guard.keys.iter().enumerate() {
+                if *key >= start && *key <= end {
+                    results.push((node_guard.data.clone(), node_guard.key.clone()));
+                } else if *key > end {
+                    return results;
+                }
+            }
+
+            // 2. 顺着 next 指针走到下一个叶子节点
+            let next = node_guard.next.clone();
+            drop(node_guard);
+
+            if let Some(ref next_node) = next {
+                current_node = next_node.clone();
+            } else {
+                break; // 到链表尾部了
+            }
+        }
+        results
+    }
+
+    fn find_leaf_node(&self, key: i32) -> Option<Arc<Mutex<TreeNode<T>>>> {
+        let mut node = self.root.clone();
+
+        loop {
+            let node_guard = node.lock().unwrap();
+            if node_guard.is_leaf {
+                return Some(node.clone());
+            }
+
+            // 找到对应的子节点索引
+            let mut i = 0;
+            while i < node_guard.keys.len() && key >= node_guard.keys[i] {
+                i += 1;
+            }
+
+            let children = node_guard.children.clone();
+            drop(node_guard);
+
+            if i < children.len() {
+                node = children[i].clone();
+            } else {
+                return None;
+            }
+        }
     }
 
     pub fn update(&mut self, data: T, new_data: T) -> bool {
