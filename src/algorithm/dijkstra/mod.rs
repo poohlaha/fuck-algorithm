@@ -1,7 +1,5 @@
 /*!
 
- */
+*/
 
-pub fn dijkstra() {
-
-}
+pub fn dijkstra() {}

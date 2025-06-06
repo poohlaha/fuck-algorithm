@@ -1,7 +1,5 @@
 /*!
 
- */
+*/
 
-pub fn kruskal<T>(arr: &mut [T]) {
-
-}
+pub fn kruskal<T>(arr: &mut [T]) {}

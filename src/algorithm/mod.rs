@@ -1,6 +1,5 @@
-
-mod search;
+mod dijkstra;
 mod greedy;
 mod kruskal;
-mod dijkstra;
 mod prim;
+mod search;

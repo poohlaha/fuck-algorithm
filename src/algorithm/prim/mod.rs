@@ -2,6 +2,4 @@
 
 */
 
-pub fn prim() {
-
-}
+pub fn prim() {}
