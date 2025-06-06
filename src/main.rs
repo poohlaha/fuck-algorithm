@@ -9,6 +9,7 @@ mod queue;
 mod sort;
 mod string;
 mod tree;
+mod algorithm;
 
 fn main() {
     link::test::test();

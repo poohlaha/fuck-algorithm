@@ -10,5 +10,4 @@ mod distributed;
 /// 特殊排序算法
 mod special;
 
-mod search;
 pub mod test;
