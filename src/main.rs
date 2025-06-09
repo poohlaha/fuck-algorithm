@@ -2,6 +2,7 @@ mod algorithm;
 mod array;
 mod backtrace;
 mod bfs;
+mod core;
 mod data_structure;
 mod error;
 mod link;
