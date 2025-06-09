@@ -169,6 +169,30 @@ impl HuffmanTree {
         result
     }
 
+    // 计算带权路径长度 = 权值 * 路径长度
+    // 如果是叶子：frequency * depth, 否则，递归累加左子树、右子树结果
+    pub fn calculate_wpl(&self, node: Arc<Node>, depth: usize) -> usize {
+        // 叶子节点(symbol 不为空)
+        if node.symbol.is_some() {
+            return node.frequency * depth;
+        }
+
+        let mut wpl: usize = 0;
+        if let Some(left) = &node.left {
+            wpl += self.calculate_wpl(left.clone(), depth + 1);
+        }
+
+        if let Some(right) = &node.right {
+            wpl += self.calculate_wpl(right.clone(), depth + 1);
+        }
+
+        wpl
+    }
+
+    pub fn get_tree_root(&self) -> Option<Arc<Node>> {
+        self.root.clone()
+    }
+
     // 可视化层序打印树结构
     pub(crate) fn print_tree(&self) {
         if let Some(ref root) = self.root {
