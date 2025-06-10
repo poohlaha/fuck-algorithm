@@ -124,5 +124,5 @@
 mod bbt;
 mod bst;
 mod order;
-mod other;
+pub mod other;
 pub mod test;
