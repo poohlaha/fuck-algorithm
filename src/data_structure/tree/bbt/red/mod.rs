@@ -211,7 +211,7 @@ where
                 if Arc::ptr_eq(root, n) && self.get_color(&node) == Color::Black {
                     let parent = self.get_parent_node(node.as_ref().unwrap());
                     if let Some(parent) = parent {
-                        let mut is_left = if let Some(left) = parent.lock().unwrap().left.clone() {
+                        let is_left = if let Some(left) = parent.lock().unwrap().left.clone() {
                             Arc::ptr_eq(&left, &node.as_ref().unwrap())
                         } else {
                             false
@@ -433,7 +433,7 @@ where
 
             // 2. 父节点是红色 ❌（出现连续红色）
             // 2.1. 叔叔是红色 -> 变色并向上修复
-            let mut uncle_color = self.get_color(&uncle);
+            let uncle_color = self.get_color(&uncle);
             if uncle_color == Color::Red {
                 // 设置 `父节点` 为 `黑色`
                 parent.lock().unwrap().color = Color::Black;
