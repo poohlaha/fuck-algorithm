@@ -1,4 +1,8 @@
 use crate::data_structure::tree::other::huff::HuffmanTree;
+use crate::data_structure::tree::other::merkle::account::Account;
+use crate::data_structure::tree::other::merkle::client::Client;
+use crate::data_structure::tree::other::merkle::merkle::MerkleTree;
+use crate::data_structure::tree::other::merkle::processor::Processor;
 use crate::data_structure::tree::other::segment::SegmentTree;
 use crate::data_structure::tree::other::trie::Trie;
 use std::collections::HashMap;
@@ -143,11 +147,93 @@ fn test_segment() {
     println!("----- Segment Tree End ------");
 }
 
+/// 测试 `Merkle 树`
+fn test_merkle() {
+    println!("----- Merkle Tree start ------");
+    println!("=== 模拟链上交易提交系统 ===");
+    // 创建账户
+    let mut accounts: HashMap<String, Account> = HashMap::new();
+    accounts.insert("Alice".into(), Account::new(100));
+    accounts.insert("Bob".into(), Account::new(50));
+    accounts.insert("Carol".into(), Account::new(30));
+    accounts.insert("Dave".into(), Account::new(8));
+
+    /*
+    println!("Alice: {}", 100);
+    println!("Bob: {}", 50);
+    println!("Carol: {}", 30);
+    println!("Dave: {}", 8);
+     */
+
+    let mut processor = Processor::new(accounts);
+
+    // 模拟发起交易(秒回机制)
+    Client::send_transaction("Alice", "Blob", 10, &mut processor);
+    Client::send_transaction("Bob", "Carol", 5, &mut processor);
+    Client::send_transaction("Carol", "Dave", 2, &mut processor);
+    Client::send_transaction("Dave", "Candy", 30, &mut processor);
+
+    // 合约调用
+    /*
+     1. 用户 "Carol" 发起一个调用
+     2. 调用的合约是 "MyContract"
+     3. 合约内部调用的是函数 "get_value"，即：获取某个值
+     4. vec![]：没有参数
+    */
+    // MyContract.get_value()
+    Client::call_contract("Carol", "MyContract", "get_value", vec![], &mut processor);
+
+    /*
+     1. 用户 "Alice" 发起调用
+     2. 合约 "MyContract" 的函数 "increment"（增量函数）
+     3. 传入参数 "x"：比如想让变量 x 自增
+     4. vec!["x".into()] 表示构造参数向量：字符串 "x" 被转换为 String 类型（用 .into()）
+    */
+    Client::call_contract(
+        "Alice",
+        "MyContract",
+        "increment",
+        vec!["x".into()],
+        &mut processor,
+    );
+
+    println!("=== 批量打包交易 ===");
+    let tx_hashes: Vec<Vec<u8>> = processor.get_transaction_hashes();
+    let tree = MerkleTree::new(&tx_hashes);
+    let root = tree.root();
+    println!("Merkle 根: {}", hex::encode(&root));
+
+    // 判断某笔交易是否存在
+    let leaf = tx_hashes[1].clone();
+    let verified = MerkleTree::verify(tree.clone(), leaf, 1);
+    println!(
+        "第 2 笔交易验证结果：{}",
+        if verified { "✅ 成功" } else { "❌ 失败" }
+    );
+
+    println!("=== 所有交易执行结果如下 ===");
+    for (i, res) in processor.get_transaction_results().iter().enumerate() {
+        println!(
+            "第 {} 笔: [{}] {} (tx_hash: {})",
+            i + 1,
+            if res.success { "✅" } else { "❌" },
+            res.message,
+            hex::encode(&res.hash)
+        );
+    }
+
+    // 查看余额
+    processor.get_balances();
+
+    println!("----- Merkle Tree End ------");
+}
+
 pub fn test() {
     println!("----- other tree start ------");
     test_huffman_tree();
     test_huffman_tree_compress();
     test_trie();
     test_segment();
+    test_merkle();
     println!("----- other tree end ------");
 }
