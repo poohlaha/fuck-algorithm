@@ -1,7 +1,6 @@
 use crate::data_structure::tree::other::huff::HuffmanTree;
 use crate::data_structure::tree::other::merkle::account::Account;
 use crate::data_structure::tree::other::merkle::client::Client;
-use crate::data_structure::tree::other::merkle::merkle::MerkleTree;
 use crate::data_structure::tree::other::merkle::processor::Processor;
 use crate::data_structure::tree::other::segment::SegmentTree;
 use crate::data_structure::tree::other::trie::Trie;
@@ -198,14 +197,10 @@ fn test_merkle() {
     );
 
     println!("=== 批量打包交易 ===");
-    let tx_hashes: Vec<Vec<u8>> = processor.get_transaction_hashes();
-    let tree = MerkleTree::new(&tx_hashes);
-    let root = tree.root();
-    println!("Merkle 根: {}", hex::encode(&root));
+    let block = processor.process();
 
     // 判断某笔交易是否存在
-    let leaf = tx_hashes[1].clone();
-    let verified = MerkleTree::verify(tree.clone(), leaf, 1);
+    let verified = processor.verify(block, 1);
     println!(
         "第 2 笔交易验证结果：{}",
         if verified { "✅ 成功" } else { "❌ 失败" }
