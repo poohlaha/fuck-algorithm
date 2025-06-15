@@ -11,22 +11,22 @@ use std::hash::Hash;
 #[derive(Clone, Debug)]
 pub struct Transaction {
     pub tx_type: TransactionType,
-}
-
-impl Transaction {
-    pub fn hash(&self) -> Vec<u8> {
-        let tx_str = format!("{:?}", self);
-        Sha256::digest(tx_str.as_bytes()).to_vec()
-    }
+    pub hash: String,
+    pub tx_hash: Vec<u8>,
 }
 
 pub struct Client;
 
 impl Client {
-    pub fn send_transaction(from: &str, to: &str, amount: i64, processor: &mut Processor) {
+    pub fn send_transaction(
+        from: &str,
+        to: &str,
+        amount: i64,
+        processor: &mut Processor,
+    ) -> String {
         // 模拟生成 tx_hash = SHA256(from + to + amount)
-        // let raw = format!("{}:{}:{}", from, to, amount);
-        // let hash = Sha256::digest(raw.as_bytes());
+        let raw = format!("{}:{}:{}", from, to, amount);
+        let hash = Sha256::digest(raw.as_bytes());
 
         let tx = Transaction {
             tx_type: TransactionType::Transfer {
@@ -34,15 +34,19 @@ impl Client {
                 to: to.to_string(),
                 amount,
             },
+            hash: hex::encode(&hash),
+            tx_hash: hash.to_vec(),
         };
 
-        // let tx_hash = hex::encode(tx.hash().clone());
-        println!("[前端] 发起交易：{} -> {} ({} BTC)...", from, to, amount);
+        println!(
+            "[前端] 发起交易：{} -> {} ({} BTC)... 返回交易哈希: {}",
+            from, to, amount, tx.hash
+        );
 
+        let hash = tx.hash.clone();
         // 秒回，获得 tx_hash
-        processor.process_and_record(tx);
-        // println!("[前端] 秒回成功，交易哈希：{}\n", tx_hash);
-        println!("");
+        processor.enqueue_transaction(tx);
+        hash
     }
 
     pub fn call_contract(
@@ -51,7 +55,11 @@ impl Client {
         method: &str,
         args: Vec<String>,
         processor: &mut Processor,
-    ) {
+    ) -> String {
+        // 模拟生成 tx_hash = SHA256(from + to + amount)
+        let raw = format!("{}:{}:{}:{:?}", caller, contract, method, args);
+        let hash = Sha256::digest(raw.as_bytes());
+
         let tx = Transaction {
             tx_type: TransactionType::ContractCall {
                 caller: caller.into(),
@@ -59,7 +67,17 @@ impl Client {
                 method: method.into(),
                 args,
             },
+            hash: hex::encode(&hash),
+            tx_hash: hash.to_vec(),
         };
-        processor.process_and_record(tx);
+
+        println!(
+            "[前端] 发起合约调用：{}.{}()... 返回交易哈希: {}",
+            contract, method, tx.hash
+        );
+
+        let hash = tx.hash.clone();
+        processor.enqueue_transaction(tx);
+        hash
     }
 }
