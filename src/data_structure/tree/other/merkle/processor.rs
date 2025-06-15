@@ -6,6 +6,7 @@ use crate::data_structure::tree::other::merkle::account::{
     Account, ContractResult, TransactionType,
 };
 use crate::data_structure::tree::other::merkle::client::Transaction;
+use crate::data_structure::tree::other::merkle::merkle::MerkleTree;
 use std::collections::{HashMap, VecDeque};
 
 #[derive(Default, Clone)]
@@ -13,6 +14,12 @@ pub struct TransactionResult {
     pub success: bool,
     pub message: String,
     pub hash: Vec<u8>,
+}
+
+pub struct Block {
+    pub transactions: Vec<Transaction>,
+    pub root: Vec<u8>,
+    pub merkle: MerkleTree,
 }
 
 pub struct Processor {
@@ -65,25 +72,81 @@ impl Processor {
         }
     }
 
-    pub fn process_and_record(&mut self, tx: Transaction) {
-        match self.apply_transaction(tx.clone()) {
-            Ok(result) => {
-                let hash = tx.hash();
-                self.mempool.push_back(tx);
-                self.tx_hashes.push(hash.clone());
-                println!("[链上处理] 交易成功，哈希值: {}", hex::encode(hash));
-                if let ContractResult::ReturnValue(val) = result {
-                    println!("合约返回值: {}", val);
-                }
-            }
-            Err(err) => {
-                println!("[链上处理] 交易失败: {}", err);
-            }
-        }
+    // 加入交到到 mempool
+    pub fn enqueue_transaction(&mut self, tx: Transaction) -> String {
+        let hash = tx.hash.clone();
+        self.mempool.push_back(tx);
+        hash
     }
 
     pub fn get_transaction_hashes(&self) -> Vec<Vec<u8>> {
         self.tx_hashes.clone()
+    }
+
+    // 打包交易
+    pub fn process(&mut self) -> Option<Block> {
+        if self.mempool.is_empty() {
+            println!("没有待处理交易");
+            return None;
+        }
+
+        let txs: Vec<_> = self.mempool.drain(..).collect();
+        let hashes: Vec<_> = txs.iter().map(|tx| tx.tx_hash.clone()).collect();
+        self.tx_hashes = hashes.clone();
+        let merkle_root = MerkleTree::new(&hashes);
+
+        let block = Block {
+            transactions: txs.clone(),
+            root: merkle_root.root(),
+            merkle: merkle_root.clone(),
+        };
+
+        println!(
+            "[区块] 构建完成，Merkle 根: {}",
+            hex::encode(&merkle_root.root())
+        );
+
+        for tx in txs {
+            let hash = tx.hash.clone();
+            let tx_hash = tx.tx_hash.clone();
+            let result = match self.apply_transaction(tx) {
+                Ok(res) => {
+                    println!("[交易成功] {}", hash);
+                    if let ContractResult::ReturnValue(val) = &res {
+                        println!("[返回值] {}", val);
+                    }
+                    TransactionResult {
+                        success: true,
+                        message: "OK".into(),
+                        hash: tx_hash,
+                    }
+                }
+                Err(err) => {
+                    println!("[交易失败] {} 错误: {}", hash, err);
+                    TransactionResult {
+                        success: false,
+                        message: err,
+                        hash: tx_hash,
+                    }
+                }
+            };
+            self.results.push(result);
+        }
+
+        Some(block)
+    }
+
+    // 验证交易
+    pub fn verify(&self, block: Option<Block>, index: usize) -> bool {
+        if let Some(block) = block {
+            let tree = block.merkle;
+            let tx_hashes = self.get_transaction_hashes();
+
+            let leaf = tx_hashes[index].clone();
+            return MerkleTree::verify(tree.clone(), leaf, index);
+        }
+
+        false
     }
 
     pub fn get_balances(&self) {
