@@ -6,10 +6,13 @@ use crate::data_structure::tree::other::merkle::account::{
     Account, ContractResult, TransactionType,
 };
 use crate::data_structure::tree::other::merkle::client::Transaction;
+use crate::data_structure::tree::other::merkle::gas::GasMeter;
 use crate::data_structure::tree::other::merkle::merkle::MerkleTree;
-use std::collections::{HashMap, VecDeque};
+use std::collections::{BinaryHeap, HashMap};
 
-#[derive(Default, Clone)]
+const MAX_SIZE: usize = 10;
+
+#[derive(Default, Clone, Debug)]
 pub struct TransactionResult {
     pub success: bool,
     pub message: String,
@@ -24,32 +27,55 @@ pub struct Block {
 
 pub struct Processor {
     accounts: HashMap<String, Account>,
-    mempool: VecDeque<Transaction>,
+    mempool: BinaryHeap<Transaction>, // VecDeque<Transaction>
     results: Vec<TransactionResult>,
     tx_hashes: Vec<Vec<u8>>,
+    max_block_size: usize,
 }
 
 impl Processor {
-    pub fn new(accounts: HashMap<String, Account>) -> Self {
+    pub fn new(accounts: HashMap<String, Account>, max_block_size: Option<usize>) -> Self {
+        let max_size = if let Some(size) = max_block_size {
+            size
+        } else {
+            MAX_SIZE
+        };
+
         Self {
             accounts,
-            mempool: VecDeque::new(),
+            mempool: BinaryHeap::new(),
             results: Vec::new(),
             tx_hashes: vec![],
+            max_block_size: max_size,
         }
     }
 
-    fn apply_transaction(&mut self, tx: Transaction) -> Result<ContractResult, String> {
+    fn apply_transaction(&mut self, tx: &Transaction) -> Result<ContractResult, String> {
         match &tx.tx_type {
             TransactionType::Transfer { from, to, amount } => {
+                let mut meter = GasMeter::new(tx.gas_limit);
+                meter.consume(5)?;
                 let from_balance = self.accounts.get_mut(from).ok_or("Sender not found")?;
                 if from_balance.balance < *amount {
-                    return Err("Insufficient balance".into());
+                    let error_msg = format!(
+                        "[交易失败: {} -> {} ({} BTC, gas: {}, priority: {})]: {}",
+                        from, to, amount, tx.gas, tx.priority, "Insufficient balance"
+                    );
+                    return Err(error_msg.into());
                 }
                 from_balance.balance -= amount;
 
                 let to_balance = self.accounts.entry(to.clone()).or_insert(Account::new(0));
                 to_balance.balance += amount;
+                println!("=======================");
+                println!(
+                    "[{} -> {} ({} BTC, gas: {}, priority: {})]: {}",
+                    from, to, amount, tx.gas, tx.priority, tx.hash
+                );
+                println!("[Gas 使用]: 已用: {}, 限制: {}", meter.used(), tx.gas_limit);
+                println!("[交易成功]: {}", tx.hash);
+                println!("=======================");
+                println!("");
                 Ok(ContractResult::Ok)
             }
             TransactionType::ContractCall {
@@ -58,16 +84,21 @@ impl Processor {
                 method,
                 args,
             } => {
+                println!("=======================");
                 println!(
-                    "模拟调用合约: {} 调用 {}.{}({:?})",
-                    caller, contract, method, args
+                    "模拟调用合约: {} 调用 {}.{}({:?}), {}",
+                    caller, contract, method, args, tx.hash
                 );
-                // 模拟合约返回值
-                if method == "get_value" {
-                    Ok(ContractResult::ReturnValue("42".to_string()))
-                } else {
-                    Ok(ContractResult::Ok)
-                }
+
+                let mut meter = GasMeter::new(tx.gas_limit);
+
+                let result = self.simulate_contract_execution(method, args, &mut meter);
+
+                println!("[Gas 使用]: 已用: {}, 限制: {}", meter.used(), tx.gas_limit);
+                println!("[交易成功]: {}", tx.hash);
+                println!("=======================");
+                println!("");
+                result
             }
         }
     }
@@ -75,12 +106,41 @@ impl Processor {
     // 加入交到到 mempool
     pub fn enqueue_transaction(&mut self, tx: Transaction) -> String {
         let hash = tx.hash.clone();
-        self.mempool.push_back(tx);
+        self.mempool.push(tx);
         hash
     }
 
     pub fn get_transaction_hashes(&self) -> Vec<Vec<u8>> {
         self.tx_hashes.clone()
+    }
+
+    pub fn simulate_contract_execution(
+        &self,
+        method: &str,
+        args: &[String],
+        meter: &mut GasMeter,
+    ) -> Result<ContractResult, String> {
+        match method {
+            "get_value" => {
+                meter.consume(10)?; // 模拟读取指令
+                Ok(ContractResult::ReturnValue("42".into()))
+            }
+            "set_value" => {
+                meter.consume(10)?; // 校验权限
+                meter.consume(50)?; // 写入存储
+                Ok(ContractResult::Ok)
+            }
+            "loop_forever" => {
+                for _ in 0..10_000 {
+                    meter.consume(1)?; // 每次循环消耗 1 gas
+                }
+                Ok(ContractResult::Ok)
+            }
+            _ => {
+                meter.consume(5)?; // 默认执行
+                Ok(ContractResult::Ok)
+            }
+        }
     }
 
     // 打包交易
@@ -90,9 +150,51 @@ impl Processor {
             return None;
         }
 
-        let txs: Vec<_> = self.mempool.drain(..).collect();
-        let hashes: Vec<_> = txs.iter().map(|tx| tx.tx_hash.clone()).collect();
-        self.tx_hashes = hashes.clone();
+        let mut txs = Vec::with_capacity(self.max_block_size);
+
+        // let txs: Vec<_> = self.mempool.drain(..).collect();
+        // let hashes: Vec<_> = txs.iter().map(|tx| tx.tx_hash.clone()).collect();
+        let mut hashes = Vec::new();
+
+        while txs.len() < self.max_block_size {
+            if let Some(tx) = self.mempool.pop() {
+                println!("Pop tx priority={}, gas={}", tx.priority, tx.gas);
+                let hash = tx.hash.clone();
+                let tx_hash = tx.tx_hash.clone();
+                let result = match self.apply_transaction(&tx) {
+                    Ok(res) => {
+                        if let ContractResult::ReturnValue(val) = &res {
+                            println!("[返回值] {}", val);
+                        }
+                        TransactionResult {
+                            success: true,
+                            message: "OK".into(),
+                            hash: tx_hash.clone(),
+                        }
+                    }
+                    Err(err) => {
+                        println!("[交易失败] {} 错误: {}", hash, err);
+                        TransactionResult {
+                            success: false,
+                            message: err,
+                            hash: tx_hash.clone(),
+                        }
+                    }
+                };
+
+                txs.push(tx);
+                self.results.push(result);
+                self.tx_hashes.push(tx_hash.clone());
+                hashes.push(tx_hash.clone());
+            } else {
+                break;
+            }
+        }
+
+        if txs.is_empty() {
+            return None;
+        }
+
         let merkle_root = MerkleTree::new(&hashes);
 
         let block = Block {
@@ -105,33 +207,6 @@ impl Processor {
             "[区块] 构建完成，Merkle 根: {}",
             hex::encode(&merkle_root.root())
         );
-
-        for tx in txs {
-            let hash = tx.hash.clone();
-            let tx_hash = tx.tx_hash.clone();
-            let result = match self.apply_transaction(tx) {
-                Ok(res) => {
-                    println!("[交易成功] {}", hash);
-                    if let ContractResult::ReturnValue(val) = &res {
-                        println!("[返回值] {}", val);
-                    }
-                    TransactionResult {
-                        success: true,
-                        message: "OK".into(),
-                        hash: tx_hash,
-                    }
-                }
-                Err(err) => {
-                    println!("[交易失败] {} 错误: {}", hash, err);
-                    TransactionResult {
-                        success: false,
-                        message: err,
-                        hash: tx_hash,
-                    }
-                }
-            };
-            self.results.push(result);
-        }
 
         Some(block)
     }

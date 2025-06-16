@@ -158,8 +158,8 @@ impl<T: Clone + Display + Debug + PartialOrd + Default> TreeNode<T> {
 
     // 打印树
     pub fn print_tree(&mut self) {
-        let mut spec: Vec<String> = Vec::new();
-        let mut value: Vec<String> = Vec::new();
+        let spec: Vec<String> = Vec::new();
+        let value: Vec<String> = Vec::new();
 
         let mut level = 0;
         let mut node_in_level = 1;

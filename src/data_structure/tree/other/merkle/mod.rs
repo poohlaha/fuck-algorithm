@@ -31,5 +31,6 @@
 
 pub mod account;
 pub mod client;
+mod gas;
 pub mod merkle;
 pub mod processor;

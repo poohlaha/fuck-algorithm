@@ -1,7 +1,7 @@
 use crate::data_structure::tree::other::huff::HuffmanTree;
 use crate::data_structure::tree::other::merkle::account::Account;
 use crate::data_structure::tree::other::merkle::client::Client;
-use crate::data_structure::tree::other::merkle::processor::Processor;
+use crate::data_structure::tree::other::merkle::processor::{Block, Processor};
 use crate::data_structure::tree::other::segment::SegmentTree;
 use crate::data_structure::tree::other::trie::Trie;
 use std::collections::HashMap;
@@ -156,6 +156,8 @@ fn test_merkle() {
     accounts.insert("Bob".into(), Account::new(50));
     accounts.insert("Carol".into(), Account::new(30));
     accounts.insert("Dave".into(), Account::new(8));
+    accounts.insert("Candy".into(), Account::new(25));
+    accounts.insert("Jack".into(), Account::new(30));
 
     /*
     println!("Alice: {}", 100);
@@ -164,13 +166,14 @@ fn test_merkle() {
     println!("Dave: {}", 8);
      */
 
-    let mut processor = Processor::new(accounts);
+    let mut processor = Processor::new(accounts, Some(3));
 
     // 模拟发起交易(秒回机制)
-    Client::send_transaction("Alice", "Blob", 10, &mut processor);
-    Client::send_transaction("Bob", "Carol", 5, &mut processor);
-    Client::send_transaction("Carol", "Dave", 2, &mut processor);
-    Client::send_transaction("Dave", "Candy", 30, &mut processor);
+    Client::send_transaction("Alice", "Blob", 10, 5, 50, 5, &mut processor);
+    Client::send_transaction("Bob", "Carol", 5, 10, 100, 10, &mut processor);
+    Client::send_transaction("Carol", "Dave", 2, 30, 300, 11, &mut processor);
+    Client::send_transaction("Dave", "Candy", 30, 40, 400, 16, &mut processor);
+    Client::send_transaction("Candy", "Jack", 21, 20, 150, 22, &mut processor);
 
     // 合约调用
     /*
@@ -180,7 +183,16 @@ fn test_merkle() {
      4. vec![]：没有参数
     */
     // MyContract.get_value()
-    Client::call_contract("Carol", "MyContract", "get_value", vec![], &mut processor);
+    Client::call_contract(
+        "Carol",
+        "MyContract",
+        "get_value",
+        vec![],
+        15,
+        100,
+        10,
+        &mut processor,
+    );
 
     /*
      1. 用户 "Alice" 发起调用
@@ -191,19 +203,41 @@ fn test_merkle() {
     Client::call_contract(
         "Alice",
         "MyContract",
-        "increment",
+        "loop_forever",
         vec!["x".into()],
+        25,
+        250,
+        15,
         &mut processor,
     );
 
-    println!("=== 批量打包交易 ===");
-    let block = processor.process();
+    println!("\n=== 批量打包交易 ===");
+    let mut blocks: Vec<Block> = Vec::new();
+    while let Some(block) = processor.process() {
+        println!(
+            "== 区块构建完毕，Merkle 根为: {} ==\n",
+            hex::encode(&block.root)
+        );
+        blocks.push(block);
+    }
 
-    // 判断某笔交易是否存在
-    let verified = processor.verify(block, 1);
+    let mut has_verified: bool = false;
+    for block in blocks {
+        // 判断某笔交易是否存在
+        let verified = processor.verify(Some(block), 1);
+        if verified {
+            has_verified = true;
+            break;
+        }
+    }
+
     println!(
-        "第 2 笔交易验证结果：{}",
-        if verified { "✅ 成功" } else { "❌ 失败" }
+        "第 2 笔交易验证结果：{}\n",
+        if has_verified {
+            "✅ 成功"
+        } else {
+            "❌ 失败"
+        }
     );
 
     println!("=== 所有交易执行结果如下 ===");
@@ -218,6 +252,7 @@ fn test_merkle() {
     }
 
     // 查看余额
+    println!("");
     processor.get_balances();
 
     println!("----- Merkle Tree End ------");
