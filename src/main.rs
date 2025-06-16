@@ -7,10 +7,10 @@ mod data_structure;
 mod error;
 mod link;
 mod math;
-mod queue;
 mod sort;
 mod string;
 mod tree;
+mod graph;
 
 fn main() {
     link::test::test();
