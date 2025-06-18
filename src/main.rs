@@ -5,12 +5,13 @@ mod bfs;
 mod core;
 mod data_structure;
 mod error;
+mod graph;
+mod leet;
 mod link;
 mod math;
 mod sort;
 mod string;
 mod tree;
-mod graph;
 
 fn main() {
     link::test::test();
@@ -20,7 +21,8 @@ fn main() {
     // math::test::test();
     // queue::test::test();
     sort::test::test();
-    data_structure::test::test()
+    data_structure::test::test();
     // backtrace::test::test();
     // bfs::test::test();
+    leet::test::test();
 }
