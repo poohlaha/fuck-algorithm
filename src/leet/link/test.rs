@@ -5,8 +5,11 @@ fn test_link_ring() {
     println!("----- ring start ------");
     let head = vec![3, 2, 0, -4];
     let pos = 1;
-    let has_cycle = CircularLinkedList::has_cycle(head, pos);
+    let has_cycle = CircularLinkedList::has_cycle(head.clone(), pos);
     println!("has cycle: {}", has_cycle);
+
+    let cycle = CircularLinkedList::detect_cycle(head.clone(), pos);
+    println!("cycle entrance: {:#?}", cycle);
     println!("----- ring end ------");
 }
 
