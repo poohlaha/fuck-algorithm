@@ -54,7 +54,7 @@
     2. 找到环的起点
        当快慢指针相遇后:
        再用一个指针从头开始走, 走 a 步
-       另一个指针从相遇点继续走, 走 nr - b 步(也等于绕回环起点
+       另一个指针从相遇点继续走, 走 nr - b 步(也等于绕回环起点)
        两个指针每次走一步, 他们将在入环点相遇
 
  解:
@@ -111,6 +111,7 @@
 */
 
 use std::cell::RefCell;
+use std::process::abort;
 use std::rc::Rc;
 
 // 使用 Rc<RefCell>>
@@ -286,8 +287,10 @@ impl CircularLinkedList {
                         return Some(a.clone());
                     }
 
-                    p1 = a.borrow().next.clone();
-                    p2 = b.borrow().next.clone();
+                    let a_ref = a.borrow();
+                    let b_ref = b.borrow();
+                    p1 = a_ref.next.clone();
+                    p2 = b_ref.next.clone();
                 }
             }
         }
