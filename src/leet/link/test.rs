@@ -9,7 +9,10 @@ fn test_link_ring() {
     println!("has cycle: {}", has_cycle);
 
     let cycle = CircularLinkedList::detect_cycle(head.clone(), pos);
-    println!("cycle entrance: {:#?}", cycle);
+    if let Some(cycle) = cycle {
+        println!("cycle entrance: {:#?}", cycle.borrow().val);
+    }
+
     println!("----- ring end ------");
 }
 

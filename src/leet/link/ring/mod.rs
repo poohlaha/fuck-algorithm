@@ -38,80 +38,79 @@
 */
 
 /*!
-环形链表II:
-地址: https://leetcode.cn/problems/linked-list-cycle-ii/description/
-问题: 给你一个链表的头节点 `head`, 判断链表中是否有环
-     给定一个链表的头节点  head ，返回链表开始入环的第一个节点。 如果链表无环，则返回 null
-     如果链表中有某个节点，可以通过连续跟踪 next 指针再次到达，则链表中存在环。
-     为了表示给定链表中的环，评测系统内部使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）
-     如果 pos 是 -1，则在该链表中没有环
-     注意：pos 不作为参数进行传递，仅仅是为了标识链表的实际情况。
-     不允许修改 链表。
-解题思路:
-    1. 判断是否有环
-       快指针走两步, 慢指针走一步
-       如果他们相遇, 说明有环;否则走到 None 就没环
-    2. 找到环的起点
-       当快慢指针相遇后:
-       再用一个指针从头开始走, 走 a 步
-       另一个指针从相遇点继续走, 走 nr - b 步(也等于绕回环起点)
-       两个指针每次走一步, 他们将在入环点相遇
+    环形链表II:
+    地址: https://leetcode.cn/problems/linked-list-cycle-ii/description/
+    问题: 给你一个链表的头节点 `head`, 判断链表中是否有环
+         给定一个链表的头节点  head ，返回链表开始入环的第一个节点。 如果链表无环，则返回 null
+         如果链表中有某个节点，可以通过连续跟踪 next 指针再次到达，则链表中存在环。
+         为了表示给定链表中的环，评测系统内部使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）
+         如果 pos 是 -1，则在该链表中没有环
+         注意：pos 不作为参数进行传递，仅仅是为了标识链表的实际情况。
+         不允许修改 链表。
+    解题思路:
+        1. 判断是否有环
+           快指针走两步, 慢指针走一步
+           如果他们相遇, 说明有环;否则走到 None 就没环
+        2. 找到环的起点
+           当快慢指针相遇后:
+           再用一个指针从头开始走, 走 a 步
+           另一个指针从相遇点继续走, 走 nr - b 步(也等于绕回环起点)
+           两个指针每次走一步, 他们将在入环点相遇
 
- 解:
-   链表结构如下：
-      head → [非环区域] a 步 →  ⭘环区域（长度 r）⭕
+    解:
+       链表结构如下：
+         head → [非环区域] a 步 →  ⭘环区域（长度 r）⭕
                        ↑           ↓
                         ←←←←←←←←←←←←
-   假设:
-     a: 从链表头部 head 到环的起点的步数(非环部分)
-     b: 从环起点到快慢指针第一次 `相遇点` 的步数(在环内)
-     r: 环的长度(一个完整的环有 r  个节点)
-     n: 快指针在环内多绕了几圈
-     快慢指针第一次在环中相遇的位置，一定是快指针绕了至少一整圈之后才追上慢指针的
+    假设:
+         a: 从链表头部 head 到环的起点的步数(非环部分)
+         b: 从环起点到快慢指针第一次 `相遇点` 的步数(在环内)
+         r: 环的长度(一个完整的环有 r  个节点)
+         n: 快指针在环内多绕了几圈
+         快慢指针第一次在环中相遇的位置，一定是快指针绕了至少一整圈之后才追上慢指针的
 
-   1. 慢指针走的路程
-      慢指针从 head 出发
-      经过非环部分 a 步
-      然后进入环, 走了 b 步到达相遇点
-   所以慢指针走的总步数是:
-      慢 = a + b
+       1. 慢指针走的路程
+          慢指针从 head 出发
+          经过非环部分 a 步
+          然后进入环, 走了 b 步到达相遇点
+       所以慢指针走的总步数是:
+          慢 = a + b
 
-   2. 快指针走的路程
-      快指针从 head 出发
-      经过非环部分 a 步
-      然后进入环, 它在环里可能绕了好几圈
+       2. 快指针走的路程
+          快指针从 head 出发
+          经过非环部分 a 步
+          然后进入环, 它在环里可能绕了好几圈
 
-      快指针比慢指针快, 每轮多走 2 步(快 2 步, 慢 1 步)
-      所以它追上慢指针时, 总共走了 2(a + b) 步
-   最终:
-      走完非环 a 步 + 在环里走 b 步 + n圈环路(n * r 步)
-   所以快指针的总则步数是:
-      快 = a + b + n * r
+          快指针比慢指针快, 每轮多走 2 步(快 2 步, 慢 1 步)
+          所以它追上慢指针时, 总共走了 2(a + b) 步
+       最终:
+          走完非环 a 步 + 在环里走 b 步 + n圈环路(n * r 步)
+       所以快指针的总则步数是:
+          快 = a + b + n * r
 
-   3. 列出等式
-      快 = 2 * 慢
-      a + b + n * r = 2(a + b)
-   -> n * r = a + b
-   -> a = n * r - b
+       3. 列出等式
+          快 = 2 * 慢
+          a + b + n * r = 2(a + b)
+       -> n * r = a + b
+       -> a = n * r - b
 
-   最终:
-      慢指针走了: a + b
-      快指针走了: a + b + n * r
+       最终:
+          慢指针走了: a + b
+          快指针走了: a + b + n * r
 
-   根据公式推导:
-      a = n * r - b
-   -> a + b = n * r
-   -> a = r - b (mod r)
-   链表头从 `a` 步到入环点, 然后再走 `b` 步(从头到相遇点的路径), 刚好等于绕环 `n` 圈
-   所以:
-     从相遇点走 `a` 步就正好回到了环起点
-   这时:
-     从链表头出发的指针走了 `a` 步
-     从相遇点的指针走了 `r - b`  步
+       根据公式推导:
+          a = n * r - b
+       -> a + b = n * r
+       -> a = r - b (mod r)
+       链表头从 `a` 步到入环点, 然后再走 `b` 步(从头到相遇点的路径), 刚好等于绕环 `n` 圈
+       所以:
+         从相遇点走 `a` 步就正好回到了环起点
+       这时:
+         从链表头出发的指针走了 `a` 步
+         从相遇点的指针走了 `r - b`  步
 */
 
 use std::cell::RefCell;
-use std::process::abort;
 use std::rc::Rc;
 
 // 使用 Rc<RefCell>>
@@ -124,7 +123,7 @@ type Link = Option<Rc<RefCell<ListNode>>>;
 
 #[derive(Debug)]
 pub struct ListNode {
-    val: i32,
+    pub val: i32,
     next: Option<Rc<RefCell<ListNode>>>,
 }
 
@@ -161,7 +160,7 @@ impl CircularLinkedList {
         // 创建环: 最后一个节点指向 pos 位置节点(力扣上最后一个节点使用箭头指向了 pos 位置节点)
         if pos > 0 && nodes.len() > 0 {
             let last = nodes.last();
-            let target = &nodes[pos as usize - 1];
+            let target = &nodes[pos as usize];
             if let Some(last) = last {
                 last.borrow_mut().next = Some(Rc::clone(&target));
             }
@@ -276,21 +275,23 @@ impl CircularLinkedList {
             // 另一个指针从相遇点继续走
             // 两个指针每次走一步, 他们将在入环点相遇
             if let (Some(s), Some(f)) = (&slow, &fast) {
-                // 再用一个指针从头开始走, 走 a 步
-                let mut p1 = head.clone();
-                // 另一个指针从相遇点继续走, 走 nr - b 步
-                let mut p2 = slow.clone(); // 或 fast.clone()
+                if Rc::ptr_eq(s, f) {
+                    // 再用一个指针从头开始走, 走 a 步
+                    let mut p1 = head.clone();
+                    // 另一个指针从相遇点继续走, 走 nr - b 步
+                    let mut p2 = slow.clone(); // 或 fast.clone()
 
-                // 两个指针每次走一步, 他们将在入环点相遇
-                while let (Some(a), Some(b)) = (&p1, &p2) {
-                    if Rc::ptr_eq(a, b) {
-                        return Some(a.clone());
+                    // 两个指针每次走一步, 他们将在入环点相遇
+                    while let (Some(a), Some(b)) = (&p1, &p2) {
+                        if Rc::ptr_eq(a, b) {
+                            return Some(a.clone());
+                        }
+
+                        let a_ref = a.borrow().next.clone();
+                        let b_ref = b.borrow().next.clone();
+                        p1 = a_ref;
+                        p2 = b_ref;
                     }
-
-                    let a_ref = a.borrow();
-                    let b_ref = b.borrow();
-                    p1 = a_ref.next.clone();
-                    p2 = b_ref.next.clone();
                 }
             }
         }
