@@ -4,6 +4,7 @@
 
 use std::collections::HashMap;
 
+mod region;
 pub mod test;
 
 pub struct Array;

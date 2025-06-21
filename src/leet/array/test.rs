@@ -1,3 +1,4 @@
+use crate::leet::array::region::NumArray;
 use crate::leet::array::Array;
 
 /// 测试 `两数之和II - 输入有序数组`
@@ -63,11 +64,34 @@ fn test_four_sum() {
     println!("----- leet code array four sum end ------");
 }
 
+/// 测试 `区域和检索-数组不可变`
+fn test_region() {
+    println!("----- leet code array region start ------");
+    let nums = vec![-2, 0, 3, -5, 2, -1];
+    let region = NumArray::new(nums);
+    let sum = region.sum_range(0, 2);
+    println!("0 到 2 的区间和: {}", sum);
+
+    let sum = region.sum_range(2, 5);
+    println!("2 到 5 的区间和: {}", sum);
+
+    let sum = region.sum_range(5, 2);
+    println!("5 到 2 的区间和: {}", sum);
+
+    let sum = region.sum_range(0, 5);
+    println!("0 到 5 的区间和: {}", sum);
+
+    let sum = region.sum_range(3, 3);
+    println!("3 到 3 的区间和: {}", sum);
+    println!("----- leet code array region end ------");
+}
+
 pub fn test() {
     println!("----- leet code array start ------");
     test_two_sum_2();
     test_two_sum();
     test_three_sum();
     test_four_sum();
+    test_region();
     println!("----- leet code array end ------");
 }

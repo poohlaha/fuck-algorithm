@@ -11,20 +11,20 @@ fn test_region_query() {
     ];
 
     let region = Region::new(matrix);
-    let sum = region.query(2, 1, 4, 3);
-    println!("(2, 1) 到 (4, 3) 的区间值: {}", sum);
+    let sum = region.sum_range(2, 1, 4, 3);
+    println!("(2, 1) 到 (4, 3) 的区间和: {}", sum);
 
-    let sum = region.query(1, 1, 2, 2);
-    println!("(1, 1) 到 (2, 2) 的区间值: {}", sum);
+    let sum = region.sum_range(1, 1, 2, 2);
+    println!("(1, 1) 到 (2, 2) 的区间和: {}", sum);
 
-    let sum = region.query(1, 2, 2, 4);
-    println!("(1, 2) 到 (2, 4) 的区间值: {}", sum);
+    let sum = region.sum_range(1, 2, 2, 4);
+    println!("(1, 2) 到 (2, 4) 的区间和: {}", sum);
 
-    let sum = region.query(2, 4, 1, 2);
-    println!("(2, 4) 到 (1, 2) 的区间值: {}", sum);
+    let sum = region.sum_range(2, 4, 1, 2);
+    println!("(2, 4) 到 (1, 2) 的区间和: {}", sum);
 
-    let sum = region.query(3, 3, 3, 3);
-    println!("(3, 3) 到 (3, 3) 的区间值: {}", sum);
+    let sum = region.sum_range(3, 3, 3, 3);
+    println!("(3, 3) 到 (3, 3) 的区间和: {}", sum);
 
     let matrix = vec![
         vec![
@@ -65,8 +65,8 @@ fn test_region_query() {
     ];
 
     let region = Region::new(matrix);
-    let sum = region.query(1, 1, 4, 4);
-    println!("极限测试: (1, 1) 到 (4, 4) 的区间值: {}", sum);
+    let sum = region.sum_range(1, 1, 4, 4);
+    println!("极限测试: (1, 1) 到 (4, 4) 的区间和: {}", sum);
 }
 
 pub fn test() {

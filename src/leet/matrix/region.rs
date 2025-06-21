@@ -1,5 +1,5 @@
 /*!
-   二维区域和检索-矩阵不可变:
+   304. 二维区域和检索-矩阵不可变:
    地址: https://leetcode.cn/problems/range-sum-query-2d-immutable/description/
    问题: 给定一个二维矩阵 `matrix`，以下类型的多个请求
         计算其子矩形范围内元素的总和，该子矩阵的 `左上角` 为 `(row1, col1)` ，`右下角` 为 `(row2, col2)`
@@ -68,7 +68,7 @@ impl Region {
     }
 
     // 查询子矩阵和, 从 (row1, col1) 到 (row2, col2)
-    pub fn query(&self, row1: i32, col1: i32, row2: i32, col2: i32) -> i64 {
+    pub fn sum_range(&self, row1: i32, col1: i32, row2: i32, col2: i32) -> i64 {
         if self.prefix.len() == 0 {
             return 0;
         }
