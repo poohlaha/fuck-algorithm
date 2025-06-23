@@ -3,4 +3,5 @@
 */
 
 mod ring;
+mod sum;
 pub mod test;
