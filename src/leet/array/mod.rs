@@ -4,6 +4,7 @@
 
 use std::collections::HashMap;
 
+mod difference;
 mod region;
 pub mod test;
 

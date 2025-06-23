@@ -86,6 +86,52 @@ fn test_region() {
     println!("----- leet code array region end ------");
 }
 
+/// 测试 `区间加法`
+fn test_difference() {
+    println!("----- leet code array difference start ------");
+    let nums = vec![0, 0, 0, 0, 0];
+    let mut diff = crate::leet::array::difference::NumArray::new(nums);
+    diff.increment(1, 3, 2);
+    let arr = diff.restore();
+    println!("对区间 [1, 3] 增加 2 后: {:?}", arr);
+
+    diff.increment(2, 4, 3);
+    let arr = diff.restore();
+    println!("对区间 [2, 4] 增加 3 后: {:?}", arr);
+
+    diff.increment(0, 2, -2);
+    let arr = diff.restore();
+    println!("对区间 [0, 2] 增加 (-1) 后: {:?}", arr);
+
+    let flag = crate::leet::array::difference::car_pooling(vec![vec![2, 1, 5], vec![3, 3, 7]], 4);
+    println!("[[2, 1, 5], [3, 3, 7]], capacity = 4: {}", flag);
+
+    let flag = crate::leet::array::difference::car_pooling(vec![vec![2, 1, 5], vec![3, 3, 7]], 5);
+    println!("[[2, 1, 5], [3, 3, 7]], capacity = 5: {}", flag);
+
+    let flag = crate::leet::array::difference::car_pooling(vec![vec![2, 1, 5], vec![3, 5, 7]], 3);
+    println!("[[2, 1, 5], [3, 5, 7]], capacity = 3: {}", flag);
+
+    let arr = crate::leet::array::difference::corp_flight_bookings(
+        vec![vec![1, 2, 10], vec![2, 3, 20], vec![2, 5, 25]],
+        5,
+    );
+
+    println!(
+        "航班: [[1, 2, 10], [2, 3, 20], [2, 5, 25], n = 5: {:?}",
+        arr
+    );
+
+    let arr = crate::leet::array::difference::corp_flight_bookings(
+        vec![vec![1, 2, 10], vec![2, 2, 15]],
+        2,
+    );
+
+    println!("航班: [[1, 2, 10], [2, 2, 15], n = 2: {:?}", arr);
+
+    println!("----- leet code array difference end ------");
+}
+
 pub fn test() {
     println!("----- leet code array start ------");
     test_two_sum_2();
@@ -93,5 +139,6 @@ pub fn test() {
     test_three_sum();
     test_four_sum();
     test_region();
+    test_difference();
     println!("----- leet code array end ------");
 }
