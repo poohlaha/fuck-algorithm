@@ -1,7 +1,9 @@
 mod deflate;
 mod dijkstra;
 mod greedy;
+mod kmp;
 mod kruskal;
 mod lzw;
+mod manacher;
 mod prim;
 mod search;
