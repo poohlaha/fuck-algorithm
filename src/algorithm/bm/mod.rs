@@ -62,7 +62,7 @@ impl BM {
         }
     }
 
-    pub fn query(&self, text: &str, pattern: &str) -> i32 {
+    pub fn query(&self, text: &str, pattern: &str, allow_overlap: bool) -> i32 {
         if text.is_empty() || pattern.is_empty() {
             return -1;
         };
@@ -137,7 +137,8 @@ impl BM {
 
             if matched {
                 count += 1;
-                i += 1;
+                // 是否允许重叠
+                i += if allow_overlap { 1 } else { m };
             }
         }
 
