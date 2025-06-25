@@ -1,6 +1,9 @@
+mod bm;
+mod bmh;
 mod deflate;
 mod dijkstra;
 mod greedy;
+mod karp;
 mod kmp;
 mod kruskal;
 mod lzw;
