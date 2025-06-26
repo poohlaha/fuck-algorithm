@@ -1,5 +1,4 @@
 mod bm;
-mod bmh;
 mod deflate;
 mod dijkstra;
 mod greedy;
@@ -9,4 +8,5 @@ mod kruskal;
 mod lzw;
 mod manacher;
 mod prim;
+mod qs;
 mod search;
