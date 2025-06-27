@@ -16,7 +16,7 @@
    - O(σ)(其中 `σ` 是字符集大小(如 ASCII 为 256))
 
 4. 实现步骤
-   - 创建一个大小为字母表(ASCII 256) 的数组 `shift[]`, 全部初始化为 `pattern.len() + 1`
+   - 创建一个大小为字母表(ASCII 256) 的数组 `shift[]`, 全部初始化为 `pattern.len() + 1`, `shift[]取第一次出现的索引位置`
      - 字符在 `pattern` 中 `越靠右`，`shift 值越小`
      - 字符在 `pattern` 中 `越靠左`，`shift 值越大`
    - 遍历模式串 `pattern`, 对于每个字符 `pattern[i]`, 设置: `shift[pattern[i]] = pattern.len() - i`(`pattern[i]` 出现 `越靠右`，`偏移越小`)

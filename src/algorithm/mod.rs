@@ -9,4 +9,5 @@ mod lzw;
 mod manacher;
 mod prim;
 mod qs;
+mod rsync;
 mod search;
