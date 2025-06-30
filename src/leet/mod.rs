@@ -4,4 +4,5 @@
 mod array;
 mod link;
 mod matrix;
+mod queue;
 pub mod test;

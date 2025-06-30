@@ -3,6 +3,7 @@ pub(crate) fn test() {
     crate::leet::link::test::test();
     crate::leet::array::test::test();
     crate::leet::matrix::test::test();
+    crate::leet::queue::test::test();
     println!("----- leet code end ------");
     println!();
 }
