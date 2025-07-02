@@ -1,5 +1,3 @@
-use std::os::macos::raw::stat;
-use std::ptr::replace;
 
 pub mod test;
 
