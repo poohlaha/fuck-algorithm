@@ -377,4 +377,62 @@ impl Array {
 
         res
     }
+
+    /**
+      N 数之和, 通用写法
+    */
+    pub fn n_sum(nums: &Vec<i32>, target: i32, n: usize, start: usize) -> Vec<Vec<i32>> {
+        let mut res: Vec<Vec<i32>> = Vec::new();
+        let len = nums.len();
+        if n < 2 || len < n {
+            return res;
+        }
+
+        if n == 2 {
+            // 两数之和
+            let mut left = start;
+            let mut right = len - 1;
+            while left < right {
+                let sum = nums[left] + nums[right];
+                if sum == target {
+                    res.push(vec![left as i32, right as i32]);
+
+                    // 跳过重复的
+                    while left < right && nums[left] == nums[left + 1] {
+                        left += 1;
+                    }
+
+                    while left < right && nums[right] == nums[right - 1] {
+                        right -= 1;
+                    }
+
+                    left += 1;
+                    right -= 1;
+                } else if sum < target {
+                    left += 1;
+                } else {
+                    right -= 1;
+                }
+            }
+        } else {
+            // 多数之和，递归拆解
+            for i in start..=(len - n) {
+                // 跳过重复的
+                if i > start && nums[i] == nums[i - 1] {
+                    continue;
+                }
+
+                // 递归找 n-1 数之和
+                let sub_results = Self::n_sum(nums, target - nums[i], n - 1, i + 1);
+                for mut sub_res in sub_results {
+                    // 把当前数字插入到解头部
+                    let mut tmp = vec![i as i32];
+                    tmp.append(&mut sub_res);
+                    res.push(tmp);
+                }
+            }
+        }
+
+        res
+    }
 }

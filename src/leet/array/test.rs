@@ -132,6 +132,21 @@ fn test_difference() {
     println!("----- leet code array difference end ------");
 }
 
+/// 测试 `N 数之和`
+fn test_n_sum() {
+    println!("----- leet code array n sum start ------");
+    let nums = vec![2, 7, 11, 15];
+    let target = 9;
+    let results = Array::n_sum(&nums, target, 2, 0);
+    println!("results: {:?}", results);
+
+    let nums = vec![-4, -1, -1, 0, 1, 2];
+    let results = Array::n_sum(&nums, 0, 3, 0);
+    println!("results: {:?}", results);
+
+    println!("----- leet code array n sum end ------");
+}
+
 pub fn test() {
     println!("----- leet code array start ------");
     test_two_sum_2();
@@ -140,5 +155,6 @@ pub fn test() {
     test_four_sum();
     test_region();
     test_difference();
+    test_n_sum();
     println!("----- leet code array end ------");
 }

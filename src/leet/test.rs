@@ -6,6 +6,7 @@ pub(crate) fn test() {
     crate::leet::queue::test::test();
     crate::leet::stack::test::test();
     crate::leet::backtrace::test::test();
+    crate::leet::slide::test::test();
     println!("----- leet code end ------");
     println!();
 }

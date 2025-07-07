@@ -6,5 +6,6 @@ mod backtrace;
 mod link;
 mod matrix;
 mod queue;
+mod slide;
 mod stack;
 pub mod test;
