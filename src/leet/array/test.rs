@@ -1,3 +1,4 @@
+use crate::leet::array::median::find_median_sorted_arrays;
 use crate::leet::array::region::NumArray;
 use crate::leet::array::Array;
 
@@ -147,6 +148,37 @@ fn test_n_sum() {
     println!("----- leet code array n sum end ------");
 }
 
+/// 测试 `寻找两个正序数组的中位数`
+fn test_find_median_sorted_arrays() {
+    println!("----- leet code array media start ------");
+    let nums1 = vec![1, 3];
+    let nums2 = vec![2];
+    let media = find_median_sorted_arrays(nums1, nums2);
+    println!("中位数: {}", media);
+
+    let nums1 = vec![1, 2];
+    let nums2 = vec![3, 4];
+    let media = find_median_sorted_arrays(nums1, nums2);
+    println!("中位数: {}", media);
+
+    let nums1 = vec![1];
+    let nums2 = vec![2];
+    let media = find_median_sorted_arrays(nums1, nums2);
+    println!("中位数: {}", media);
+
+    let nums1 = vec![];
+    let nums2 = vec![1];
+    let media = find_median_sorted_arrays(nums1, nums2);
+    println!("中位数: {}", media);
+
+    let nums1 = vec![];
+    let nums2 = vec![2, 3];
+    let media = find_median_sorted_arrays(nums1, nums2);
+    println!("中位数: {}", media);
+
+    println!("----- leet code array media end ------");
+}
+
 pub fn test() {
     println!("----- leet code array start ------");
     test_two_sum_2();
@@ -156,5 +188,6 @@ pub fn test() {
     test_region();
     test_difference();
     test_n_sum();
+    test_find_median_sorted_arrays();
     println!("----- leet code array end ------");
 }
