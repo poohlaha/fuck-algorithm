@@ -44,8 +44,16 @@ pub fn find_median_sorted_arrays(nums1: Vec<i32>, nums2: Vec<i32>) -> f64 {
 
         let l1 = if i == 0 { i32::MIN } else { nums_a[i - 1] };
         let r1 = if i == m { i32::MAX } else { nums_a[i] };
-        let l2 = if j == 0 { i32::MIN } else { nums_b[(j - 1) as usize] };
-        let r2 = if j == n as isize { i32::MAX } else { nums_b[j as usize] };
+        let l2 = if j == 0 {
+            i32::MIN
+        } else {
+            nums_b[(j - 1) as usize]
+        };
+        let r2 = if j == n as isize {
+            i32::MAX
+        } else {
+            nums_b[j as usize]
+        };
 
         if l1 <= r2 && l2 <= r1 {
             let left_max = if i == 0 {

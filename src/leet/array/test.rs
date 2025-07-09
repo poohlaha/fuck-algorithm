@@ -141,6 +141,11 @@ fn test_n_sum() {
     let results = Array::n_sum(&nums, target, 2, 0);
     println!("results: {:?}", results);
 
+    let nums = vec![3, 3];
+    let target = 6;
+    let results = Array::n_sum(&nums, target, 2, 0);
+    println!("results: {:?}", results);
+
     let nums = vec![-4, -1, -1, 0, 1, 2];
     let results = Array::n_sum(&nums, 0, 3, 0);
     println!("results: {:?}", results);

@@ -180,7 +180,7 @@ impl Array {
             return Vec::new();
         }
 
-        let mut numbers = nums.clone();
+        let mut numbers = nums;
         numbers.sort();
 
         let mut res = Vec::new();
@@ -219,15 +219,11 @@ impl Array {
                     while left < right && numbers[right] == numbers[right + 1] {
                         right -= 1;
                     }
-                }
-
-                // 如果和 `小于 target`, 说明左边的数小了 -> left++
-                if sum < total {
+                } else if sum < total {
+                    // 如果和 `小于 target`, 说明左边的数小了 -> left++
                     left += 1;
-                }
-
-                // 如果和 `大于 target`, 说明右边的数大了 -> right--
-                if sum > total {
+                } else if sum > total {
+                    // 如果和 `大于 target`, 说明右边的数大了 -> right--
                     right -= 1;
                 }
             }
@@ -263,10 +259,10 @@ impl Array {
       5. 提前终止循环(剪枝)
          - i:
             - 如果 nums[i] + nums[i+1] + nums[i+2] + nums[i+3] > target，说明最小四数和都超过目标，后面更大数无解，提前退出外层循环
-            - 如果 nums[i] + nums[n-3] + nums[n-2] + nums[n-1] < target，说明最大四数和都小于目标，说明当前 i 不可能构成解, 继续下一 i
+            - 如果 nums[i] + nums[n-3] + nums[n-2] + nums[n-1] < target，说明最大四数和都小于目标，说明当前 i 不可能构成解, 继续下一个 i
          - j
             - 如果 nums[i] + nums[j] + nums[j+1] + nums[j+2] > target，说明最小四数和都超过目标，后面更大数无解，提前退出内层循环
-            - 如果 nums[i] + nums[j] + nums[n-1] + nums[n-2] < target，说明最大四数和都小于目标，说明当前 j 不可能构成解, 继续下一 j
+            - 如果 nums[i] + nums[j] + nums[n-1] + nums[n-2] < target，说明最大四数和都小于目标，说明当前 j 不可能构成解, 继续下一个 j
     */
     pub fn four_sum(nums: Vec<i32>, target: i32) -> Vec<Vec<i32>> {
         let n = nums.len();

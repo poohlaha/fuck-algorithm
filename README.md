@@ -65,7 +65,10 @@
   - 离散数学
 
 - leet
-  力扣题目
+  - [差分数组](src/leet/docs/difference.md)
+  - [中位数](src/leet/docs/median.md)
+  - [前缀和](src/leet/docs/prefix.md)
+  - [子序列](src/leet/docs/subsequence.md)
 
 - sort
   [排序算法](src/sort/sort.md), 包括:
