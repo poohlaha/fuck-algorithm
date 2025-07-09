@@ -8,4 +8,5 @@ mod matrix;
 mod queue;
 mod slide;
 mod stack;
+mod str;
 pub mod test;
