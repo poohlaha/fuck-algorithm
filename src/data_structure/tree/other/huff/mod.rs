@@ -1,5 +1,5 @@
 /*!
-霍夫曼树(Huffman Tree)
+  哈夫曼树(Huffman Tree)
 */
 
 use std::cmp::Ordering;
@@ -66,7 +66,7 @@ pub struct HuffmanTree {
 }
 
 impl HuffmanTree {
-    // 通过频率表构造霍夫曼树
+    // 通过频率表构造哈夫曼树
     pub(crate) fn new(frequency_map: &HashMap<char, usize>) -> Self {
         let mut heap = BinaryHeap::new();
 
