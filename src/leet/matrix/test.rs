@@ -1,5 +1,6 @@
 use crate::leet::matrix::difference::Difference;
 use crate::leet::matrix::region::Region;
+use crate::leet::matrix::z::find_diagonal_order;
 
 /// 测试 `二维前缀和`
 fn test_region_query() {
@@ -86,9 +87,25 @@ fn test_difference() {
     println!("----- leet code matrix difference end ------");
 }
 
+/// 测试 `矩阵 Z 形变换`
+fn test_find_diagonal_order() {
+    println!("----- leet code matrix z start ------");
+    let arr = find_diagonal_order(vec![vec![1,2,3], vec![4,5,6], vec![7,8,9]]);
+    println!("arr: {:?}", arr);
+
+    let arr = find_diagonal_order(vec![vec![1,2], vec![3,4]]);
+    println!("arr: {:?}", arr);
+
+    let arr = find_diagonal_order(vec![vec![1,2]]);
+    println!("arr: {:?}", arr);
+
+    println!("----- leet code matrix z end ------");
+}
+
 pub fn test() {
     println!("----- leet code link start ------");
     test_region_query();
     test_difference();
+    test_find_diagonal_order();
     println!("----- leet code link end ------");
 }

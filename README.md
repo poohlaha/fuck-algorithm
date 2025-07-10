@@ -49,7 +49,7 @@
     - [二叉搜索树](src/data_structure/tree/bst/BST.md)
     - 树堆
     - 伸展树
-    - [霍夫曼树](src/data_structure/tree/other/huff/huff.md)
+    - [哈夫曼树](src/data_structure/tree/other/huff/huff.md)
     - [Merkle 树](src/data_structure/tree/other/merkle/merkle.md)
     - [线段树](src/data_structure/tree/other/segment/segment.md)
     - [字典树(前缀树)](src/data_structure/tree/other/trie/trie.md)
@@ -69,6 +69,7 @@
   - [中位数](src/leet/docs/median.md)
   - [前缀和](src/leet/docs/prefix.md)
   - [子序列](src/leet/docs/subsequence.md)
+  - [Z 字形变换](src/leet/docs/zigzag.md)
 
 - sort
   [排序算法](src/sort/sort.md), 包括:
