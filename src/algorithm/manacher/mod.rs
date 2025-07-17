@@ -30,7 +30,7 @@ impl Manacher {
         for i in 0..len {
             // 判断 i < R 是否成立
             if i < r {
-                // `i' = 2 * C - 1`(i关于 C 的对称点)
+                // `i' = 2 * C - i`(i关于 C 的对称点)
                 // 初始 `P[i] = min(P[i'], R - i)`
                 p[i] = min(p[2 * c - i], r - i);
             }
