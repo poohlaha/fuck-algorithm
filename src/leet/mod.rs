@@ -3,6 +3,7 @@
 */
 mod array;
 mod backtrace;
+mod dp;
 mod link;
 mod matrix;
 mod queue;

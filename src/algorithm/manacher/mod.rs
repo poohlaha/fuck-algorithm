@@ -48,7 +48,7 @@ impl Manacher {
             // 扩展需要更新 c 和 r
             if i + p[i] > r {
                 c = i;
-                r = i + p[i]
+                r = i + p[i];
             }
         }
 
