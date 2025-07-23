@@ -2,7 +2,7 @@ use crate::leet::dp::regular::is_match;
 
 /// 测试 `正则表达式匹配`
 fn test_is_match() {
-    println!("----- leet code matrix z start ------");
+    println!("----- leet code reg match start ------");
     let matched = is_match("aa".to_string(), "a".to_string());
     println!("is match: {:?}", matched);
 
@@ -15,7 +15,7 @@ fn test_is_match() {
     let matched = is_match("".to_string(), "aa".to_string());
     println!("is match: {:?}", matched);
 
-    println!("----- leet code matrix z end ------");
+    println!("----- leet code reg match end ------");
 }
 
 pub fn test() {

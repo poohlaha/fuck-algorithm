@@ -27,6 +27,9 @@ fn test_max_area() {
     println!("----- leet code max area start ------");
     let result = max_area(vec![1, 8, 6, 2, 5, 4, 8, 3, 7]);
     println!("max area: {:}", result);
+
+    let result = max_area(vec![1, 1]);
+    println!("max area: {:}", result);
     println!("----- leet code max area end ------");
 }
 

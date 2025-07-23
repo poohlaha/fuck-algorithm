@@ -5,6 +5,7 @@ mod array;
 mod backtrace;
 mod dbpointer;
 mod dp;
+mod greedy;
 mod link;
 mod matrix;
 mod queue;

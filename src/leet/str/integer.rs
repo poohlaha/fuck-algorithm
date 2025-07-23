@@ -10,8 +10,6 @@
     参考: src/leet/link/sum.rs
 */
 
-use std::cmp::min;
-
 pub fn reverse(x: i32) -> i32 {
     if x > i32::MAX || x < i32::MIN || x == 0 || x == -0 {
         return 0;

@@ -10,6 +10,7 @@ pub(crate) fn test() {
     crate::leet::str::test::test();
     crate::leet::dp::test::test();
     crate::leet::dbpointer::test::test();
+    crate::leet::greedy::test::test();
     println!("----- leet code end ------");
     println!();
 }
