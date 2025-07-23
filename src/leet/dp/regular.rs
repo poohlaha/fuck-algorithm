@@ -24,7 +24,7 @@ pub fn is_match(s: String, p: String) -> bool {
     // 边界条件(初始化)
     dp[0][0] = true;
 
-    // 预处理：空字符串和模式匹配的情况，例如 s="" p="a*" "a*b*" "a*b*.*"
+    // 预处理第一行：空字符串和模式匹配的情况，例如 s="" p="a*" "a*b*" "a*b*.*"
     // i = 0，固定表示 s 为空字符串
     for j in 1..=n {
         if p_bytes[j - 1] == b'*' && j >= 2 {
@@ -32,6 +32,7 @@ pub fn is_match(s: String, p: String) -> bool {
         }
     }
 
+    // 第一行已处理, 处理后续行
     for i in 1..m + 1 {
         for j in 1..n + 1 {
             // 1. 当 p[j - 1] != '*' 时

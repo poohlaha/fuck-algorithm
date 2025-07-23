@@ -9,6 +9,7 @@ pub(crate) fn test() {
     crate::leet::slide::test::test();
     crate::leet::str::test::test();
     crate::leet::dp::test::test();
+    crate::leet::dbpointer::test::test();
     println!("----- leet code end ------");
     println!();
 }

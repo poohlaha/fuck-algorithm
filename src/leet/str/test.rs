@@ -1,4 +1,4 @@
-use crate::leet::str::integer::{is_palindrome, my_atoi, reverse};
+use crate::leet::str::integer::{my_atoi, reverse};
 use crate::leet::str::z;
 
 /// 测试 `Z 字形变换`
@@ -47,32 +47,10 @@ fn test_my_atoi() {
     println!("----- leet code string my atoi end ------");
 }
 
-/// 测试 `回文数`
-fn test_is_palindrome() {
-    println!("----- leet code string palindrome start ------");
-    let result = is_palindrome(121);
-    println!("is palindrome: {:}", result);
-
-    let result = is_palindrome(-121);
-    println!("is palindrome: {:}", result);
-
-    let result = is_palindrome(3);
-    println!("is palindrome: {:}", result);
-
-    let result = is_palindrome(10);
-    println!("is palindrome: {:}", result);
-
-    let result = is_palindrome(21120);
-    println!("is palindrome: {:}", result);
-
-    println!("----- leet code string palindrome end ------");
-}
-
 pub fn test() {
     println!("----- leet code string start ------");
     test_string_z_convert();
     test_integer_reverse();
     test_my_atoi();
-    test_is_palindrome();
     println!("----- leet code string end ------");
 }

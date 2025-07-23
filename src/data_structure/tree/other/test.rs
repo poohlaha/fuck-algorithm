@@ -6,7 +6,7 @@ use crate::data_structure::tree::other::segment::SegmentTree;
 use crate::data_structure::tree::other::trie::Trie;
 use std::collections::HashMap;
 
-/// 测试 `霍夫曼树`
+/// 测试 `哈夫曼树`
 pub fn test_huffman_tree() {
     println!("----- Huffman Tree start ------");
     let mut frequency_map = HashMap::new();
@@ -63,7 +63,7 @@ pub fn test_huffman_tree() {
     println!("----- Huffman Tree end ------");
 }
 
-/// 测试 `霍夫曼树(数据压缩)`
+/// 测试 `哈夫曼树(数据压缩)`
 pub fn test_huffman_tree_compress() {
     println!("----- Huffman Tree Compress start ------");
     let json_str = r#"{

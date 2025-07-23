@@ -3,6 +3,7 @@
 */
 mod array;
 mod backtrace;
+mod dbpointer;
 mod dp;
 mod link;
 mod matrix;
