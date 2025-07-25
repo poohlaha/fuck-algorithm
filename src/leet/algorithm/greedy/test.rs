@@ -1,4 +1,4 @@
-use crate::leet::greedy::{int_to_roman, roman_to_int};
+use crate::leet::algorithm::greedy::{int_to_roman, roman_to_int};
 
 /// 测试 `整数转罗马数字`
 fn test_int_to_roman() {

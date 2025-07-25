@@ -70,6 +70,7 @@
   - [前缀和](src/leet/docs/prefix.md)
   - [子序列](src/leet/docs/subsequence.md)
   - [Z 字形变换](src/leet/docs/zigzag.md)
+  - [分治法](src/leet/docs/divide.md)
 
 - sort
   [排序算法](src/sort/sort.md), 包括:
