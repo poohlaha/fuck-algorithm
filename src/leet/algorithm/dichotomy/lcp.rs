@@ -44,6 +44,7 @@ pub fn longest_common_prefix(strs: Vec<String>) -> String {
                 } else {
                     p = str[0..mid as usize].to_string();
                 }
+
                 if prefix.is_empty() {
                     prefix = p;
                     continue;

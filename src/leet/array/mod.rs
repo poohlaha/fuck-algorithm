@@ -2,6 +2,7 @@
  数组
 */
 
+use std::cmp::min;
 use std::collections::HashMap;
 
 mod difference;
@@ -154,18 +155,18 @@ impl Array {
     }
 
     /**
-    三数之和:
-    地址: https://leetcode-cn.com/problems/3sum/
-    问题: 给你一个整数数组 nums，判断是否存在三元组 [nums[i], nums[j], nums[k]] 满足 i != j、i != k 且 j != k ，同时还满足 nums[i] + nums[j] + nums[k] == 0 。
-         请你返回所有和为 0 且不重复的三元组
-         答案中不可以包含重复的三元组
-    条件总结:
-    1. 三元组的三个索引不同，即 i != j != k
-    2. 三元组的值和为0
-    3. `不允许结果中有重复的三元组`，比如 [-2, 0, 2] 出现两次，算重复，需要去重
-    4. `三元组中的元素可以重复`，比如两个 1
+        三数之和:
+        地址: https://leetcode-cn.com/problems/3sum/
+        问题: 给你一个整数数组 nums，判断是否存在三元组 [nums[i], nums[j], nums[k]] 满足 i != j、i != k 且 j != k ，同时还满足 nums[i] + nums[j] + nums[k] == 0 。
+             请你返回所有和为 0 且不重复的三元组
+             答案中不可以包含重复的三元组
+        条件总结:
+        1. 三元组的三个索引不同，即 i != j != k
+        2. 三元组的值和为0
+        3. `不允许结果中有重复的三元组`，比如 [-2, 0, 2] 出现两次，算重复，需要去重
+        4. `三元组中的元素可以重复`，比如两个 1
 
-    解: 使用 `循环` 扣除后, 余下的用双指针
+        解: 使用 `循环` 扣除后, 余下的用双指针
     */
     pub fn three_sum(nums: Vec<i32>) -> Vec<Vec<i32>> {
         if nums.len() == 0 {
@@ -233,36 +234,36 @@ impl Array {
     }
 
     /**
-    四数之和:
-    地址: https://leetcode.cn/problems/4sum/
-    问题: 给你一个由 n 个整数组成的数组 nums ，和一个目标值 target。
-         请你找出并返回满足下述全部条件且不重复的四元组 [nums[a], nums[b], nums[c], nums[d]] (若两个四元组元素一一对应，则认为两个四元组重复):
-         0 <= a, b, c, d < n
-         a、b、c 和 d 互不相同
-         nums[a] + nums[b] + nums[c] + nums[d] == target
-         你可以按 任意顺序 返回答案
+        四数之和:
+        地址: https://leetcode.cn/problems/4sum/
+        问题: 给你一个由 n 个整数组成的数组 nums ，和一个目标值 target。
+             请你找出并返回满足下述全部条件且不重复的四元组 [nums[a], nums[b], nums[c], nums[d]] (若两个四元组元素一一对应，则认为两个四元组重复):
+             0 <= a, b, c, d < n
+             a、b、c 和 d 互不相同
+             nums[a] + nums[b] + nums[c] + nums[d] == target
+             你可以按 任意顺序 返回答案
 
-    条件总结:
-    1. 四个下标互不相同：a != b != c != d
-    2. 四个数和等于 target：nums[a] + nums[b] + nums[c] + nums[d] == target
-    3. 结果中不包含重复的四元组（元素相同即重复）
+        条件总结:
+        1. 四个下标互不相同：a != b != c != d
+        2. 四个数和等于 target：nums[a] + nums[b] + nums[c] + nums[d] == target
+        3. 结果中不包含重复的四元组（元素相同即重复）
 
-    解:
-      1. 先排序数组(方便去重或剪枝)
-      2. 用 `两层循环固定前两个数` nums[i] 和 nums[j]
-      3. 然后对剩余部分使用双指针 left 和 right 查找满足 nums[left] + nums[right] == target - nums[i] - nums[j]
-      4. 跳过重复元素避免重复结果
-         - i: 如果 nums[i] == nums[i - 1]，跳过，避免重复四元组
-         - j: 如果 nums[j] == nums[j - 1]，跳过，避免重复
-         - 移动 left, 跳过和前一个相同的元素
-         - 移动 right, 跳过和前一个相同的元素
-      5. 提前终止循环(剪枝)
-         - i:
-            - 如果 nums[i] + nums[i+1] + nums[i+2] + nums[i+3] > target，说明最小四数和都超过目标，后面更大数无解，提前退出外层循环
-            - 如果 nums[i] + nums[n-3] + nums[n-2] + nums[n-1] < target，说明最大四数和都小于目标，说明当前 i 不可能构成解, 继续下一个 i
-         - j
-            - 如果 nums[i] + nums[j] + nums[j+1] + nums[j+2] > target，说明最小四数和都超过目标，后面更大数无解，提前退出内层循环
-            - 如果 nums[i] + nums[j] + nums[n-1] + nums[n-2] < target，说明最大四数和都小于目标，说明当前 j 不可能构成解, 继续下一个 j
+        解:
+          1. 先排序数组(方便去重或剪枝)
+          2. 用 `两层循环固定前两个数` nums[i] 和 nums[j]
+          3. 然后对剩余部分使用双指针 left 和 right 查找满足 nums[left] + nums[right] == target - nums[i] - nums[j]
+          4. 跳过重复元素避免重复结果
+             - i: 如果 nums[i] == nums[i - 1]，跳过，避免重复四元组
+             - j: 如果 nums[j] == nums[j - 1]，跳过，避免重复
+             - 移动 left, 跳过和前一个相同的元素
+             - 移动 right, 跳过和前一个相同的元素
+          5. 提前终止循环(剪枝)
+             - i:
+                - 如果 nums[i] + nums[i+1] + nums[i+2] + nums[i+3] > target，说明最小四数和都超过目标，后面更大数无解，提前退出外层循环
+                - 如果 nums[i] + nums[n-3] + nums[n-2] + nums[n-1] < target，说明最大四数和都小于目标，说明当前 i 不可能构成解, 继续下一个 i
+             - j
+                - 如果 nums[i] + nums[j] + nums[j+1] + nums[j+2] > target，说明最小四数和都超过目标，后面更大数无解，提前退出内层循环
+                - 如果 nums[i] + nums[j] + nums[n-1] + nums[n-2] < target，说明最大四数和都小于目标，说明当前 j 不可能构成解, 继续下一个 j
     */
     pub fn four_sum(nums: Vec<i32>, target: i32) -> Vec<Vec<i32>> {
         let n = nums.len();
@@ -431,5 +432,161 @@ impl Array {
         }
 
         res
+    }
+
+    /**
+       16. 最接近的三数之和
+       力扣: https://leetcode.cn/problems/3sum-closest/description/
+       题目: 给你一个长度为 n 的整数数组 nums 和 一个目标值 target。
+            请你从 nums 中选出三个整数，使它们的和与 target 最接近。
+            返回这三个数的和。
+            假定每组输入只存在恰好一个解。
+
+      解: `排序 + 双指针` 或 `排序 + 枚举 + 二分查找`
+
+      二分法:
+          1. 排序
+             从小到大排序
+
+          2. 枚举前两个数(i,j)
+             固定前两个数的下标 i 和 j，只考虑后面剩下部分中的第三个数, 然后计算这两个数之后，想要的目标补数
+             sum = nums[i] + nums[j] + nums[k]
+             我们想要 sum 尽量接近 target
+             设: target2 = target - nums[i] - nums[j]
+             此时问题就变成了:
+                 nums[j+1..] 中找一个数 k，使得 nums[k] 尽量接近 target2
+
+          3. 二分查找
+             left = j + 1, right = n - 1
+
+             举例:
+                 nums = [-4, -1, 1, 2, 5, 8]
+                 target = 1
+                 target2 = 1 - (-4) - (-1) = 6
+             求: 找到一个数 nums[k], 最接近 6
+              -> left = 2, right = 5
+              -> mid = (2 + 5) / 2 = 3
+              -> nums[mid] = 2
+              -> 2 < 6, 太小了, 搜索右边
+              -> left = mid + 1 = 3 + 1 = 4
+
+              -> left = 4, right = 5
+              -> mid = (4 + 5) / 2 = 4
+              -> nums[mid] = 5
+              -> 5 < 6, 太小了, 搜索右边
+              -> left = mid + 1 = 4 + 1 = 5
+
+              -> left = 5, right = 5
+              -> mid = (5 + 5) / 2 = 5
+              -> nums[5] = 8
+              -> 8 > 6, 太大了, 搜索左边
+              -> right = mid - 1 = 5 - 1 = 4
+
+              -> left = 5, right = 4
+              -> left > right, 循环终止
+
+              分析结果
+              left = 5, right = 4
+              nums[left] = nums[5] = 8
+              nums[right] = nums[4] = 5
+
+              比较:
+              abs(6 - 8) = 2
+              abs(6 - 5) = 1
+              => 所以 5 更接近
+
+          4. 时间复杂度
+             排序: O(n log n)
+             枚举两个数: O(n²)
+             每次用二分找第三个数: O(log n)
+             总时间复杂度: O(n² log n)
+    */
+    pub fn three_sum_closest(nums: Vec<i32>, target: i32) -> i32 {
+        if nums.is_empty() {
+            return 0;
+        }
+
+        if nums.len() == 1 {
+            return nums[0];
+        }
+
+        if nums.len() == 2 {
+            return 0;
+        }
+
+        let mut nums = nums;
+        nums.sort();
+        let n = nums.len();
+
+        // 默认取前三个数
+        let mut closet_sum = nums[0] + nums[1] + nums[2];
+
+        for i in 0..=n - 1 {
+            let mut left = i + 1;
+            let mut right = n - 1;
+
+            while left < right {
+                let sum = nums[i] + nums[left] + nums[right];
+
+                if (sum - target).abs() < (closet_sum - target).abs() {
+                    closet_sum = sum;
+                }
+
+                if sum < target {
+                    left += 1;
+                } else if sum > target {
+                    right -= 1;
+                } else {
+                    return sum;
+                }
+            }
+        }
+
+        closet_sum
+    }
+
+    pub fn three_sum_closest2(nums: Vec<i32>, target: i32) -> i32 {
+        let mut nums = nums;
+        nums.sort();
+        let n = nums.len();
+        let mut closest_sum = i32::MAX;
+        let mut min_diff = i32::MAX;
+
+        for i in 0..n - 2 {
+            for j in i + 1..n - 1 {
+                let target2 = target - nums[i] - nums[j];
+
+                // 二分查找 nums[k] ∈ [j+1, n-1]，使得 nums[k] 最接近 target2
+                let mut left = j + 1;
+                let mut right = n - 1;
+
+                while left <= right {
+                    let mid = (left + right) / 2;
+                    let num = nums[mid];
+
+                    if num == target2 {
+                        return target; // 完全匹配
+                    } else if num < target2 {
+                        left = mid + 1;
+                    } else {
+                        right = mid - 1;
+                    }
+                }
+
+                // 此时 left 可能越界，但 left/right 分别是第一个大于、小于 target2 的位置
+                for &k in [right, left].iter() {
+                    if k > j && k < n {
+                        let sum = nums[i] + nums[j] + nums[k];
+                        let diff = (sum - target).abs();
+                        if diff < min_diff {
+                            min_diff = diff;
+                            closest_sum = sum;
+                        }
+                    }
+                }
+            }
+        }
+
+        closest_sum
     }
 }

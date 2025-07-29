@@ -184,6 +184,24 @@ fn test_find_median_sorted_arrays() {
     println!("----- leet code array media end ------");
 }
 
+/// 测试 `寻找两个正序数组的中位数`
+fn test_three_sum_closest() {
+    println!("----- leet code array closet start ------");
+    let sum = Array::three_sum_closest(vec![-1, 2, 1, -4], 1);
+    println!("target `1` sum: {}", sum);
+
+    let sum = Array::three_sum_closest2(vec![-1, 2, 1, -4], 1);
+    println!("target `1` sum: {}", sum);
+
+    let sum = Array::three_sum_closest(vec![0, 0, 0], 1);
+    println!("target `1` sum: {}", sum);
+
+    let sum = Array::three_sum_closest2(vec![0, 0, 0], 1);
+    println!("target `1` sum: {}", sum);
+
+    println!("----- leet code array closet end ------");
+}
+
 pub fn test() {
     println!("----- leet code array start ------");
     test_two_sum_2();
@@ -194,5 +212,6 @@ pub fn test() {
     test_difference();
     test_n_sum();
     test_find_median_sorted_arrays();
+    test_three_sum_closest();
     println!("----- leet code array end ------");
 }
