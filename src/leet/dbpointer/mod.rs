@@ -5,6 +5,7 @@
 use std::cmp::{max, min};
 
 mod integer;
+mod link;
 pub mod test;
 
 /**

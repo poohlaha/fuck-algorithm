@@ -197,7 +197,7 @@ pub fn roman_to_int(s: String) -> i32 {
     while right < n {
         right += 1;
 
-        let mut index = right + 1;
+        let index = right + 1;
         if index <= n {
             let str = &s[left..index];
             if map.contains_key(str) {
