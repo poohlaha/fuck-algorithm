@@ -36,11 +36,21 @@ fn test_max_area() {
 
 /// 测试 `删除链表的倒数第 N 个节点`
 fn test_remove_nth_from_end() {
-    println!("----- leet code delete link n node start ------");
+    println!("----- leet code remove link n node start ------");
     let mut head = Link::create_node(vec![1, 2, 3, 4, 5]);
     head = Link::remove_nth_from_end(head, 2);
     println!("head: {:#?}", head);
-    println!("----- leet code delete link n node end ------");
+    println!("----- leet code remove link n node end ------");
+}
+
+/// 测试 `合并两个有序链表`
+fn test_merge_two_lists() {
+    println!("----- leet code merge two list start ------");
+    let list1 = Link::create_node(vec![1, 2, 4]);
+    let list2 = Link::create_node(vec![1, 3, 4, 5]);
+    let result = Link::merge_two_lists(list1, list2);
+    println!("head: {:#?}", result);
+    println!("----- leet code merge two list end ------");
 }
 
 pub fn test() {
@@ -48,5 +58,6 @@ pub fn test() {
     test_is_palindrome();
     test_max_area();
     test_remove_nth_from_end();
+    test_merge_two_lists();
     println!("----- leet code double pointer end ------");
 }

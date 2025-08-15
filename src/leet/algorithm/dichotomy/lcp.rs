@@ -38,7 +38,7 @@ pub fn longest_common_prefix(strs: Vec<String>) -> String {
             let mut prefix: String = String::new();
             let mut has_diff = true;
             for str in strs.iter() {
-                let mut p: String = String::new();
+                let p: String;
                 if mid == 0 {
                     p = str[0..=mid as usize].to_string();
                 } else {
