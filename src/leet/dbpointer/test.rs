@@ -1,5 +1,5 @@
 use crate::leet::dbpointer::integer::is_palindrome;
-use crate::leet::dbpointer::link::Link;
+use crate::leet::dbpointer::link::{merge_k_lists, Link};
 use crate::leet::dbpointer::max_area;
 
 /// 测试 `回文数`
@@ -53,11 +53,27 @@ fn test_merge_two_lists() {
     println!("----- leet code merge two list end ------");
 }
 
+/// 测试 `合并 K 个升序链表`
+fn test_merge_k_lists() {
+    println!("----- leet code merge k list start ------");
+    let list1 = Link::create_node(vec![1, 4, 5]);
+    let list2 = Link::create_node(vec![1, 3, 4]);
+    let list3 = Link::create_node(vec![2, 6]);
+    let result = merge_k_lists(vec![list1, list2, list3]);
+    println!("head: {:#?}", result);
+
+    let result = merge_k_lists(vec![None]);
+    println!("head: {:#?}", result);
+
+    println!("----- leet code merge k list end ------");
+}
+
 pub fn test() {
     println!("----- leet code double pointer start ------");
     test_is_palindrome();
     test_max_area();
     test_remove_nth_from_end();
     test_merge_two_lists();
+    test_merge_k_lists();
     println!("----- leet code double pointer end ------");
 }

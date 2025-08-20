@@ -1,3 +1,4 @@
+use crate::leet::backtrace::brackets::generate_parenthesis;
 use crate::leet::backtrace::n::Solution;
 use crate::leet::backtrace::phone::letter_combinations;
 
@@ -30,9 +31,22 @@ fn test_backtrace_phone() {
     println!("----- backtrace phone end ------");
 }
 
+/// 测试 `括号生成`
+fn test_generate_parenthesis() {
+    println!("----- backtrace generate parenthesis start ------");
+    let results = generate_parenthesis(3);
+    println!("{:?}", results);
+
+    let results = generate_parenthesis(1);
+    println!("{:?}", results);
+
+    println!("----- backtrace generate parenthesis end ------");
+}
+
 pub fn test() {
     println!("----- leet code backtrace start ------");
     test_backtrace_n();
     test_backtrace_phone();
+    test_generate_parenthesis();
     println!("----- leet code backtrace end ------");
 }

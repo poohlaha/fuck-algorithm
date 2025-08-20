@@ -9,9 +9,13 @@
 
   解: 使用双指针(快慢指针), 让快指针先走 n 步, 再同时移动快慢指针, 当快指针指向末尾 null 时, 慢指针为要删除的节点
 */
+
+use std::cmp::{Ordering};
+use std::collections::BinaryHeap;
+
 pub struct Link;
 
-#[derive(Debug, Clone)]
+#[derive(Eq, Ord, PartialEq, PartialOrd, Clone, Debug)]
 pub struct ListNode {
     pub val: i32,
     pub next: Option<Box<ListNode>>,
@@ -20,6 +24,25 @@ pub struct ListNode {
 impl ListNode {
     fn new(val: i32) -> Self {
         ListNode { val, next: None }
+    }
+}
+
+// 包装节点, 手动实现 Ord
+#[derive(Eq, PartialEq)]
+struct HeapNode(Box<ListNode>);
+
+// 完全可比较, 每一对值都必须能比较出大小
+impl Ord for HeapNode {
+    fn cmp(&self, other: &Self) -> Ordering {
+        // BinaryHeap 默认是最大堆，所以这里反转顺序
+        other.0.val.cmp(&self.0.val)
+    }
+}
+
+// 部分可比较, 可能有些值没法比较（例如 f64::NAN 和别的数）
+impl PartialOrd for HeapNode {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        Some(self.cmp(other))
     }
 }
 
@@ -145,4 +168,51 @@ impl Link {
 
         dummy.next
     }
+}
+
+/**
+  23. 合并 K 个升序链表
+  力扣: https://leetcode.cn/problems/merge-k-sorted-lists/description/
+  题目: 给你一个链表数组，每个链表都已经按升序排列。
+       请你将所有链表合并到一个升序链表中，返回合并后的链表。
+
+  解: 使用最小堆把头节点全放进去
+  时间复杂度: O(n log k)
+  空间复杂度: O(k)
+*/
+pub fn merge_k_lists(lists: Vec<Option<Box<ListNode>>>) -> Option<Box<ListNode>> {
+    if lists.is_empty() {
+        return None;
+    }
+
+    let mut heap = BinaryHeap::new();
+
+    // 把每个链表的头节点加入最小堆
+    for list in lists {
+        if let Some(node) = list {
+            // 需要包装 Reverse，使其变成最小堆
+            // std::cmp::Reverse，它会反转比较顺序
+            // heap.push(Reverse(node));
+            heap.push(HeapNode(node));
+        }
+    }
+
+    let mut dummy = Box::new(ListNode::new(0));
+    let mut tail = &mut dummy;
+
+    // while let Some(Reverse(mut node)) = heap.pop() {
+    while let Some(HeapNode(mut node)) = heap.pop() {
+        // 把最小的节点接到结果链表
+        tail.next = Some(Box::new(ListNode::new(node.val)));
+
+        if let Some(next) = node.next.take() {
+            // heap.push(Reverse(next));
+            heap.push(HeapNode(next));
+        }
+
+        // tail 指针不断前进
+        tail = tail.next.as_mut().unwrap();
+    }
+
+    dummy.next
 }
