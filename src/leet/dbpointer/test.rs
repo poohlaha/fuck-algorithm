@@ -1,5 +1,5 @@
 use crate::leet::dbpointer::integer::is_palindrome;
-use crate::leet::dbpointer::link::{merge_k_lists, Link};
+use crate::leet::dbpointer::link::{merge_k_lists, reverse_k_group, swap_pairs, Link};
 use crate::leet::dbpointer::max_area;
 
 /// 测试 `回文数`
@@ -68,6 +68,36 @@ fn test_merge_k_lists() {
     println!("----- leet code merge k list end ------");
 }
 
+/// 测试 `两两交换链表中的节点`
+fn test_swap_pairs() {
+    println!("----- leet code swap pairs start ------");
+    let list1 = Link::create_node(vec![1, 2, 3, 4]);
+    let list2 = Link::create_node(vec![1]);
+    let list3 = Link::create_node(vec![]);
+    let node1 = swap_pairs(list1);
+    let node2 = swap_pairs(list2);
+    let node3 = swap_pairs(list3);
+    println!("head1: {:#?}", node1);
+    println!("head2: {:#?}", node2);
+    println!("head3: {:#?}", node3);
+    println!("----- leet code swap pairs end ------");
+}
+
+/// 测试 `K 个一组翻转链表`
+fn test_reverse_k_group() {
+    println!("----- leet code reverse k group start ------");
+    let list1 = Link::create_node(vec![1, 2, 3, 4, 5]);
+    let list2 = Link::create_node(vec![1, 2, 3, 4, 5]);
+    let list3 = Link::create_node(vec![4, 8, 4]);
+    let node1 = reverse_k_group(list1, 2);
+    let node2 = reverse_k_group(list2, 3);
+    let node3 = reverse_k_group(list3, 3);
+    println!("head1: {:#?}", node1);
+    println!("head2: {:#?}", node2);
+    println!("head3: {:#?}", node3);
+    println!("----- leet code reverse k group end ------");
+}
+
 pub fn test() {
     println!("----- leet code double pointer start ------");
     test_is_palindrome();
@@ -75,5 +105,7 @@ pub fn test() {
     test_remove_nth_from_end();
     test_merge_two_lists();
     test_merge_k_lists();
+    test_swap_pairs();
+    test_reverse_k_group();
     println!("----- leet code double pointer end ------");
 }
