@@ -412,7 +412,6 @@ pub fn reverse_k_group(head: Option<Box<ListNode>>, k: i32) -> Option<Box<ListNo
             }
         }
 
-
         // 2. 定义区间[a, b), a = prev.next, b = tail.next
         let b = tail.next.take(); // 区间的右边界，不参与翻转
         let a = prev.next.take();

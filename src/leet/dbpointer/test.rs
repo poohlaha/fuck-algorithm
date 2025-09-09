@@ -1,3 +1,4 @@
+use crate::leet::dbpointer::arr::remove_duplicates;
 use crate::leet::dbpointer::integer::is_palindrome;
 use crate::leet::dbpointer::link::{merge_k_lists, reverse_k_group, swap_pairs, Link};
 use crate::leet::dbpointer::max_area;
@@ -98,6 +99,19 @@ fn test_reverse_k_group() {
     println!("----- leet code reverse k group end ------");
 }
 
+/// 测试 `删除有序数组中的重复项`
+fn test_remove_duplicates() {
+    println!("----- leet code remove duplicates start ------");
+    let mut nums1 = vec![1, 1, 2];
+    let k1 = remove_duplicates(&mut nums1);
+    println!("k: {:#?}, nums: {:?}", k1, nums1);
+
+    let mut nums2 = vec![0, 0, 1, 1, 1, 2, 2, 3, 3, 4];
+    let k2 = remove_duplicates(&mut nums2);
+    println!("k: {:#?}, nums: {:?}", k2, nums2);
+    println!("----- leet code remove duplicates end ------");
+}
+
 pub fn test() {
     println!("----- leet code double pointer start ------");
     test_is_palindrome();
@@ -107,5 +121,6 @@ pub fn test() {
     test_merge_k_lists();
     test_swap_pairs();
     test_reverse_k_group();
+    test_remove_duplicates();
     println!("----- leet code double pointer end ------");
 }

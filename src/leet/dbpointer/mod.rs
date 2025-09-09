@@ -4,6 +4,7 @@
 
 use std::cmp::{max, min};
 
+mod arr;
 mod integer;
 mod link;
 pub mod test;
