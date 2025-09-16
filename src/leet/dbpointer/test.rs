@@ -1,4 +1,4 @@
-use crate::leet::dbpointer::arr::remove_duplicates;
+use crate::leet::dbpointer::arr::{remove_duplicates, remove_element};
 use crate::leet::dbpointer::integer::is_palindrome;
 use crate::leet::dbpointer::link::{merge_k_lists, reverse_k_group, swap_pairs, Link};
 use crate::leet::dbpointer::max_area;
@@ -112,6 +112,19 @@ fn test_remove_duplicates() {
     println!("----- leet code remove duplicates end ------");
 }
 
+/// 测试 `移除元素`
+fn test_remove_element() {
+    println!("----- leet code remove element start ------");
+    let mut nums1 = vec![3, 2, 2, 3];
+    let k1 = remove_element(&mut nums1, 3);
+    println!("k: {:#?}, nums: {:?}", k1, nums1);
+
+    let mut nums2 = vec![0, 1, 2, 2, 3, 0, 4, 2];
+    let k2 = remove_element(&mut nums2, 2);
+    println!("k: {:#?}, nums: {:?}", k2, nums2);
+    println!("----- leet code remove element end ------");
+}
+
 pub fn test() {
     println!("----- leet code double pointer start ------");
     test_is_palindrome();
@@ -122,5 +135,6 @@ pub fn test() {
     test_swap_pairs();
     test_reverse_k_group();
     test_remove_duplicates();
+    test_remove_element();
     println!("----- leet code double pointer end ------");
 }
