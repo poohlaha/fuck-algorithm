@@ -21,7 +21,7 @@
      - `next` 中存的是 `真前缀 = 真后缀` 的值
    - 匹配过程
      - 两指针, 一个指针 `i` 指向主串, 另一个指针 `j` 指向模式串, 初始为 `0`
-     - 比较 `text[i]` 和 `pattern[i]` 是否匹配
+     - 比较 `text[i]` 和 `pattern[j]` 是否匹配
        - `匹配` `i += 1`, `j += 1`
        - `不匹配`, `i 不动`, `回退 j (j = next[j - 1])`, 然后 `接着循环比较`
        - `j` 跳到 `模式串` 中 `最长可复用的匹配前缀长度`
@@ -43,7 +43,7 @@
 6. 举例
    ```text
    主串(text): ababcabcabababd
-   模式串(pattern): ababd
+   模式串(pattern): ababacd
    
    1. 构造模式串的 `next` 数组(部分匹配表)
    next 数组长度为 5
@@ -111,87 +111,87 @@
    index:  0 1 2 3 4 5 6 7 8 9 10 11 12 13
 
    2. 匹配过程
-   2.1 两指针, 一个指针 `i` 指向主串, 另一个指针 `j` 指向模式串, 初始为 `0`
+   2.1 定义两指针, 一个指针 `i` 指向主串, 另一个指针 `j` 指向模式串, 初始为 `0`
   
    i = 0
-   -> 比较 text[i] 和 pattern[i], 即 text[0] 和 pattern[0]
+   -> 比较 text[i] 和 pattern[j], 即 text[0] 和 pattern[0]
    -> text[0] = a, pattern[0] = a
    -> a = a, 相等, i += 1 = 1, j += 1 = 1
    
    i = 1
-   -> 比较 text[i] 和 pattern[i], 即 text[1] 和 pattern[1]  
+   -> 比较 text[i] 和 pattern[j], 即 text[1] 和 pattern[1]  
    -> text[1] = b, pattern[1] = b
    -> b = b, 相等, i += 1 = 2, j += 1 = 2
    
    i = 2
-   -> 比较 text[i] 和 pattern[i], 即 text[2] 和 pattern[2]  
+   -> 比较 text[i] 和 pattern[j], 即 text[2] 和 pattern[2]  
    -> text[2] = a, pattern[2] = a
    -> a = a, 相等, i += 1 = 3, j += 1 = 3
    
    i = 3
-   -> 比较 text[i] 和 pattern[i], 即 text[3] 和 pattern[3]  
+   -> 比较 text[i] 和 pattern[j], 即 text[3] 和 pattern[3]  
    -> text[3] = b, pattern[2] = b
    -> b = b, 相等, i += 1 = 4, j += 1 = 4
    
    i = 4
-   -> 比较 text[i] 和 pattern[i], 即 text[4] 和 pattern[4]  
+   -> 比较 text[i] 和 pattern[j], 即 text[4] 和 pattern[4]  
    -> text[4] = b, pattern[4] = b
    -> a = a, 相等, i += 1 = 5, j += 1 = 5
    
    i = 5
-   -> 比较 text[i] 和 pattern[i], 即 text[5] 和 pattern[5]  
+   -> 比较 text[i] 和 pattern[j], 即 text[5] 和 pattern[5]  
    -> text[5] = b, pattern[4] = c  
    -> b != c, 回退 j: next[j - 1] = next[4] = 3, i 不动, j = 3
-   -> 继续比较 text[i] 和 pattern[i], 即 text[5] 和 pattern[3] 
+   -> 继续比较 text[i] 和 pattern[j], 即 text[5] 和 pattern[3] 
    -> text[5] = b, pattern[3] = b 
    -> b = b, 相等, i += 1 = 6, j += 1 = 4
-   -> 继续比较 text[i] 和 pattern[i], 即 text[6] 和 pattern[4]  
+   -> 继续比较 text[i] 和 pattern[j], 即 text[6] 和 pattern[4]  
    -> text[6] = c, pattern[4] = a
    -> c != a, 回退j: next[j - 1] = next[3] = 2, i 不动, j = 2
-   -> 继续比较 text[i] 和 pattern[i], 即 text[6] 和 pattern[2]
+   -> 继续比较 text[i] 和 pattern[j], 即 text[6] 和 pattern[2]
    -> text[6] = c, pattern[2] = a
    -> c != a, 回退j: next[j - 1] = next[1] = 0, i 不动, j = 0
-   -> 继续比较 text[i] 和 pattern[i], 即 text[6] 和 pattern[0]  
+   -> 继续比较 text[i] 和 pattern[j], 即 text[6] 和 pattern[0]  
    -> text[6] = c, pattern[0] = a  
    -> c != a, 此时 j = 0, 无法回退
    -> 主串指针前移, i += 1 = 7, 此时 j = 0
      
    i = 7
-   -> 比较 text[i] 和 pattern[i], 即 text[7] 和 pattern[0]  
+   -> 比较 text[i] 和 pattern[j], 即 text[7] 和 pattern[0]  
    -> text[7] = a, pattern[0] = a  
    -> a = a, 相等, i += 1 = 8, j += 1 = 1
    
    i = 8
-   -> 比较 text[i] 和 pattern[i], 即 text[8] 和 pattern[1] 
+   -> 比较 text[i] 和 pattern[j], 即 text[8] 和 pattern[1] 
    -> text[8] = b, pattern[1] = b  
    -> b = b, 相等, i += 1 = 9, j += 1 = 2
    
    i = 9
-   -> 比较 text[i] 和 pattern[i], 即 text[9] 和 pattern[2]  
+   -> 比较 text[i] 和 pattern[j], 即 text[9] 和 pattern[2]  
    -> text[9] = a, pattern[2] = a
    -> a = a, 相等, i += 1 = 10, j += 1 = 3
    
    i = 10
-   -> 比较 text[i] 和 pattern[i], 即 text[10] 和 pattern[3]  
+   -> 比较 text[i] 和 pattern[j], 即 text[10] 和 pattern[3]  
    -> text[10] = b, pattern[3] = b
    -> b = b, 相等, i += 1 = 11, j += 1 = 4
    
    i = 11
-   -> 比较 text[i] 和 pattern[i], 即 text[11] 和 pattern[4]  
+   -> 比较 text[i] 和 pattern[j], 即 text[11] 和 pattern[4]  
    -> text[11] = a, pattern[4] = a 
    -> a = a, 相等, i += 1 = 12, j += 1 = 5
    
    i = 12
-   -> 比较 text[i] 和 pattern[i], 即 text[12] 和 pattern[5]  
+   -> 比较 text[i] 和 pattern[j], 即 text[12] 和 pattern[5]  
    -> text[12] = c, pattern[5] = c 
    -> c = c, 相等, i += 1 = 13, j += 1 = 6
    
    i = 13
-   -> 比较 text[i] 和 pattern[i], 即 text[13] 和 pattern[6]  
+   -> 比较 text[i] 和 pattern[j], 即 text[13] 和 pattern[6]  
    -> text[13] = a, pattern[6] = a 
    -> a = a, 相等, i += 1 = 14, j += 1 = 7
    
    最后:
    j = 7 等于模式串的长度, 匹配成功
-   匹配起始位置是 i - j = 14 - 7 = 7
+   匹配起始位置是 i + 1 - n = 13 + 1 - 7 = 7
    ```
