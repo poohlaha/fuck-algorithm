@@ -16,7 +16,7 @@
    - O(σ)(其中 `σ` 是字符集大小(如 ASCII 为 256))
 
 4. 实现步骤
-   - 创建一个大小为字母表(ASCII 256) 的数组 `shift[]`, 全部初始化为 `pattern.len() + 1`, `shift[]取第一次出现的索引位置`
+   - 创建一个大小为字母表(ASCII 256) 的数组 `shift[]`, 全部初始化为 `pattern.len() + 1`, `shift[]` 取 `m - 最后一次出现的索引位置`, 即: `shift[c] = m - last_index(c)`
      - 字符在 `pattern` 中 `越靠右`，`shift 值越小`
      - 字符在 `pattern` 中 `越靠左`，`shift 值越大`
    - 遍历模式串 `pattern`, 对于每个字符 `pattern[i]`, 设置: `shift[pattern[i]] = pattern.len() - i`(`pattern[i]` 出现 `越靠右`，`偏移越小`)
@@ -178,4 +178,20 @@
    想要好性能又不想写好后缀表                BM-Horspool ✨               BM 的简化变种，性能好，逻辑好写
    模式串长，文本也大                       BM 或 BM-Horspool            模式串越长, 这类算法跳跃越远、优势越大
    中文、emoji混合内容                     任意(建议 QS)                  推荐用 Vec<char>，QS 实现最友好
+   ```
+   
+## 详细步骤
+1. 创建 `字母表`(`ASCII 256`) 的数组 `shift[]` 数组, 初始化值为 `pattern.len() + 1`
+   - `shift[]` 取 `m - 最后一次出现的索引位置`, 即: `shift[c] = m - last_index(c)`
+   
+2. 匹配过程
+   ```markdown
+   2.1 从 `i = 0` 开始循环(`i + m < text.len()`)
+   2.1.1 比较 `text[i..m + i] == pattern` 是否相等
+     - 相等, 返回 `i`
+     - 不相等, 查找 `窗口后的字符`(`text[i + m]`) 在 `shift` 数组中 `是否存在`
+       - 存在, 取 `shift[text[i + m]]`
+       - 不存在, 取默认值(pattern.len() + 1) 
+       ps: 可直接取 shift 中的值, shift 中默认值是 `pattern.len() + 1`
+     - `i += 窗口后的字符的值`
    ```

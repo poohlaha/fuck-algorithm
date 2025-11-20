@@ -10,5 +10,6 @@
 */
 
 pub mod bst;
+mod greater;
 mod splay;
 mod treap;

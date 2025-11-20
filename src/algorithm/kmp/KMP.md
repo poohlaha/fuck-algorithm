@@ -19,6 +19,7 @@
      - `next[i]` 表示 `pattern[0..i]` 这段子串的 **最长相等的真前缀和真后缀** 的长度
      - `真前缀/真后缀`: 长度不等于整个字符串本身的前缀和后缀
      - `next` 中存的是 `真前缀 = 真后缀` 的值
+     - 在以第 `i` 个字符结尾的模式串中，有多长的一段 `开头` 和 `结尾` 是一样的
    - 匹配过程
      - 两指针, 一个指针 `i` 指向主串, 另一个指针 `j` 指向模式串, 初始为 `0`
      - 比较 `text[i]` 和 `pattern[j]` 是否匹配
@@ -43,7 +44,7 @@
 6. 举例
    ```text
    主串(text): ababcabcabababd
-   模式串(pattern): ababacd
+   模式串(pattern): ababaca
    
    1. 构造模式串的 `next` 数组(部分匹配表)
    next 数组长度为 5
@@ -105,6 +106,59 @@
    pattern:  a  b  a  b  a  c  a
    index:    0  1  2  3  4  5  6
    next:     0  0  1  2  3  0  1
+   
+   next[i]:
+   i = 0
+   -> pattern[i] = a
+   -> 前缀: 无(只有空串)
+   -> 后缀: 无
+   -> 最长相等前后缀长度 = 0
+   -> next[0] = 0
+   
+   i = 1
+   -> pattern[0..i] = ab
+   -> 前缀候选: a
+   -> 后缀候选: b
+   -> 没有相等部分
+   -> next[1] = 0
+   
+   i = 2
+   -> pattern[0..i] = aba
+   -> 前缀候选: a, ab
+   -> 后缀候选: a, ba
+   -> 相等部分: a
+   -> 最长相等前后缀长度 = 1
+   -> next[2] = 1
+   
+   i = 3
+   -> pattern[0..i] = abab
+   -> 前缀候选: a, ab, aba
+   -> 后缀候选: b, ab, bab
+   -> 相等部分: ab
+   -> 最长相等前后缀长度 = 2
+   -> next[3] = 2
+   
+   i = 4
+   -> pattern[0..i] = ababa
+   -> 前缀候选: a, ab, aba, abab
+   -> 后缀候选: a, ba, aba, baba
+   -> 相等部分: aba
+   -> 最长相等前后缀长度 = 3
+   -> next[4] = 3
+   
+   i = 5
+   -> pattern[0..i] = ababac
+   -> 前缀候选: a, ab, aba, abab, ababa
+   -> 后缀候选: c, ac, bac, abac, babac
+   -> 没有相等部分
+   -> next[5] = 0
+   
+   i = 6
+   -> pattern[0..i] = ababaca
+   -> 前缀候选: a, ab, aba, abab, ababa, ababac
+   -> 后缀候选: a, ca, aca, baca, abaca, babaca
+   -> 相等部分: a
+   -> next[6] = 1
    
    主串:
    text:  "a b a b a b c a b a  b  a  c  a"
@@ -194,4 +248,39 @@
    最后:
    j = 7 等于模式串的长度, 匹配成功
    匹配起始位置是 i + 1 - n = 13 + 1 - 7 = 7
+   ```
+   
+7. 为什么回退 `j` 到 `next[j - 1]`
+   ```text
+   1. 当前失配发生在 `pattern[j]`
+   2. 此时 `pattern[0..j-1]` 之前已经 `匹配成功`
+   3. 所以去查这段子串 `pattern[0..j-1]` 自身的 `最长相等前后缀` 的长度, 这个长度存放在 `next[j - 1]` 中
+   ps: 在失配前的部分里，最长的可重叠部分长度是多少
+   ```
+   
+## 详细步骤
+1. 定义 `next(lps)` 数组
+   ```markdown
+   1.1 定义辅助指针 `j`, 表示 `当前最长前后缀的长度`
+   
+   1.2 从 `i = 1` 到 `m` 开始循环，因为 `next[0] = 0`
+   1.2.1 `j > 0` 时, 比较 `pattern[i]` 和 `pattern[j]`
+       - 不相等, 则 `回退`, 
+         - 取 `j = next[j - 1]`, 并重新比较 `pattern[i]` 和 `pattern[j]`
+       - 相等, 则 `i` 不动, `j += 1`
+       - 设置 `next[i] = j`
+   ```
+
+2. 匹配过程
+   ```markdown
+   2.1 定义一个指针 `j` 指向模式串, 初始为 `0`
+   
+   2.2 从 `i = 0` 到 `m` 开始循环
+   2.2.1 `j > 0` 时, 比较 `text[i]` 和 `pattern[j]`
+      - 不相等, 则 `回退`, 
+        - 取 `j = next[j - 1]`, 并重新比较 `text[i]` 和 `pattern[j]`
+      - 相等, 则 `j += 1`
+      - 如果 `j = m`, `匹配成功`
+        - `j` 是 `模式串的长度` , 匹配起始位置是 `i + 1 - m`
+        - 继续寻找下一个匹配: `j = next[j - 1]`
    ```
