@@ -14,7 +14,6 @@ fn test_divide() {
     println!("----- leet code divide end ------");
 }
 
-
 pub fn test() {
     println!("----- leet code other start ------");
     test_divide();

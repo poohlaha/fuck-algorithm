@@ -199,6 +199,31 @@ impl<T: Clone + Debug + Display + PartialOrd> TreeNode<T> {
         std::cmp::max(left_depth, right_depth) + 1
     }
 
+    // 树的直径
+    pub fn diameter(&self) -> usize {
+        let mut max_diameter = 0;
+        self.depth_and_update(&mut max_diameter);
+
+        max_diameter
+    }
+
+    fn depth_and_update(&self, max_diameter: &mut usize) -> usize {
+        let left_depth = self
+            .left
+            .as_ref()
+            .map_or(0, |node| node.depth_and_update(max_diameter));
+        let right_depth = self
+            .right
+            .as_ref()
+            .map_or(0, |node| node.depth_and_update(max_diameter));
+
+        // 直径经过当前节点 = 左深度 + 右深度
+        *max_diameter = (*max_diameter).max(left_depth + right_depth);
+
+        // 返回节点数
+        left_depth.max(right_depth) + 1
+    }
+
     pub fn print(&self) {
         let mut queue = VecDeque::new();
         queue.push_back((Some(self), 0));
