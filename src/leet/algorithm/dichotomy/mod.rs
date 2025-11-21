@@ -3,4 +3,5 @@
 */
 
 mod lcp;
+mod ship;
 pub mod test;
