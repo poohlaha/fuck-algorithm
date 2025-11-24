@@ -1,6 +1,7 @@
 use crate::leet::backtrace::brackets::generate_parenthesis;
 use crate::leet::backtrace::n::Solution;
 use crate::leet::backtrace::phone::letter_combinations;
+use crate::leet::backtrace::sudoku::Sudoku;
 
 /// 测试 `N 皇后问题`
 fn test_backtrace_n() {
@@ -43,10 +44,31 @@ fn test_generate_parenthesis() {
     println!("----- backtrace generate parenthesis end ------");
 }
 
+/// 测试 `数独`
+fn test_sudoku() {
+    println!("----- backtrace sudoku start ------");
+    let mut board = vec![
+        vec!['5', '3', '.', '.', '7', '.', '.', '.', '.'],
+        vec!['6', '.', '.', '1', '9', '5', '.', '.', '.'],
+        vec!['.', '9', '8', '.', '.', '.', '.', '6', '.'],
+        vec!['8', '.', '.', '.', '6', '.', '.', '.', '3'],
+        vec!['4', '.', '.', '8', '.', '3', '.', '.', '1'],
+        vec!['7', '.', '.', '.', '2', '.', '.', '.', '6'],
+        vec!['.', '6', '.', '.', '.', '.', '2', '8', '.'],
+        vec!['.', '.', '.', '4', '1', '9', '.', '.', '5'],
+        vec!['.', '.', '.', '.', '8', '.', '.', '7', '9'],
+    ];
+    Sudoku::solve_sudoku(&mut board);
+    Sudoku::print(&board);
+
+    println!("----- backtrace sudoku end ------");
+}
+
 pub fn test() {
     println!("----- leet code backtrace start ------");
     test_backtrace_n();
     test_backtrace_phone();
     test_generate_parenthesis();
+    test_sudoku();
     println!("----- leet code backtrace end ------");
 }

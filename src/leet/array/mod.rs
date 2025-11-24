@@ -5,6 +5,7 @@
 use std::collections::HashMap;
 mod difference;
 mod median;
+mod range;
 mod region;
 pub mod test;
 

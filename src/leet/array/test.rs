@@ -1,4 +1,5 @@
 use crate::leet::array::median::find_median_sorted_arrays;
+use crate::leet::array::range::Range;
 use crate::leet::array::region::NumArray;
 use crate::leet::array::Array;
 
@@ -202,6 +203,27 @@ fn test_three_sum_closest() {
     println!("----- leet code array closet end ------");
 }
 
+/// 测试 `在排序数组中查找元素的第一个和最后一个位置`
+fn test_search_range() {
+    println!("----- leet code array search range start ------");
+    let result = Range::search_range(vec![-1, 1, 2, 4], 1);
+    println!("target `1` sum: {:?}", result);
+
+    let result = Range::search_range(vec![5, 7, 7, 8, 8, 10], 8);
+    println!("target `6` sum: {:?}", result);
+
+    let result = Range::search_range(vec![5, 7, 7, 8, 8, 10], 6);
+    println!("target `0` sum: {:?}", result);
+
+    let result = Range::search_range(vec![], 2);
+    println!("target `2` sum: {:?}", result);
+
+    let result = Range::search_range(vec![8, 8, 8, 8, 8], 8);
+    println!("target `8` sum: {:?}", result);
+
+    println!("----- leet code array search range end ------");
+}
+
 pub fn test() {
     println!("----- leet code array start ------");
     test_two_sum_2();
@@ -213,5 +235,6 @@ pub fn test() {
     test_n_sum();
     test_find_median_sorted_arrays();
     test_three_sum_closest();
+    test_search_range();
     println!("----- leet code array end ------");
 }
