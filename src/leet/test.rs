@@ -12,6 +12,7 @@ pub(crate) fn test() {
     crate::leet::dbpointer::test::test();
     crate::leet::algorithm::test::test();
     crate::leet::other::test::test();
+    crate::leet::hashset::test::test();
     println!("----- leet code end ------");
     println!();
 }

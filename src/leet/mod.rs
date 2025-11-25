@@ -6,6 +6,7 @@ mod array;
 mod backtrace;
 mod dbpointer;
 mod dp;
+mod hashset;
 mod link;
 mod matrix;
 mod other;
