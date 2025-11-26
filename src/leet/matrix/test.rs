@@ -1,4 +1,5 @@
 use crate::leet::matrix::difference::Difference;
+use crate::leet::matrix::divisible::{number_of_paths, number_of_paths_scroll};
 use crate::leet::matrix::region::Region;
 use crate::leet::matrix::z::find_diagonal_order;
 
@@ -102,10 +103,41 @@ fn test_find_diagonal_order() {
     println!("----- leet code matrix z end ------");
 }
 
+/// 测试 `矩阵中和能被 K 整除的路径`
+fn test_number_of_paths() {
+    println!("----- leet code matrix divisible start ------");
+    let result = number_of_paths(vec![vec![5, 2, 4], vec![3, 0, 5], vec![0, 7, 2]], 3);
+    println!("result: {:}", result);
+
+    let result = number_of_paths(vec![vec![0, 0]], 5);
+    println!("result: {:}", result);
+
+    let result = number_of_paths(
+        vec![vec![7, 3, 4, 9], vec![2, 3, 6, 2], vec![2, 3, 7, 0]],
+        1,
+    );
+    println!("result: {:}", result);
+
+    let result = number_of_paths_scroll(vec![vec![5, 2, 4], vec![3, 0, 5], vec![0, 7, 2]], 3);
+    println!("scroll result: {:}", result);
+
+    let result = number_of_paths_scroll(vec![vec![0, 0]], 5);
+    println!("scroll result: {:}", result);
+
+    let result = number_of_paths_scroll(
+        vec![vec![7, 3, 4, 9], vec![2, 3, 6, 2], vec![2, 3, 7, 0]],
+        1,
+    );
+    println!("scroll result: {:}", result);
+
+    println!("----- leet code matrix divisible end ------");
+}
+
 pub fn test() {
     println!("----- leet code link start ------");
     test_region_query();
     test_difference();
     test_find_diagonal_order();
+    test_number_of_paths();
     println!("----- leet code link end ------");
 }

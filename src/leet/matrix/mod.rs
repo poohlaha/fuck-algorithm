@@ -24,6 +24,7 @@
 */
 
 mod difference;
+mod divisible;
 mod region;
 pub mod test;
 mod z;
