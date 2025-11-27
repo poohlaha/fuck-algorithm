@@ -100,6 +100,7 @@ pub fn max_subarray_sum(nums: Vec<i32>, k: i32) -> i64 {
 
         if best[m].0 != i64::MAX {
             let (min_prefix, idx) = best[m];
+            // nums[idx..i-1], sum = p[i] - p[idx], 同一组的最小前缀和相减
             let sum = p[i] - min_prefix;
 
             if sum > max_sum {
