@@ -7,6 +7,7 @@ mod difference;
 mod median;
 mod range;
 mod region;
+mod sum;
 pub mod test;
 
 pub struct Array;

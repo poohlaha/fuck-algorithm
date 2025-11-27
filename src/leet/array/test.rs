@@ -1,6 +1,7 @@
 use crate::leet::array::median::find_median_sorted_arrays;
 use crate::leet::array::range::Range;
 use crate::leet::array::region::NumArray;
+use crate::leet::array::sum::max_subarray_sum;
 use crate::leet::array::Array;
 
 /// 测试 `两数之和II - 输入有序数组`
@@ -224,6 +225,20 @@ fn test_search_range() {
     println!("----- leet code array search range end ------");
 }
 
+/// 测试 `长度可被 K 整除的子数组的最大元素和`
+fn test_max_subarray_sum() {
+    println!("----- leet code sub array sum start ------");
+    let result = max_subarray_sum(vec![1, 2], 1);
+    println!("target `1` sum: {:?}", result);
+
+    let result = max_subarray_sum(vec![-1, -2, -3, -4, -5], 4);
+    println!("target `4` sum: {:?}", result);
+
+    let result = max_subarray_sum(vec![-5, 1, 2, -3, 4], 2);
+    println!("target `2` sum: {:?}", result);
+    println!("----- leet code sub array sum end ------");
+}
+
 pub fn test() {
     println!("----- leet code array start ------");
     test_two_sum_2();
@@ -236,5 +251,6 @@ pub fn test() {
     test_find_median_sorted_arrays();
     test_three_sum_closest();
     test_search_range();
+    test_max_subarray_sum();
     println!("----- leet code array end ------");
 }
