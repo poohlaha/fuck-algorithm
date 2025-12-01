@@ -12,7 +12,7 @@ fn test_final_value() {
 }
 
 pub fn test() {
-    println!("----- leet code other start ------");
+    println!("----- leet code hashset start ------");
     test_final_value();
-    println!("----- leet code other end ------");
+    println!("----- leet code hashset end ------");
 }

@@ -13,6 +13,7 @@ pub(crate) fn test() {
     crate::leet::algorithm::test::test();
     crate::leet::other::test::test();
     crate::leet::hashset::test::test();
+    crate::leet::hashmap::test::test();
     println!("----- leet code end ------");
     println!();
 }

@@ -16,3 +16,5 @@ mod stack;
 mod str;
 pub mod test;
 mod tree;
+
+mod hashmap;
