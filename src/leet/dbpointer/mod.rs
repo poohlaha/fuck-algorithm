@@ -7,6 +7,7 @@ use std::cmp::{max, min};
 mod arr;
 mod integer;
 mod link;
+mod player;
 pub mod test;
 
 /**

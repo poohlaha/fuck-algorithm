@@ -4,7 +4,7 @@ use std::os::unix::raw::uid_t;
    3381. 长度可被 K 整除的子数组的最大元素和
    力扣: https://leetcode.cn/problems/maximum-subarray-sum-with-length-divisible-by-k/description
    题目: 给你一个整数数组 nums 和一个整数 k 。
-        返回 nums 中一个 非空子数组 的 最大 和，要求该子数组的长度可以 被 k 整除。
+        返回 nums 中一个 非空子数组 的 最大和，要求该子数组的长度可以 被 k 整除。
 
    思路: 使用 前缀和
    解: (r + 1 - l) % k == 0  => (r + 1) % k == l % k

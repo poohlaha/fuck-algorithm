@@ -2,6 +2,7 @@ use crate::leet::dbpointer::arr::{remove_duplicates, remove_element};
 use crate::leet::dbpointer::integer::is_palindrome;
 use crate::leet::dbpointer::link::{merge_k_lists, reverse_k_group, swap_pairs, Link};
 use crate::leet::dbpointer::max_area;
+use crate::leet::dbpointer::player::match_players_and_trainers;
 
 /// 测试 `回文数`
 fn test_is_palindrome() {
@@ -125,6 +126,17 @@ fn test_remove_element() {
     println!("----- leet code remove element end ------");
 }
 
+/// 测试 ` 运动员和训练师的最大匹配数`
+fn test_match_players_and_trainers() {
+    println!("----- leet code test match start ------");
+    let result = match_players_and_trainers(vec![4, 7, 9], vec![8, 2, 5, 8]);
+    println!("result: {}", result);
+
+    let result = match_players_and_trainers(vec![1, 1, 1], vec![10]);
+    println!("result: {}", result);
+    println!("----- leet code test match end ------");
+}
+
 pub fn test() {
     println!("----- leet code double pointer start ------");
     test_is_palindrome();
@@ -136,5 +148,6 @@ pub fn test() {
     test_reverse_k_group();
     test_remove_duplicates();
     test_remove_element();
+    test_match_players_and_trainers();
     println!("----- leet code double pointer end ------");
 }
