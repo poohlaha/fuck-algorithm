@@ -1,3 +1,4 @@
+use crate::leet::link::decimal::DecimalLink;
 use crate::leet::link::ring::CircularLinkedList;
 use crate::leet::link::sum::NumLink;
 
@@ -37,9 +38,24 @@ fn test_add_two_numbers() {
     println!("----- sum end ------");
 }
 
+/// 测试 ``
+pub fn test_get_decimal_value() {
+    println!("----- decimal start ------");
+    let head = DecimalLink::create(vec![1, 0, 1]);
+    let result = DecimalLink::get_decimal_value(head);
+    println!("result: {:?}", result);
+
+    let head = DecimalLink::create(vec![0]);
+    let result = DecimalLink::get_decimal_value(head);
+    println!("result: {:?}", result);
+
+    println!("----- decimal end ------");
+}
+
 pub fn test() {
     println!("----- leet code link start ------");
     test_link_ring();
     test_add_two_numbers();
+    test_get_decimal_value();
     println!("----- leet code link end ------");
 }
