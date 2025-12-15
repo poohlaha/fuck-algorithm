@@ -1,6 +1,7 @@
 use crate::leet::array::median::find_median_sorted_arrays;
 use crate::leet::array::range::Range;
 use crate::leet::array::region::NumArray;
+use crate::leet::array::subfolder::remove_subfolders;
 use crate::leet::array::sum::max_subarray_sum;
 use crate::leet::array::Array;
 
@@ -239,6 +240,34 @@ fn test_max_subarray_sum() {
     println!("----- leet code sub array sum end ------");
 }
 
+/// 测试 `删除子文件夹`
+fn test_remove_subfolders() {
+    println!("----- leet code remove sub folders start ------");
+    let result = remove_subfolders(vec![
+        "/a".to_string(),
+        "/a/b".to_string(),
+        "/c/d".to_string(),
+        "/c/d/e".to_string(),
+        "/c/f".to_string(),
+    ]);
+    println!("result: {:?}", result);
+
+    let result = remove_subfolders(vec![
+        "/a".to_string(),
+        "/a/b/c".to_string(),
+        "/a/b/d".to_string(),
+    ]);
+    println!("result: {:?}", result);
+
+    let result = remove_subfolders(vec![
+        "/a/b/c".to_string(),
+        "/a/b/ca".to_string(),
+        "/a/b/d".to_string(),
+    ]);
+    println!("result: {:?}", result);
+    println!("----- leet code remove sub sub folders end ------");
+}
+
 pub fn test() {
     println!("----- leet code array start ------");
     test_two_sum_2();
@@ -252,5 +281,6 @@ pub fn test() {
     test_three_sum_closest();
     test_search_range();
     test_max_subarray_sum();
+    test_remove_subfolders();
     println!("----- leet code array end ------");
 }

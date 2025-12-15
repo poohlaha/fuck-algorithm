@@ -7,6 +7,7 @@ mod difference;
 mod median;
 mod range;
 mod region;
+mod subfolder;
 mod sum;
 pub mod test;
 
