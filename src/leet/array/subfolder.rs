@@ -24,6 +24,9 @@
              /a 后面紧跟着它的所有子文件夹
              /c/d 后面紧跟着 /c/d/e
        不会出现 `子文件夹跑到父文件夹前面`, 因此: 只要维护一个 `上一个保留的文件夹`
+
+   时间复杂度: O(n log n)
+   空间复杂度: O(log n)
 */
 pub fn remove_subfolders(folder: Vec<String>) -> Vec<String> {
     if folder.is_empty() {
