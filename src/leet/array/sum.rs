@@ -1,5 +1,3 @@
-use std::os::unix::raw::uid_t;
-
 /**
    3381. 长度可被 K 整除的子数组的最大元素和
    力扣: https://leetcode.cn/problems/maximum-subarray-sum-with-length-divisible-by-k/description

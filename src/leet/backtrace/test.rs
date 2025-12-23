@@ -1,6 +1,7 @@
 use crate::leet::backtrace::brackets::generate_parenthesis;
 use crate::leet::backtrace::n::Solution;
 use crate::leet::backtrace::phone::letter_combinations;
+use crate::leet::backtrace::subset::count_max_or_subsets;
 use crate::leet::backtrace::sudoku::Sudoku;
 
 /// 测试 `N 皇后问题`
@@ -64,11 +65,27 @@ fn test_sudoku() {
     println!("----- backtrace sudoku end ------");
 }
 
+/// 测试 `统计按位或能得到最大值的子集数目`
+fn test_count_max_or_subsets() {
+    println!("----- backtrace count max or subsets start ------");
+    let results = count_max_or_subsets(vec![3, 1]);
+    println!("{:?}", results);
+
+    let results = count_max_or_subsets(vec![2, 2, 2]);
+    println!("{:?}", results);
+
+    let results = count_max_or_subsets(vec![3, 2, 1, 5]);
+    println!("{:?}", results);
+
+    println!("----- backtrace count max or subsets end ------");
+}
+
 pub fn test() {
     println!("----- leet code backtrace start ------");
     test_backtrace_n();
     test_backtrace_phone();
     test_generate_parenthesis();
     test_sudoku();
+    test_count_max_or_subsets();
     println!("----- leet code backtrace end ------");
 }
