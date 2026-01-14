@@ -16,6 +16,7 @@ mod deflate;
 mod dijkstra;
 mod greedy;
 mod inplace;
+mod kahn;
 mod karp;
 mod kmp;
 mod kruskal;
