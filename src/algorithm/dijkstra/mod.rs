@@ -55,7 +55,7 @@ use std::collections::BinaryHeap;
 
 pub fn dijkstra(graph: Vec<Vec<(usize, i32)>>) {
     let n = graph.len();
-    let inf = i32::MAX / 2;
+    let inf = i32::MAX / 2; // 防止相加时 i32 溢出
 
     // 1. 初始化 dist, dist[i] = 从起点到 i 的当前最短距离（未知时是 ∞）
     let mut dist = vec![inf; n];
