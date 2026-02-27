@@ -88,14 +88,20 @@ fn astar(start: Point, goal: Point, width: i32, height: i32) -> Option<Vec<Point
 
     g_score.insert(start, 0.0f64);
 
+    let h = heuristic(start, goal);
     open.push(Node {
         point: start,
         g: 0.0,
-        h: heuristic(start, goal),
-        f: 0.0 + heuristic(goal, goal),
+        h,
+        f: h,
     });
 
     while let Some(current) = open.pop() {
+        // 过滤已经处理过的节点
+        if closed.contains(&current.point) {
+            continue;
+        }
+
         // 如果到达终点
         if current.point == goal {
             // 回溯路径
@@ -114,6 +120,9 @@ fn astar(start: Point, goal: Point, width: i32, height: i32) -> Option<Vec<Point
         // 加入到 closed
         closed.insert(current.point);
 
+        // 当前最优 g
+        let current_g = *g_score.get(&current.point).unwrap();
+
         // 扩展邻居
         for (neighbor, move_cost) in get_neighbors(current.point, width, height) {
             // 判断是否在 closed 中
@@ -121,7 +130,7 @@ fn astar(start: Point, goal: Point, width: i32, height: i32) -> Option<Vec<Point
                 continue;
             }
 
-            let tentative_g = current.g + move_cost;
+            let tentative_g = current_g + move_cost;
 
             // 查找 g_score 中是否存在节点
             let best_g = g_score.get(&neighbor).cloned().unwrap_or(f64::INFINITY);
