@@ -1,6 +1,10 @@
 /*!
   [Dijkstra 算法](src/graph/base/two.md)
 
+ ** 前提条件 **
+ - ✔ 边权必须 ≥ 0
+ - ❌ 不能处理负权边(那是 Bellman-Ford)
+
   **算法步骤**
   1. 初始化 dist, dist[i] = 从起点到 i 的当前最短距离（未知时是 ∞）
   2. 起点入队(优先队列, 最小堆, Dijkstra 的“队列”必须是：按 dist 最小优先)

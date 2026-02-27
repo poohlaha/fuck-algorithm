@@ -11,6 +11,7 @@
   - O(n): 需要额外数组(如: 归并排序用到临时数组)
   - O(log n): 递归调用栈空间(如快速排序的递归深度)
 */
+mod a_star;
 mod bm;
 mod deflate;
 mod dijkstra;
